@@ -82,15 +82,18 @@ class ProcessStream
         $c[ 'collection' ]->ensureMethod('find', $c[ 'interface' ], '$key, $default=null');
         $c[ 'collection' ]->ensureMethod('findBy', $c[ 'interface' ], '$key, $value');
 
-        $process = [];
-        foreach ($c as $name => $classDoc) {
-//            $content  = $classDoc->process();
-//            $fileName = $classDoc->getFileName();
-            if ($this->isFallbackClass($classDoc->getName())) {
-                continue;
-            }
-            $process[] = $classDoc;
-        }
+        $process = $c->values()->filter(function(ClassDoc $classDoc){
+            return !$this->isFallbackClass($classDoc->getName());
+        });
+//        $process = [];
+//        foreach ($c as $name => $classDoc) {
+////            $content  = $classDoc->process();
+////            $fileName = $classDoc->getFileName();
+//            if ($this->isFallbackClass($classDoc->getName())) {
+//                continue;
+//            }
+//            $process[] = $classDoc;
+//        }
         return $process;
     }
 
