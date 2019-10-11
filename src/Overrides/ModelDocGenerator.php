@@ -1,11 +1,11 @@
 <?php
 
-namespace Pyradic\IdeHelper\Command;
+namespace Pyro\IdeHelper\Overrides;
 
-use Pyradic\Platform\Console\IdeHelperModelsCommand;
+use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class GenerateModelCompletion extends IdeHelperModelsCommand
+class ModelDocGenerator extends IdeHelperModelsCommand
 {
     public function generateForModel($class)
     {

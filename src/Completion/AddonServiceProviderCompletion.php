@@ -1,15 +1,16 @@
 <?php
 
-namespace Pyradic\IdeHelper\Command;
+namespace Pyro\IdeHelper\Completion;
 
-use Laradic\Generators\DocBlock\ClassDoc;
 use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
+use Laradic\Generators\DocBlock\DocBlockGenerator;
+use Laradic\Idea\Completions\CompletionInterface;
 
-class ProcessAddonServiceProvider
+class AddonServiceProviderCompletion implements CompletionInterface
 {
-    public function handle()
+    public function generate(DocBlockGenerator $generator, $next)
     {
-        $class = new ClassDoc(AddonServiceProvider::class);
+        $class = $generator->class(AddonServiceProvider::class);
         $class->ensure('property', <<<DOC
 array \$routes  = [
     \$i => [
@@ -36,12 +37,11 @@ array \$routes  = [
      ]
 ] 
 DOC
-);
-        foreach($class->getDocBlock()->getTagsByName('property') as $tag) {
-            $class->getDocBlock()->deleteTag($tag);
-        }
-        $res = $class->process();
+        );
 
-        return $res;
+        $docBlock = $class->getDocBlock();
+        foreach ($docBlock->getTagsByName('property') as $tag) {
+            $docBlock->deleteTag($tag);
+        }
     }
 }

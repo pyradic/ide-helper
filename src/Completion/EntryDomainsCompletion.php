@@ -1,39 +1,45 @@
-<?php
+<?php /** @noinspection ContractViolationInspection */
 
-namespace Pyradic\IdeHelper\Command;
+namespace Pyro\IdeHelper\Completion;
 
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\DocBlock\ClassDoc;
+use Laradic\Generators\DocBlock\DocBlockGenerator;
+use Laradic\Idea\Completions\CompletionInterface;
+use Pyro\IdeHelper\Command\FindAllEntryDomains;
 
-class ProcessStream
+class EntryDomainsCompletion implements CompletionInterface
 {
+    use DispatchesJobs;
+
+
     /** @var \Laradic\Generators\DocBlock\DocBlockGenerator */
     protected $generator;
-    /** @var string */
-    protected $namespace;
-    /** @var string */
-    protected $path;
 
-    protected static $classDocClass = ClassDoc::class;
-
-    /**
-     * AddStreamToGenerator constructor.
-     *
-     * @param string                                         $namespace
-     * @param string                                         $path
-     * @param \Laradic\Generators\DocBlock\DocBlockGenerator $generator
-     */
-    public function __construct(string $path, string $namespace)
+    public function generate(DocBlockGenerator $generator, $next)
     {
-        $this->namespace = $namespace;
-        $this->path      = $path;
+        $this->generator = $generator;
+        $this->getDomains()->map(function ($namespace, $path) {
+            return $this->getClasses($path, $namespace);
+        });
+        return $next($generator);
     }
 
-    public function handle()
+    protected function getDomains()
     {
-        $path      = $this->path;
-        $namespace = $this->namespace;
-        $name      = pathinfo($path, PATHINFO_BASENAME);
+        $domains                                                                = $this->dispatchNow(new FindAllEntryDomains(app('addon.collection')->installed()));
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Assignment') ] = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Stream') ]     = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Entry') ]      = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Version') ]    = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Field') ]      = 'Anomaly\Streams\Platform';
+        return collect($domains);
+    }
+
+    public function getClasses($path, $namespace)
+    {
+        $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Laradic\Generators\DocBlock\ClassDoc[]|\Illuminate\Support\Collection $c */
         /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc}  $c         */
         $c = collect([
@@ -48,11 +54,11 @@ class ProcessStream
             'interface'           => "\\{$namespace}\\{$name}\\Contract\\{$name}Interface",
             'repositoryInterface' => "\\{$namespace}\\{$name}\\Contract\\{$name}RepositoryInterface",
         ])->map(function ($className, $key) {
-            if ( ! class_exists($className) &&  ! interface_exists($className)) {
+            if ( ! class_exists($className) && ! interface_exists($className)) {
                 $className = $this->getFallbackClass($key);
-                return $this->createClassDoc($className);
+                return $this->generator->class($className);
             }
-            return $this->createClassDoc($className);
+            return $this->generator->class($className);
         });
 
         $cs = $c->map(function (ClassDoc $class) {
@@ -64,7 +70,7 @@ class ProcessStream
         $c[ 'presenter' ]->ensure('mixin', $c[ 'model' ]);
         $c[ 'repositoryInterface' ]->ensure('mixin', $c[ 'repository' ]);
 
-        $c[ 'repository' ]->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
+        $c[ 'repository' ]->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
         $c[ 'repository' ]->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
         $c[ 'repository' ]->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
         $c[ 'repository' ]->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
@@ -82,18 +88,11 @@ class ProcessStream
         $c[ 'collection' ]->ensureMethod('find', $c[ 'interface' ], '$key, $default=null');
         $c[ 'collection' ]->ensureMethod('findBy', $c[ 'interface' ], '$key, $value');
 
-        $process = $c->values()->filter(function(ClassDoc $classDoc){
-            return !$this->isFallbackClass($classDoc->getName());
+        /** @var \Illuminate\Support\Collection|ClassDoc[] $process */
+        $process = $c->values()->filter(function (ClassDoc $classDoc) {
+            return ! $this->isFallbackClass($classDoc->getName());
         });
-//        $process = [];
-//        foreach ($c as $name => $classDoc) {
-////            $content  = $classDoc->process();
-////            $fileName = $classDoc->getFileName();
-//            if ($this->isFallbackClass($classDoc->getName())) {
-//                continue;
-//            }
-//            $process[] = $classDoc;
-//        }
+
         return $process;
     }
 
@@ -120,18 +119,4 @@ class ProcessStream
         $class = Str::removeLeft($class, '\\');
         return in_array($class, $this->fallbacks, true);
     }
-
-    public static function setClassDocClass($classDocClass)
-    {
-        static::$classDocClass = $classDocClass;
-    }
-
-    /** @return ClassDoc */
-    protected function createClassDoc($class)
-    {
-        $classDocClass = static::$classDocClass;
-        return new $classDocClass($class);
-    }
-
-
 }

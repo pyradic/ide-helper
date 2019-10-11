@@ -1,15 +1,25 @@
 <?php
 
-namespace Pyradic\IdeHelper;
+namespace Pyro\IdeHelper;
 
 use Illuminate\Support\ServiceProvider;
-use Pyradic\IdeHelper\Console\IdeHelperStreamsCommand;
+use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
+use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
 
 class IdeHelperServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->app->register(\Laradic\Support\SupportServiceProvider::class);
+        $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);
+
         $this->app->singleton(IdeHelperStreamsCommand::class);
-        $this->commands(IdeHelperStreamsCommand::class);;
+        $this->commands(IdeHelperStreamsCommand::class);
+    }
+
+    public function boot()
+    {
+        $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
     }
 }

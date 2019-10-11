@@ -1,13 +1,13 @@
 <?php /** @noinspection OneTimeUseVariablesInspection */
 
-namespace Pyradic\IdeHelper\Command;
+namespace Pyro\IdeHelper\Command;
 
-use ReflectionClass;
-use Illuminate\Support\Str;
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Application\Application;
+use Illuminate\Support\Str;
+use ReflectionClass;
 
-class FindAllStreams
+class FindAllEntryDomains
 {
     /** @var \Anomaly\Streams\Platform\Application\Application */
     protected $application;
