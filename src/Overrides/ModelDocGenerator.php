@@ -15,4 +15,9 @@ class ModelDocGenerator extends IdeHelperModelsCommand
     }
 
 
+    public function setWrite(bool $write)
+    {
+        $this->write=$write;
+        return $this;
+    }
 }
