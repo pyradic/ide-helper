@@ -15,8 +15,8 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
         $dir = $this->option('dir');
 
         $locations = [];
-        $addons = resolve(AddonCollection::class);
-        if($this->option('addon') !== null){
+        $addons    = resolve(AddonCollection::class);
+        if ($this->option('addon') !== null) {
             $addon = $addons->get($this->option('addon'));
             $this->setModelLocations($this->findAddonModelLocations($addon));
         } else {
@@ -28,8 +28,8 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
 
     protected function setModelLocations($locations)
     {
-        $locations=Arr::wrap($locations);
-        $this->laravel[ 'config' ]->set('ide-helper.model_locations',$locations);
+        $locations = Arr::wrap($locations);
+        $this->laravel[ 'config' ]->set('ide-helper.model_locations', $locations);
     }
 
     protected function findAddonModelLocations(Addon $addon)
@@ -47,7 +47,6 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
             })
             ->unique()->toArray();
     }
-
 
 
     protected function findModelLocations(AddonCollection $addons)
@@ -71,9 +70,9 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
 
     protected function getOptions()
     {
-        $opts=parent::getOptions();
+        $opts = parent::getOptions();
         return array_merge($opts, [
-            ['addon','A',InputOption::VALUE_OPTIONAL,'The addon']
+            [ 'addon', 'A', InputOption::VALUE_OPTIONAL, 'The addon' ],
         ]);
     }
 

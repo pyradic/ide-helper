@@ -32,16 +32,14 @@ array \$routes  = [
 
          'anomaly.module.users::redirect' => '/',
          'anomaly.module.users::route' => 'vendor.module.example::route.name',
-         'anomaly.module.users::intended' => ''
+         'anomaly.module.users::intended' => '',
          'anomaly.module.users::message' => 'Sorry, you do not have access.',
      ]
 ] 
 DOC
         );
 
-        $docBlock = $class->getDocBlock();
-        foreach ($docBlock->getTagsByName('property') as $tag) {
-            $docBlock->deleteTag($tag);
-        }
+        $class->clearTagsByName('property');
+        return $next($generator);
     }
 }
