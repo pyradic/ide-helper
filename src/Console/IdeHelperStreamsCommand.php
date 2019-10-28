@@ -37,7 +37,6 @@ class IdeHelperStreamsCommand extends Command
 
     public function handle(CompletionGenerator $generator)
     {
-        $this->laravel->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
 
         $this->call('streams:compile');
 

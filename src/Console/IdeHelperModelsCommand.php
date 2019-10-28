@@ -13,7 +13,6 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
 {
     public function handle()
     {
-        $this->laravel->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
 
         $dir = $this->option('dir');
 
