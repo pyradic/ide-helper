@@ -22,7 +22,6 @@ class IdeHelperServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
-        $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
 
     }
 }

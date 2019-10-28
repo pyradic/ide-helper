@@ -5,6 +5,7 @@ namespace Pyro\IdeHelper\Console;
 use Anomaly\Streams\Platform\Addon\Addon;
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Illuminate\Support\Arr;
+use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use ReflectionClass;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -12,6 +13,8 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
 {
     public function handle()
     {
+        $this->laravel->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
+
         $dir = $this->option('dir');
 
         $locations = [];

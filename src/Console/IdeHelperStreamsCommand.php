@@ -14,6 +14,7 @@ use Pyro\IdeHelper\Completion\FormBuilderCompletion;
 use Pyro\IdeHelper\Completion\ModuleCompletion;
 use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
+use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 
 class IdeHelperStreamsCommand extends Command
@@ -36,6 +37,8 @@ class IdeHelperStreamsCommand extends Command
 
     public function handle(CompletionGenerator $generator)
     {
+        $this->laravel->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
+
         $this->call('streams:compile');
 
         $generated         = $generator
