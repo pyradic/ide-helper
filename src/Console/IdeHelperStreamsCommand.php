@@ -8,9 +8,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Laradic\Generators\DocBlock\ProcessedClassDoc;
 use Laradic\Idea\CompletionGenerator;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
+use Pyro\IdeHelper\Completion\AuthCompletion;
 use Pyro\IdeHelper\Completion\EntryDomainsCompletion;
 use Pyro\IdeHelper\Completion\FormBuilderCompletion;
 use Pyro\IdeHelper\Completion\ModuleCompletion;
+use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 
@@ -26,6 +28,8 @@ class IdeHelperStreamsCommand extends Command
         ModuleCompletion::class,
         AddonServiceProviderCompletion::class,
         TableBuilderCompletion::class,
+        AuthCompletion::class,
+        RequestCompletion::class
     ];
 
     protected $description = '';
