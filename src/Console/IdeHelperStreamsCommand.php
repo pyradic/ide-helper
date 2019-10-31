@@ -12,7 +12,7 @@ use Pyro\IdeHelper\Completion\AuthCompletion;
 use Pyro\IdeHelper\Completion\EntryDomainsCompletion;
 use Pyro\IdeHelper\Completion\FormBuilderCompletion;
 use Pyro\IdeHelper\Completion\ModuleCompletion;
-use Pyro\IdeHelper\Completion\RequestCompletion;
+use Pyro\IdeHelper\Completion\RequestCompqletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
@@ -21,7 +21,7 @@ class IdeHelperStreamsCommand extends Command
 {
     use DispatchesJobs;
 
-    protected $signature = 'ide:streams {--out= : output path}';
+    protected $signature = 'ide-helper:streams {--out= : output path}';
 
     public static $completions = [
         EntryDomainsCompletion::class,
