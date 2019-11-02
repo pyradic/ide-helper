@@ -3,12 +3,12 @@
 namespace Pyro\IdeHelper\Completion;
 
 use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
+use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
-use Laradic\Idea\Completions\CompletionInterface;
 
 class AddonServiceProviderCompletion implements CompletionInterface
 {
-    public function generate(DocBlockGenerator $generator, $next)
+    public function generate(DocBlockGenerator $generator)
     {
         $class = $generator->class(AddonServiceProvider::class);
         $class->ensure('property', <<<DOC
@@ -40,6 +40,6 @@ DOC
         );
 
         $class->clearTagsByName('property');
-        return $next($generator);
+
     }
 }

@@ -3,19 +3,19 @@
 namespace Pyro\IdeHelper\Completion;
 
 use Anomaly\Streams\Platform\Addon\Module\Module;
+use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\ClassDoc;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
-use Laradic\Idea\Completions\CompletionInterface;
 
 class ModuleCompletion implements CompletionInterface
 {
-    public function generate(DocBlockGenerator $generator, $next)
+    public function generate(DocBlockGenerator $generator)
     {
         $class = $generator->class(Module::class);
         $this->sections($class);
         $this->shortcuts($class);
         $class->clearTagsByName('property');
-        return $next($generator);
+
     }
 
     protected function sections(ClassDoc $class)

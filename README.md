@@ -9,6 +9,12 @@ It features:
 - `PHPStorm/IDEA` [Twig completion tips](#twig-completion-tips)
 
 ### Stream related code completion
+
+#### PHPToolbox based
+![](screens/ide-helper-addon-collections.png)
+
+
+#### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.
 This is done using the same way as ide-helper:models
 by generating DocBlock tags in the source files or in a separate file

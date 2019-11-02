@@ -3,13 +3,13 @@
 namespace Pyro\IdeHelper\Completion;
 
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
+use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\ClassDoc;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
-use Laradic\Idea\Completions\CompletionInterface;
 
 class FormBuilderCompletion implements CompletionInterface
 {
-    public function generate(DocBlockGenerator $generator, $next)
+    public function generate(DocBlockGenerator $generator)
     {
         $class = $generator->class(FormBuilder::class);
         $this->sections($class);
@@ -19,7 +19,7 @@ class FormBuilderCompletion implements CompletionInterface
         //fields
         //rules
         $class->clearTagsByName('property');
-        return $next($generator);
+
     }
 
     protected function sections(ClassDoc $class)

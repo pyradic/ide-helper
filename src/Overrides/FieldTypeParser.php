@@ -2,9 +2,13 @@
 
 namespace Pyro\IdeHelper\Overrides;
 
+use Anomaly\FileFieldType\FileFieldType;
+use Anomaly\FilesFieldType\FilesFieldType;
+use Anomaly\FilesModule\File\FileModel;
 use Anomaly\MultipleFieldType\MultipleFieldType;
 use Anomaly\RelationshipFieldType\RelationshipFieldType;
 use Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface;
+use Anomaly\UploadFieldType\UploadFieldType;
 
 class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser
 {
@@ -24,7 +28,7 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
 
         $returnTag     = [ '\Illuminate\Database\Eloquent\Relations\Relation' ];
         $returnComment = '';
-        if ($type instanceof MultipleFieldType) {
+        if ($type instanceof MultipleFieldType ) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsToMany';
             try {
                 $relatedModel  = get_class($type->getRelatedModel());
@@ -36,6 +40,14 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
             try {
                 $relatedModel  = get_class($type->getRelatedModel());
+                $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
+            }
+            catch (\Throwable $e) {
+            }
+        } elseif($type instanceof UploadFieldType || $type instanceof FileFieldType) {
+            $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
+            try {
+                $relatedModel  = \Anomaly\FilesModule\File\FileModel::class;
                 $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
             }
             catch (\Throwable $e) {

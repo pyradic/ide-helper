@@ -2,16 +2,14 @@
 
 namespace Pyro\IdeHelper\Completion;
 
-use Anomaly\Streams\Platform\Addon\AddonServiceProvider;
-use Anomaly\Streams\Platform\Addon\Module\Module;
 use Anomaly\Streams\Platform\Ui\Table\TableBuilder;
+use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\ClassDoc;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
-use Laradic\Idea\Completions\CompletionInterface;
 
 class TableBuilderCompletion implements CompletionInterface
 {
-    public function generate(DocBlockGenerator $generator, $next)
+    public function generate(DocBlockGenerator $generator)
     {
         $class = $generator->class(TableBuilder::class);
         $this->sections($class);
@@ -20,7 +18,7 @@ class TableBuilderCompletion implements CompletionInterface
         $this->buttons($class);
         $this->filters($class);
         $class->clearTagsByName('property');
-        return $next($generator);
+
     }
 
     protected function sections(ClassDoc $class)
