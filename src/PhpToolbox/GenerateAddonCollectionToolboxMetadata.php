@@ -7,6 +7,7 @@ use Anomaly\Streams\Platform\Addon\Extension\ExtensionCollection;
 use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
 use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
 use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laradic\Idea\PhpToolbox\Metadata;
 
@@ -22,8 +23,10 @@ class GenerateAddonCollectionToolboxMetadata
         $this->path = $path;
     }
 
-    public function handle(AddonCollection $addons)
+    public function handle(AddonCollection $addons, Filesystem $fs)
     {
+        $fs->ensureDirectory(path_get_directory($this->path));
+
         $meta = Metadata::create($this->path);
         $data = [
             'modules'    => [],

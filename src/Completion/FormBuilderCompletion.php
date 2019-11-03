@@ -31,6 +31,7 @@ array \$sections  = [
 ]
 DOC
         );
+
     }
 
     protected function actions(ClassDoc $class)

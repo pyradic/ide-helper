@@ -11,7 +11,11 @@ It features:
 ### Stream related code completion
 
 #### PHPToolbox based
+For AddonCollection, ModuleCollection, ThemeCollection etc. `CTRL+click` / `CTRL+b` takes you to the specific addon class.
 ![](screens/ide-helper-addon-collections.png)
+
+For all views. `CTRL+click` / `CTRL+b` takes you to the specific addon view file.
+![](screens/ide-helper-views.png)
 
 
 #### Docblock based

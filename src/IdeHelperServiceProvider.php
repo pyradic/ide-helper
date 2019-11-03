@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper;
 
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
@@ -40,8 +41,13 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->commands('command.ide.streams');
     }
 
-    public function boot()
+    public function boot(Repository $config)
     {
+        $metas=$config->get('laradic.idea.meta.metas',[]);
+        unset($metas[\Laradic\Idea\Metas\ViewMeta::class]);
+        $config->set('laradic.idea.meta.metas',$metas);
+
+
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
         if (env('INSTALLED')) {
             $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);

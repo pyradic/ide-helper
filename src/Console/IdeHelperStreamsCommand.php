@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Arr;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\DocBlock\ProcessedClassDoc;
+use Laradic\Idea\PhpToolbox\GenerateViewsMetadata;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
 use Pyro\IdeHelper\Completion\AuthCompletion;
 use Pyro\IdeHelper\Completion\EntryDomainsCompletion;
@@ -70,6 +71,7 @@ class IdeHelperStreamsCommand extends Command
         }
 
         $this->dispatchNow(new GenerateAddonCollectionToolboxMetadata());
+        $this->dispatchNow(new GenerateViewsMetadata());
 
         $this->info('Streams completion generated');
     }
