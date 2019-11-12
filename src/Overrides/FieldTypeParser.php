@@ -3,8 +3,6 @@
 namespace Pyro\IdeHelper\Overrides;
 
 use Anomaly\FileFieldType\FileFieldType;
-use Anomaly\FilesFieldType\FilesFieldType;
-use Anomaly\FilesModule\File\FileModel;
 use Anomaly\MultipleFieldType\MultipleFieldType;
 use Anomaly\RelationshipFieldType\RelationshipFieldType;
 use Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface;
@@ -17,6 +15,7 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
      * Return the parsed relation.
      *
      * @param AssignmentInterface $assignment
+     *
      * @return string
      */
     public function relation(AssignmentInterface $assignment)
@@ -28,13 +27,13 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
 
         $returnTag     = [ '\Illuminate\Database\Eloquent\Relations\Relation' ];
         $returnComment = '';
-        if ($type instanceof MultipleFieldType ) {
+        if ($type instanceof MultipleFieldType) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsToMany';
             try {
                 $relatedModel  = get_class($type->getRelatedModel());
                 $returnComment = "// return \$this->belongsToMany(\\{$relatedModel}::class);";
             }
-            catch (\Throwable $e) {
+            catch (\Exception $e) {
             }
         } elseif ($type instanceof RelationshipFieldType) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
@@ -42,15 +41,15 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
                 $relatedModel  = get_class($type->getRelatedModel());
                 $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
             }
-            catch (\Throwable $e) {
+            catch (\Exception $e) {
             }
-        } elseif($type instanceof UploadFieldType || $type instanceof FileFieldType) {
+        } elseif ($type instanceof UploadFieldType || $type instanceof FileFieldType) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
             try {
                 $relatedModel  = \Anomaly\FilesModule\File\FileModel::class;
                 $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
             }
-            catch (\Throwable $e) {
+            catch (\Exception $e) {
             }
         }
 

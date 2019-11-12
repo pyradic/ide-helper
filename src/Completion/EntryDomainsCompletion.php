@@ -72,8 +72,8 @@ class EntryDomainsCompletion implements CompletionInterface
         $c[ 'criteria' ]->ensure('mixin', $c[ 'queryBuilder' ]);
 
         $c[ 'repository' ]->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
-        $c[ 'repository' ]->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
-        $c[ 'repository' ]->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
+        $c[ 'repository' ]->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
+        $c[ 'repository' ]->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
         $c[ 'repository' ]->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"');
         $c[ 'repository' ]->ensureMethod('find', $c[ 'interface' ], '$id');
         $c[ 'repository' ]->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id');

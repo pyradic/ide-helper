@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper;
 
+use Anomaly\Streams\Platform\Event\Ready;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
@@ -27,7 +28,7 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->app->singleton('command.ide.streams', function () {
             $command = new IdeHelperStreamsCommand();
             $command->addCompletions([
-                new AddonCollectionsCompletion(['get']),
+                new AddonCollectionsCompletion([ 'get' ]),
                 AddonServiceProviderCompletion::class,
                 AuthCompletion::class,
                 EntryDomainsCompletion::class,
@@ -43,14 +44,15 @@ class IdeHelperServiceProvider extends ServiceProvider
 
     public function boot(Repository $config)
     {
-        $metas=$config->get('laradic.idea.meta.metas',[]);
-        unset($metas[\Laradic\Idea\Metas\ViewMeta::class]);
-        $config->set('laradic.idea.meta.metas',$metas);
-
+        $metas = $config->get('laradic.idea.meta.metas', []);
+        unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
+        $config->set('laradic.idea.meta.metas', $metas);
 
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
-        if (env('INSTALLED')) {
-            $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
-        }
+        $this->app->booted( function () {
+            if (env('INSTALLED')) {
+                $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
+            }
+        });
     }
 }
