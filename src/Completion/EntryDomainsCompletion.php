@@ -63,7 +63,7 @@ class EntryDomainsCompletion implements CompletionInterface
         });
 
         $cs = $c->map(function (ClassDefinition $class) {
-            return $class->getReflectionName() . '[]';
+            return $class->getReflectionName(true) . '[]';
         });
 //        $cs = collect($c->all())->evaluate('getNameArray()', 'map'); //cast('string')->evaluate('item ~ "[]"','map');
 
@@ -72,29 +72,26 @@ class EntryDomainsCompletion implements CompletionInterface
         $c[ 'repositoryInterface' ]->ensureTag('mixin', $c[ 'repository' ]);
         $c[ 'criteria' ]->ensureTag('mixin', $c[ 'queryBuilder' ]);
 
-        $c[ 'repository' ]->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
-        $c[ 'repository' ]->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
-        $c[ 'repository' ]->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
-        $c[ 'repository' ]->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"');
-        $c[ 'repository' ]->ensureMethod('find', $c[ 'interface' ], '$id');
-        $c[ 'repository' ]->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id');
-        $c[ 'repository' ]->ensureMethod('findBy', $c[ 'interface' ], '$key, $value');
-        $c[ 'repository' ]->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids');
-        $c[ 'repository' ]->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value');
-        $c[ 'repository' ]->ensureMethod('findTrashed', $c[ 'interface' ], '$id');
-        $c[ 'repository' ]->ensureMethod('newQuery', $c[ 'queryBuilder' ]);
-        $c[ 'repository' ]->ensureMethod('create', $c[ 'interface' ], 'array $attributes = []');
-        $c[ 'repository' ]->ensureMethod('getModel', $c[ 'model' ]);
-        $c[ 'repository' ]->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []');
-        $c[ 'repository' ]->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"');
-        $c[ 'repository' ]->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"');
-        $c[ 'repository' ]->ensureMethod('lastModified', $c[ 'interface' ]);
+        $c[ 'repository' ]->cleanTag('method')
+            ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
+            ->ensureMethod('find', $c[ 'interface' ], '$id')
+            ->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id')
+            ->ensureMethod('findBy', $c[ 'interface' ], '$key, $value')
+            ->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids')
+            ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
+            ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
+            ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = []')
+            ->ensureMethod('getModel', $c[ 'model' ])
+            ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
+            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
+            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
+            ->ensureMethod('lastModified', $c[ 'interface' ]);
 
-//        $c[ 'collection' ]->ensureMethod('all', $cs[ 'interface' ]);
-//        $c[ 'collection' ]->ensureMethod('first', $c[ 'interface' ]);
-//        $c[ 'collection' ]->ensureMethod('get', $cs[ 'interface' ], '$key, $default=null');
-//        $c[ 'collection' ]->ensureMethod('find', $c[ 'interface' ], '$key, $default=null');
-//        $c[ 'collection' ]->ensureMethod('findBy', $c[ 'interface' ], '$key, $value');
+        $c[ 'queryBuilder' ]->ensureTag('property', $c['model'] . ' $model');
 
         /** @var \Illuminate\Support\Collection|ClassDoc[] $process */
         $process = $c->values()->filter(function (ClassDefinition $classDoc) {

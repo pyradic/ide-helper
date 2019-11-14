@@ -1,24 +1,65 @@
 # Ide Helper for PyroCMS / Streams Platform
 
-The purpose of this package is to provide improved code-completion for PyroCMS based applications and to reduce time spend reading the documentation/other code.
+The purpose of this package is to provide improved code-completion for PyroCMS/Streams Platform applications and to reduce time spend
+reading the documentation/other code.
 
-It features:
-- [Code completion / resolving methods and properties in stream based related classes.](#stream-related-code-completion)
-- [Improved code completion for models compared to `laravel-ide-helper` by taking translation into account](#model-completion)
-- `PHPStorm/IDEA` [Code completion for class properties (like FormBuilder sections, buttons, etc)](#class-properties)
-- `PHPStorm/IDEA` [Twig completion tips](#twig-completion-tips)
+Although this package has various PHPStorm specific features, it\'s still able to provide quite a few extras for other ide\'s/editors.
 
-### Stream related code completion
+**This package is very much a WIP** but can already be used if wanted.
 
-#### PHPToolbox based
-For AddonCollection, ModuleCollection, ThemeCollection etc. **`CTRL+click`** / `CTRL+b` opens the addon class file.
+### ToC
+- Installation
+- Streams Platform & Addon related resolving & code completion
+  - Addon collections
+  - Views
+- Docblock based
+- Model Completion
+- Class properties
+  - AddonServiceProvider
+  - Module
+  - FormBuilder
+  - TableBuilder
+- Twig Completion
+
+
+### Installation
+1. Install using composer
+    ```sh
+    composer require pyro/ide-helper --dev
+    ```
+
+2. Register service provider, preferably only when `APP_ENV=local`
+    ```php
+    \Pyro\IdeHelper\IdeHelperServiceProvider::class;
+    ```
+
+3. Run generation
+    ```sh
+    ide-helper:generate
+    ide-helper:meta 
+    ide-helper:models [--addon anomaly.module.pages]          
+    ide-helper:streams
+    idea:completion
+    idea:meta
+    ```
+
+### Streams Platform & Addon related resolving & code completion
+
+> This feature requires PHPStorm/IntelliJ IDEA with the `deep-assoc-completion` plugin installed
+
+##### Addon collections
+For AddonCollection, ModuleCollection, ThemeCollection etc.  
+`CTRL+click` / `CTRL+b` opens the addon class file.
+
 ![](screens/ide-helper-addon-collections.png)
 
-For all views. `CTRL+click` / `CTRL+b` opens the view file.
+##### Views
+`CTRL+click` / `CTRL+b` opens the view file.
+
 ![](screens/ide-helper-views.png)
 
 
-#### Docblock based
+### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.
 This is done using the same way as ide-helper:models
 by generating DocBlock tags in the source files or in a separate file
@@ -105,5 +146,5 @@ The screenshots should make it all clear.
 #### TableBuilder properties
 - Provides the same button completion as FormBuilder
 
-### Twig completion tips
+### Twig completion
 todo...
