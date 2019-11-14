@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Arr;
 use Laradic\Generators\Completion\CompletionGenerator;
-use Laradic\Generators\DocBlock\ProcessedClassDoc;
+use Laradic\Generators\DocBlock\Definition\ClassDefinition;
+use Laradic\Generators\DocBlock\ProcessedClassDefinition;
 use Laradic\Idea\PhpToolbox\GenerateViewsMetadata;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
 use Pyro\IdeHelper\Completion\AuthCompletion;
@@ -16,6 +17,7 @@ use Pyro\IdeHelper\Completion\FormBuilderCompletion;
 use Pyro\IdeHelper\Completion\ModuleCompletion;
 use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
+use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionToolboxMetadata;
 
@@ -47,8 +49,9 @@ class IdeHelperStreamsCommand extends Command
     public function handle(CompletionGenerator $generator)
     {
         $this->line('Compiling streams...');
-        $this->call('streams:compile', ['--quiet' => true]);
+//        $this->call('streams:compile', ['--quiet' => true]);
         $this->line('Generating completions...');
+        $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
 
         $generated         = $generator
             ->append($this->completions)
@@ -61,11 +64,9 @@ class IdeHelperStreamsCommand extends Command
         } else {
             $generated->writeToSourceFiles();
             $modelDocGenerator->setWrite(true);
-            $generated->getResults()->filter(function (ProcessedClassDoc $doc) use ($modelDocGenerator) {
-                if ($doc->getClass()->isSubclassOf(Model::class)) {
-                    $modelDocGenerator->generateForModel($doc->getClass());
-                    //$doc->setDoc($newDoc);
-//                $this->line('generated for model '.$doc->getClass()->getName());
+            $generated->getResults()->filter(function (ClassDefinition $doc) use ($modelDocGenerator) {
+                if ($doc->getReflection()->isSubclassOf(Model::class)) {
+                    $modelDocGenerator->generateForModel($doc->getReflectionName());
                 }
             });
         }

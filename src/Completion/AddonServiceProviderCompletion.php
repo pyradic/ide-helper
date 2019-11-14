@@ -11,7 +11,7 @@ class AddonServiceProviderCompletion implements CompletionInterface
     public function generate(DocBlockGenerator $generator)
     {
         $class = $generator->class(AddonServiceProvider::class);
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$routes  = [
     \$i => [
          'as' => '',
@@ -39,7 +39,7 @@ array \$routes  = [
 DOC
         );
 
-        $class->clearTagsByName('property');
+        $class->cleanTag('property');
 
     }
 }

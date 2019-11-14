@@ -14,8 +14,8 @@ class AuthCompletion implements CompletionInterface
     {
         $class = $generator->class(Authenticatable::class);
         $model = Str::ensureLeft(config('auth.providers.users.model'), '\\');
-        $class->ensure('mixin', $model);
-        $class->clearTagsByName('mixin');
+        $class->ensureTag('mixin', $model);
+        $class->cleanTag('mixin');
     }
 
 }

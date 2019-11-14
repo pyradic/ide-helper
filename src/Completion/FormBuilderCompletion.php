@@ -5,6 +5,7 @@ namespace Pyro\IdeHelper\Completion;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\ClassDoc;
+use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
 
 class FormBuilderCompletion implements CompletionInterface
@@ -18,14 +19,14 @@ class FormBuilderCompletion implements CompletionInterface
         $this->options($class);
         //fields
         //rules
-        $class->clearTagsByName('property');
+        $class->cleanTag('property');
 
     }
 
-    protected function sections(ClassDoc $class)
+    protected function sections(ClassDefinition $class)
     {
         $section=Common::formSection();
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$sections  = [
     \$i => {$section}
 ]
@@ -34,9 +35,9 @@ DOC
 
     }
 
-    protected function actions(ClassDoc $class)
+    protected function actions(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$actions  = [
     \$i => []
 ]
@@ -44,10 +45,10 @@ DOC
         );
     }
 
-    protected function buttons(ClassDoc $class)
+    protected function buttons(ClassDefinition $class)
     {
         $button = Common::$button;
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$buttons  = [
     \$button => {$button}
 ]
@@ -55,9 +56,9 @@ DOC
         );
     }
 
-    protected function options(ClassDoc $class)
+    protected function options(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$options  = [
     \$i => []
 ]

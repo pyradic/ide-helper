@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CollectionCompletion;
 use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\ClassDoc;
+use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
 use Pyro\IdeHelper\Command\FindAllEntryDomains;
 
@@ -39,7 +40,7 @@ class EntryDomainsCompletion implements CompletionInterface
     public function getClasses($path, $namespace)
     {
         $name = pathinfo($path, PATHINFO_BASENAME);
-        /** @var \Laradic\Generators\DocBlock\ClassDoc[]|\Illuminate\Support\Collection $c */
+        /** @var \Laradic\Generators\DocBlock\Definition\ClassDefinition[]|\Illuminate\Support\Collection $c */
         /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc}  $c         */
         $c = collect([
             'model'               => "\\{$namespace}\\{$name}\\{$name}Model",
@@ -61,15 +62,15 @@ class EntryDomainsCompletion implements CompletionInterface
             return $this->generator->class($className);
         });
 
-        $cs = $c->map(function (ClassDoc $class) {
-            return $class->getName() . '[]';
+        $cs = $c->map(function (ClassDefinition $class) {
+            return $class->getReflectionName() . '[]';
         });
 //        $cs = collect($c->all())->evaluate('getNameArray()', 'map'); //cast('string')->evaluate('item ~ "[]"','map');
 
-        $c[ 'interface' ]->ensure('mixin', $c[ 'model' ]);
-        $c[ 'presenter' ]->ensure('mixin', $c[ 'model' ]);
-        $c[ 'repositoryInterface' ]->ensure('mixin', $c[ 'repository' ]);
-        $c[ 'criteria' ]->ensure('mixin', $c[ 'queryBuilder' ]);
+        $c[ 'interface' ]->ensureTag('mixin', $c[ 'model' ]);
+        $c[ 'presenter' ]->ensureTag('mixin', $c[ 'model' ]);
+        $c[ 'repositoryInterface' ]->ensureTag('mixin', $c[ 'repository' ]);
+        $c[ 'criteria' ]->ensureTag('mixin', $c[ 'queryBuilder' ]);
 
         $c[ 'repository' ]->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
         $c[ 'repository' ]->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ]);
@@ -96,10 +97,10 @@ class EntryDomainsCompletion implements CompletionInterface
 //        $c[ 'collection' ]->ensureMethod('findBy', $c[ 'interface' ], '$key, $value');
 
         /** @var \Illuminate\Support\Collection|ClassDoc[] $process */
-        $process = $c->values()->filter(function (ClassDoc $classDoc) {
-            return ! $this->isFallbackClass($classDoc->getName());
+        $process = $c->values()->filter(function (ClassDefinition $classDoc) {
+            return ! $this->isFallbackClass($classDoc->getReflectionName());
         });
-        with(new CollectionCompletion($c[ 'collection' ]->getName(), $c[ 'interface' ]->getName()))->generate($this->generator);
+        with(new CollectionCompletion($c[ 'collection' ]->getReflectionName(), $c[ 'interface' ]->getReflectionName()))->generate($this->generator);
         return $process;
     }
 

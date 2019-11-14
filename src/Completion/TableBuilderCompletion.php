@@ -4,7 +4,7 @@ namespace Pyro\IdeHelper\Completion;
 
 use Anomaly\Streams\Platform\Ui\Table\TableBuilder;
 use Laradic\Generators\Completion\CompletionInterface;
-use Laradic\Generators\DocBlock\ClassDoc;
+use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
 
 class TableBuilderCompletion implements CompletionInterface
@@ -17,13 +17,13 @@ class TableBuilderCompletion implements CompletionInterface
         $this->actions($class);
         $this->buttons($class);
         $this->filters($class);
-        $class->clearTagsByName('property');
+        $class->cleanTag('property');
 
     }
 
-    protected function sections(ClassDoc $class)
+    protected function sections(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$sections  = [
     \$i => []
 ]
@@ -31,9 +31,9 @@ DOC
         );
     }
 
-    protected function options(ClassDoc $class)
+    protected function options(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$options  = [
     \$i => []
 ]
@@ -41,9 +41,9 @@ DOC
         );
     }
 
-    protected function actions(ClassDoc $class)
+    protected function actions(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$actions  = [
     \$i => []
 ]
@@ -51,10 +51,10 @@ DOC
         );
     }
 
-    protected function buttons(ClassDoc $class)
+    protected function buttons(ClassDefinition $class)
     {
         $button = Common::$button;
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$buttons  = [
     \$i => {$button}
 ]
@@ -62,9 +62,9 @@ DOC
         );
     }
 
-    protected function filters(ClassDoc $class)
+    protected function filters(ClassDefinition $class)
     {
-        $class->ensure('property', <<<DOC
+        $class->ensureTag('property', <<<DOC
 array \$filters  = [
     \$i => []
 ]

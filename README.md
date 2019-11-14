@@ -11,10 +11,10 @@ It features:
 ### Stream related code completion
 
 #### PHPToolbox based
-For AddonCollection, ModuleCollection, ThemeCollection etc. `CTRL+click` / `CTRL+b` takes you to the specific addon class.
+For AddonCollection, ModuleCollection, ThemeCollection etc. **`CTRL+click`** / `CTRL+b` opens the addon class file.
 ![](screens/ide-helper-addon-collections.png)
 
-For all views. `CTRL+click` / `CTRL+b` takes you to the specific addon view file.
+For all views. `CTRL+click` / `CTRL+b` opens the view file.
 ![](screens/ide-helper-views.png)
 
 

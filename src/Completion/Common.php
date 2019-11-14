@@ -1,9 +1,29 @@
 <?php
 
 namespace Pyro\IdeHelper\Completion;
+use Illuminate\Support\Arr;
 
+/**
+ *
+ * @property string $asdf
+ */
 class Common
 {
+    public static function get($keys)
+    {
+        $keys = Arr::wrap($keys);
+        $result = [];
+        foreach($keys as $key){
+            if(method_exists(static::class,$key)){
+                $result[] = forward_static_call([static::class, $key]);
+            } elseif(property_exists(static::class, $key)){
+                $result[] = static::$$key;
+            }
+        }
+        return $result;
+    }
+
+
     public static $button = <<<DOC
 [
     'slug'        => 'blocks',
@@ -34,6 +54,50 @@ class Common
     'href'        => 'admin/blocks/areas/{request.route.parameters.area}/choose',
 ]
 DOC;
+
+    public static $moduleShortcut = <<<DOC
+[
+    'icon'  => 'fa fa-database',
+    'href'  => '',
+    'title' => '',
+    'label' => '',
+ ]
+DOC;
+
+    public static function moduleSection()
+    {
+        $button = static::$button;
+        return <<<DOC
+[
+    'slug'        => 'blocks',
+    'permalink'   => '',
+    'attributes'  => [],
+    'title'       => '',
+    'description' => '',
+    'data-toggle' => 'modal',
+    'data-target' => '#modal',
+    'data-href'   => 'admin/blocks/areas/{request.route.parameters.area}',
+    'href'        => 'admin/blocks/choose',
+    'buttons' => [
+        '',
+        \$button => {$button},
+    ],
+    
+    'sections' => [
+        \$section => [
+            'hidden'  => true,
+            'href'    => '',
+            'buttons' => [
+                '',
+                \$button => {$button},
+            ],
+        ],
+    ],
+],
+DOC;
+
+    }
+
 
     public static function formSection()
     {

@@ -14,7 +14,7 @@ class RequestCompletion implements CompletionInterface
         /** @var \Anomaly\UsersModule\User\UserModel $user */
         $class = $generator->class(Request::class);
         $model = Str::ensureLeft(config('auth.providers.users.model'), '\\');
-        $class->ensureMethod('user', $model);
+        $class->ensureMethodTag('user()')->setType($model);
 
     }
 }

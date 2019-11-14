@@ -51,7 +51,6 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
         $this->app->booted( function () {
             if (env('INSTALLED')) {
-                $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
             }
         });
     }
