@@ -18,10 +18,14 @@ class EntryDomainsCompletion implements CompletionInterface
     /** @var \Laradic\Generators\DocBlock\DocBlockGenerator */
     protected $generator;
 
+    protected $excludeNamespaces = ['Anomaly\CommentsModule','Anomaly\DocumentationModule'];
+
     public function generate(DocBlockGenerator $generator)
     {
         $this->generator = $generator;
-        $this->getDomains()->map(function ($namespace, $path) {
+        $this->getDomains()->filter(function($namespace){
+            return !in_array($namespace,$this->excludeNamespaces);
+        })->map(function ($namespace, $path) {
             return $this->getClasses($path, $namespace);
         });
     }

@@ -8,6 +8,9 @@ Although this package has various PHPStorm specific features, it\'s still able t
 **This package is very much a WIP** but can already be used if wanted.
 
 ### ToC
+- Todos
+  - Docblocks
+  - Others
 - Installation
 - Streams Platform & Addon related resolving & code completion
   - Addon collections
@@ -22,10 +25,66 @@ Although this package has various PHPStorm specific features, it\'s still able t
 - Twig Completion
 
 
+### Todos
+
+##### Docblocks
+
+- [ ] Streams Platform
+  - [ ] Addons
+    - [x] AddonCollection
+    - [x] ModuleCollection
+    - [x] ExtensionCollection
+    - [x] ThemeCollection
+    - [x] PluginCollection
+    - [x] FieldTypeCollection
+    - [ ] AddonServiceProvider
+      - [x] Routes
+  - [ ] UI
+    - [x] Button
+    - [ ] Form
+        - [ ] Action
+        - [x] Button
+        - [ ] Field
+        - [x] Section
+    - [ ] Table
+        - [ ] Action
+        - [x] Button
+        - [ ] Column
+        - [ ] Filter
+        - [ ] Header
+        - [ ] Row
+        - [ ] View
+    - [ ] Tree
+- [ ] Streams
+  - [x] Collections
+  - [ ] Criterias
+  - [ ] Factorys
+  - [ ] Models
+      - [ ] Translation fields
+      - [x] Fields, methods
+  - [ ] QueryBuilders
+  - [x] Repositories
+  - [ ] Router
+  - [x] Contract
+    - [x] Interface
+    - [x] RepositoryInterface
+
+
+##### Other
+- [ ] Twig
+- [x] Views
+- [x] Config
+- [ ] ...
+
+
+
 ### Installation
+> As this package is still in development, to install using the `~1.0` version constraint requires you
+> to set `"minimum-stability": "dev"` and `"prefer-stable": true` in your `composer.json`
+
 1. Install using composer
     ```sh
-    composer require pyro/ide-helper --dev
+    composer require pyro/ide-helper:~1.0 --dev
     ```
 
 2. Register service provider, preferably only when `APP_ENV=local`
@@ -48,16 +107,28 @@ Although this package has various PHPStorm specific features, it\'s still able t
 > This feature requires PHPStorm/IntelliJ IDEA with the `deep-assoc-completion` plugin installed
 
 ##### Addon collections
+
+> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
+
 For AddonCollection, ModuleCollection, ThemeCollection etc.  
 `CTRL+click` / `CTRL+b` opens the addon class file.
 
 ![](screens/ide-helper-addon-collections.png)
 
 ##### Views
+
+> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
+
 `CTRL+click` / `CTRL+b` opens the view file.
 
 ![](screens/ide-helper-views.png)
 
+
+##### Config
+
+> This feature requires PHPStorm/IntelliJ IDEA
+
+![](screens/ide-helper-config.png)
 
 ### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.

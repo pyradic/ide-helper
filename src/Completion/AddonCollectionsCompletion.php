@@ -39,7 +39,7 @@ class AddonCollectionsCompletion implements CompletionInterface
     public function generate(DocBlockGenerator $generator)
     {
         foreach (static::$items as $collection => $item) {
-            with(new CollectionCompletion($collection, $item))->generate($generator);
+            with(new CollectionCompletion($collection, $item, $this->exclude))->generate($generator);
         }
     }
 }
