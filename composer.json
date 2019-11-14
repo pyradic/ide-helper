@@ -1,5 +1,13 @@
 {
     "name": "pyro/ide-helper",
+    "description": "Various PyroCMS code completion improvements for ide's",
+    "keywords": ["laravel","pyrocms"],
+    "homepage": "https://github.com/pyradic/ide-helper",
+    "readme": "./README.md",
+    "authors": [
+        {"name": "Robin Radic","role": "Developer","email": "rradic@hotmail.com"}
+    ],
+    "license": "MIT",
     "require": {
         "laradic/support": "~2.1",
         "laradic/generators": "~2.1",
