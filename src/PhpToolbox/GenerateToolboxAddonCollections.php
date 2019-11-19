@@ -11,7 +11,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laradic\Idea\PhpToolbox\Metadata;
 
-class GenerateAddonCollectionToolboxMetadata
+class GenerateToolboxAddonCollections
 {
     protected $path;
 

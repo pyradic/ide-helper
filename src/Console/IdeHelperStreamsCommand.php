@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Generators\DocBlock\ProcessedClassDefinition;
-use Laradic\Idea\PhpToolbox\GenerateViewsMetadata;
+use Laradic\Idea\PhpToolbox\GenerateToolboxViews;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
 use Pyro\IdeHelper\Completion\AuthCompletion;
 use Pyro\IdeHelper\Completion\EntryDomainsCompletion;
@@ -19,7 +19,8 @@ use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
-use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionToolboxMetadata;
+use Pyro\IdeHelper\PhpToolbox\GenerateToolboxAddonCollections;
+use Pyro\IdeHelper\PhpToolbox\GenerateToolboxConfig;
 
 class IdeHelperStreamsCommand extends Command
 {
@@ -71,8 +72,9 @@ class IdeHelperStreamsCommand extends Command
             });
         }
 
-        $this->dispatchNow(new GenerateAddonCollectionToolboxMetadata());
-        $this->dispatchNow(new GenerateViewsMetadata());
+        $this->dispatchNow(new GenerateToolboxAddonCollections());
+        $this->dispatchNow(new GenerateToolboxConfig());
+        $this->dispatchNow(new GenerateToolboxViews());
 
         $this->info('Streams completion generated');
     }

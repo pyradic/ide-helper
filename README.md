@@ -104,7 +104,7 @@ Although this package has various PHPStorm specific features, it\'s still able t
 
 ### Streams Platform & Addon related resolving & code completion
 
-> This feature requires PHPStorm/IntelliJ IDEA with the `deep-assoc-completion` plugin installed
+> This feature requires PHPStorm/IntelliJ IDEA **^2019**. Ensure you have at least `2019.1.1`
 
 ##### Addon collections
 
@@ -126,7 +126,10 @@ For AddonCollection, ModuleCollection, ThemeCollection etc.
 
 ##### Config
 
-> This feature requires PHPStorm/IntelliJ IDEA
+> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
+
+`CTRL+click` / `CTRL+b` opens the config file.  
+PyroCMS addon config files can have up to 3 locations. Opening resolves to the correct file!
 
 ![](screens/ide-helper-config.png)
 

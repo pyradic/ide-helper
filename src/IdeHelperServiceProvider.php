@@ -46,6 +46,7 @@ class IdeHelperServiceProvider extends ServiceProvider
     {
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
+        unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);
         $config->set('laradic.idea.meta.metas', $metas);
 
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
