@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper\Completion;
 
+use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CollectionCompletion;
@@ -18,13 +19,18 @@ class EntryDomainsCompletion implements CompletionInterface
     /** @var \Laradic\Generators\DocBlock\DocBlockGenerator */
     protected $generator;
 
-    protected $excludeNamespaces = ['Anomaly\CommentsModule','Anomaly\DocumentationModule'];
+    protected $exclude = [ 'Anomaly\CommentsModule', 'Anomaly\DocumentationModule' ];
+
+    public function __construct($exclude = [])
+    {
+        $this->exclude = $exclude;
+    }
 
     public function generate(DocBlockGenerator $generator)
     {
         $this->generator = $generator;
-        $this->getDomains()->filter(function($namespace){
-            return !in_array($namespace,$this->excludeNamespaces);
+        $this->getDomains()->filter(function ($namespace) {
+            return ! in_array($namespace, $this->exclude);
         })->map(function ($namespace, $path) {
             return $this->getClasses($path, $namespace);
         });
@@ -88,14 +94,14 @@ class EntryDomainsCompletion implements CompletionInterface
             ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
             ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
             ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = []')
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c['model']))
             ->ensureMethod('getModel', $c[ 'model' ])
             ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
             ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
             ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
             ->ensureMethod('lastModified', $c[ 'interface' ]);
 
-        $c[ 'queryBuilder' ]->ensureTag('property', $c['model'] . ' $model');
+        $c[ 'queryBuilder' ]->ensureTag('property', $c[ 'model' ] . ' $model');
 
         /** @var \Illuminate\Support\Collection|ClassDoc[] $process */
         $process = $c->values()->filter(function (ClassDefinition $classDoc) {
@@ -128,5 +134,47 @@ class EntryDomainsCompletion implements CompletionInterface
     {
         $class = Str::removeLeft($class, '\\');
         return in_array($class, $this->fallbacks, true);
+    }
+
+    protected function getAttributesString($model){
+        $string = ['['];
+        foreach($this->getAttributes($model) as $attr){
+            $string[] = "'{$attr}' => '',";
+        }
+        $string[] = ']';
+        return implode('',$string);
+    }
+    protected function getAttributes($model)
+    {
+        if($model instanceof ClassDefinition){
+            $model = $model->getReflectionName();
+            $model = new $model;
+        }
+        try {
+            return array_unique(array_merge($model->getAssignments()->fieldSlugs(), $model->getRelationshipAssignments()->fieldSlugs()));
+        }catch (\Exception $e){
+            return [];
+        }
+        return array_combine($keys, array_map(function () {
+            return '';
+        }, $keys));
+    }
+
+    /**
+     * @var \Illuminate\Support\Collection|\Doctrine\DBAL\Schema\Column[]
+     */
+    static $tableColumns = [];
+
+    /**
+     * @param string $table
+     *
+     * @return \Illuminate\Support\Collection|\Doctrine\DBAL\Schema\Column[]
+     */
+    protected function getDatabaseTableColumns(string $table)
+    {
+        if ( ! array_key_exists($table, static::$tableColumns)) {
+            static::$tableColumns[ $table ] = collect(app()->db->getDoctrineSchemaManager()->listTableColumns($table));
+        }
+        return static::$tableColumns[ $table ];
     }
 }

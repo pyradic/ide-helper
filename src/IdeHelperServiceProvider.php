@@ -2,7 +2,6 @@
 
 namespace Pyro\IdeHelper;
 
-use Anomaly\Streams\Platform\Event\Ready;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
@@ -15,23 +14,24 @@ use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
-use Pyro\IdeHelper\Overrides\FieldTypeParser;
 
 class IdeHelperServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->mergeConfigFrom(dirname(__DIR__) . '/config/pyro.ide.php', 'pyro.ide');
+
         $this->app->register(\Laradic\Support\SupportServiceProvider::class);
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);
 
-        $this->app->singleton('command.ide.streams', function () {
+        $this->app->singleton('command.ide.streams', function ($app) {
             $command = new IdeHelperStreamsCommand();
             $command->addCompletions([
                 new AddonCollectionsCompletion([ 'get' ]),
                 AddonServiceProviderCompletion::class,
                 AuthCompletion::class,
-                EntryDomainsCompletion::class,
+                new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
                 FormBuilderCompletion::class,
                 ModuleCompletion::class,
                 RequestCompletion::class,
@@ -50,7 +50,7 @@ class IdeHelperServiceProvider extends ServiceProvider
         $config->set('laradic.idea.meta.metas', $metas);
 
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
-        $this->app->booted( function () {
+        $this->app->booted(function () {
             if (env('INSTALLED')) {
             }
         });

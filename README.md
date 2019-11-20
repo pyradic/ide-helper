@@ -104,11 +104,12 @@ Although this package has various PHPStorm specific features, it\'s still able t
 
 ### Streams Platform & Addon related resolving & code completion
 
-> This feature requires PHPStorm/IntelliJ IDEA **^2019**. Ensure you have at least `2019.1.1`
+> These feature requires:
+> - PHPStorm/IntelliJ IDEA **^2019**. Ensure you have at least `2019.1.1`
+> - PHPStorm/IntelliJ plugin **PHP Toolbox**
 
 ##### Addon collections
 
-> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
 
 For AddonCollection, ModuleCollection, ThemeCollection etc.  
 `CTRL+click` / `CTRL+b` opens the addon class file.
@@ -117,8 +118,6 @@ For AddonCollection, ModuleCollection, ThemeCollection etc.
 
 ##### Views
 
-> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
-
 `CTRL+click` / `CTRL+b` opens the view file.
 
 ![](screens/ide-helper-views.png)
@@ -126,12 +125,18 @@ For AddonCollection, ModuleCollection, ThemeCollection etc.
 
 ##### Config
 
-> This feature requires PHPStorm/IntelliJ IDEA with the `php-toolbox` plugin installed
-
 `CTRL+click` / `CTRL+b` opens the config file.  
 PyroCMS addon config files can have up to 3 locations. Opening resolves to the correct file!
 
 ![](screens/ide-helper-config.png)
+
+
+##### Streams Repositories
+
+For `Repository` classes in all Streams
+
+![](screens/ide-helper-repository-create.png)
+
 
 ### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.

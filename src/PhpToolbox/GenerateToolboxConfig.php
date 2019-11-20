@@ -177,7 +177,7 @@ class GenerateToolboxConfig
                     'target'        => 'file:///' . $reslativePath,
                 ];
                 if ($isFile) {
-                    $item[ 'icon' ]      .= 'FILE_ICON';
+                    $item[ 'icon' ]      .= 'PHP_FILE';
                     $item[ 'tail_text' ] = ' file';
                 } elseif ($resolved[ 'type' ] === 'array') {
                     $item[ 'icon' ] .= 'FUNCTION';
