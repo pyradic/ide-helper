@@ -33,7 +33,7 @@ use Laradic\Support\FS;
             "items":
  */
 
-class GenerateToolboxConfig
+class GenerateConfigMeta
 {
     use DispatchesJobs;
 
@@ -47,7 +47,8 @@ class GenerateToolboxConfig
     public function __construct($path = null, array $excludes = [])
     {
         if ($path === null) {
-            $path = base_path('php-toolbox/pyro-config/.ide-toolbox.metadata.json');
+
+            $path = path_join(config('laradic.idea.toolbox.path'), 'pyro/config/.ide-toolbox.metadata.json');
         }
         $this->path     = $path;
         $this->excludes = $excludes;

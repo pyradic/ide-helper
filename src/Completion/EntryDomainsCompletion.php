@@ -155,9 +155,6 @@ class EntryDomainsCompletion implements CompletionInterface
         }catch (\Exception $e){
             return [];
         }
-        return array_combine($keys, array_map(function () {
-            return '';
-        }, $keys));
     }
 
     /**

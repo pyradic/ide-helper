@@ -5,7 +5,6 @@ namespace Pyro\IdeHelper\PhpToolbox;
 use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Carbon\Carbon;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laradic\Idea\PhpToolbox\Metadata;
 
@@ -41,32 +40,33 @@ class GenerateStreamMeta
      * GenerateStreamMeta constructor.
      *
      * @param StreamInterface|string $namespace
-     * @param string|null $slug
+     * @param string|null            $slug
      */
     public function __construct($namespace, string $slug = null)
     {
-        if($namespace instanceof StreamInterface){
+        if ($namespace instanceof StreamInterface) {
             $this->stream = $namespace;
-            $slug = $namespace->slug;
-            $namespace = $namespace->namespace;
+            $slug         = $namespace->slug;
+            $namespace    = $namespace->namespace;
         }
         $this->streamNamespace = $namespace;
         $this->streamSlug      = $slug;
 
         $path       = path_join(
             config('pyro.ide.toolbox.path'),
-            $this->key = 'stream_' . $namespace . '_' . $slug,
+            'streams',
+            $this->key = $slug . '_' . $namespace . '_' . $slug . '_' . $namespace,
             '.ide-toolbox.metadata.json'
         );
         $this->meta = Metadata::create($path);
-config('pyro.ide');
+        config('pyro.ide');
     }
 
     public function handle(StreamRepositoryInterface $streamRepository)
     {
         $stream = $this->stream;
         $stream = $stream ?: $streamRepository->findBySlugAndNamespace($this->streamSlug, $this->streamNamespace);
-        if(!$stream){
+        if ( ! $stream) {
             return;
         }
 
@@ -77,60 +77,35 @@ config('pyro.ide');
         $this->namespace       = $this->modelReflection->getNamespaceName();
         $this->classPrefix     = Str::removeRight($this->modelReflection->getShortName(), 'Model');
 
-
-        $this->generateModel();
-        $this->generateRepository();
-
+        $this->generateFieldAttributeMethods();
         $this->generateFieldsProvider();
 
         $this->meta->save();
         return;
     }
 
-    protected function generateModel()
+    protected function generateFieldAttributeMethods()
     {
-        $class     = get_class($this->model);
-        $interface = "{$this->namespace}\\Contract\\{$this->classPrefix}Interface";
-        $this->meta->push('registrar', [
-            'provider'   => $this->key . '_fields',
-            'language'   => 'php',
-            'signatures' => [
-                [ 'class' => $class, 'method' => 'create', 'type' => 'array_key', ],
-                [ 'class' => $class, 'method' => 'update', 'type' => 'array_key', ],
-                [ 'class' => $interface, 'method' => 'create', 'type' => 'array_key', ],
-                [ 'class' => $interface, 'method' => 'update', 'type' => 'array_key', ],
-            ],
-            'signature'  => [
-                "{$class}::create",
-                "{$class}::update",
-                "{$interface}::create",
-                "{$interface}::update",
-            ],
-        ]);
-    }
-
-    protected function generateRepository()
-    {
-        $class = "{$this->namespace}\\{$this->classPrefix}Repository";
-        if ( ! class_exists($class)) {
+        $repository = "{$this->namespace}\\{$this->classPrefix}Repository";
+        $model     = get_class($this->model);
+        if ( ! class_exists($repository)) {
             return;
         }
-        $interface = "{$this->namespace}\\Contract\\{$this->classPrefix}RepositoryInterface";
 
         $this->meta->push('registrar', [
             'provider'   => $this->key . '_fields',
             'language'   => 'php',
             'signatures' => [
-                [ 'class' => $class, 'method' => 'create', 'type' => 'array_key', ],
-                [ 'class' => $class, 'method' => 'update', 'type' => 'array_key', ],
-                [ 'class' => $interface, 'method' => 'create', 'type' => 'array_key', ],
-                [ 'class' => $interface, 'method' => 'update', 'type' => 'array_key', ],
+                [ 'class' => $repository, 'method' => 'create', 'type' => 'array_key', ],
+                [ 'class' => $repository, 'method' => 'update', 'type' => 'array_key', ],
+//                [ 'class' => $interface, 'method' => 'create', 'type' => 'array_key', ],
+//                [ 'class' => $interface, 'method' => 'update', 'type' => 'array_key', ],
             ],
             'signature'  => [
-                $class . '::create',
-                $class . '::update',
-                "{$interface}::create",
-                "{$interface}::update",
+                "{$repository}:create",
+                "{$repository}:update",
+//                "{$interface}::create",
+//                "{$interface}::update",
             ],
         ]);
     }
