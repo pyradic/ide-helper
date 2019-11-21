@@ -1,16 +1,64 @@
 ## FormBuilder:
 
+- [Options](#options)
 - [Callbacks](#callbacks)
 - [Events](#events)
 - [Call Sequence](#call-sequence)
 - [Commands](#commands)
 - [Component Builders](#component-builders)
+- [Hints, Tips & tricks](#hints-tips--tricks)
+- [Examples](#examples)
 
 
 
-### Options
+## Options
 
-### Callbacks
+### Buttons
+pre-defined buttons can be found in the `ButtonRegistry` class.
+```php
+protected $buttons = [
+    'cancel',     // pre-defined button, check ButtonRegistry
+    'delete' => [ // you can override or append options for pre-defined buttons 
+        'icon' => 'file-o' 
+    ],
+    '<slug>' => [
+        'slug'        => 'blocks',
+        'data-toggle' => 'modal',
+        'data-toggle' => 'confirm',
+        'data-toggle' => 'process',
+
+        'data-icon' => 'info',
+        'data-icon' => 'warning',
+
+        'data-target' => '#modal',
+        'data-href'   => 'admin/blocks/areas/{request.route.parameters.area}',
+
+        'data-title'   => 'anomaly.module.addons::confirm.disable_title',
+        'data-message' => 'anomaly.module.addons::confirm.disable_message',
+        'data-message' => 'Updating Repositories',
+
+        'button' => 'Fully\\Qualified\\Namespace\\CustomButtonClass',
+
+        'type'       => 'warning',
+        'icon'       => 'fa fa-toggle-off',
+        'text'       => '',
+        'permission' => '',
+        'href'       => 'admin/addons/disable/{entry.namespace}',
+        'attributes' => [
+            'aria-foo' => 'something'
+        ],
+        
+        'enabled' => 'admin/dashboard/view/*',
+        'href'    => 'admin/blocks/areas/{request.route.parameters.area}/choose',       
+    ],
+];
+
+```
+
+
+
+
+## Callbacks
 | Name                    | Fires From                 | Fires On                            |
 |:--------------------------|:-----------------------------|:--------------------------------------|
 | validating              |                            |  FormValidator                      |
@@ -26,7 +74,7 @@
 | setting_entry           | SetFormEntry               |  FormBuilder                        |
 | entry_set               | SetFormEntry               | FormBuilder                         |
 
-### Events
+## Events
 | Name                | Location |
 |:----------------------|:-----------|
 | FormWasBuilt        |            |
@@ -36,7 +84,7 @@
 
 
 
-### Call sequence
+## Call sequence
 
 > Clicking the links scrolls to the documentation for it. Does not navigate you away from the page.
 
@@ -141,14 +189,6 @@
 - `FormBuilder::flash()`
 - `FormBuilder::render()`
 
-## MultipleFormBuilder:
-
-saving_{$slug}
-saved_{$slug}
-posting_forms
-posting_{$slug}
-versioning_forms
-versioning_{$slug}
 
 ## Commands
 ##### `SetFormModel`
@@ -229,7 +269,7 @@ Set...
 Set...
 
 
-**Interesting note:** The `FieldFactory` checks for the `field` option in a `fields` array item and if set, uses it as class.
+**Interesting note:** The `ButtonFactory` checks for the `button` option in a `buttons` array item array and if set, uses it as class.
 
 ## Component Builders
 
@@ -307,4 +347,11 @@ A `Populator` will do something..
 
 ### Dropdown
 A `Populator` will do something..
+
+
+## Hints, Tips & tricks
+todo..
+
+## Examples
+todo..
 
