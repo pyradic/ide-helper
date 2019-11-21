@@ -12,6 +12,14 @@
 
 
 ## Options
+### Fields
+todo...
+
+### Sections
+todo...
+
+### Actions
+todo...
 
 ### Buttons
 pre-defined buttons can be found in the `ButtonRegistry` class.
@@ -93,20 +101,20 @@ protected $buttons = [
   - **`CALLBACK`** `ready`
   - **`.COMMAND`** [`BuildForm`](#call-sequence) `..`
     - **`.COMMAND`** [`AddAssets`](#call-sequence) <small>`add assets to form`</small>
-    - **`.COMMAND`** [`SetFormModel`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetFormStream`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetRepository`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetFormEntry`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetFormModel`](#call-sequence) `Resolve & set form model on both Form and FormBuilder`
+    - **`.COMMAND`** [`SetFormStream`](#call-sequence) `Get stream from model and set it on Form `
+    - **`.COMMAND`** [`SetRepository`](#call-sequence) `If not set, attempts to set correct FormRepository`
+    - **`.COMMAND`** [`SetFormEntry`](#call-sequence) `Get entry on edit/create entry on create and set it on Form`
       - **`CALLBACK`** `setting_entry`
       - **`CALLBACK`** `entry_set`
     - **`.COMMAND`** [`SetFormVersion`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetDefaultParameters`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetFormOptions`](#call-sequence) `..`
-    - **`.COMMAND`** [`SetDefaultOptions`](#call-sequence) `..`
-    - **`.COMMAND`** [`LoadFormErrors`](#call-sequence) `..`
-    - **`.COMMAND`** [`AuthorizeForm`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetDefaultParameters`](#call-sequence) `Copies some properties from FormBuilder to Form`
+    - **`.COMMAND`** [`SetFormOptions`](#call-sequence) `Gets the FormBuilder options, transforms it and set in Form`
+    - **`.COMMAND`** [`SetDefaultOptions`](#call-sequence) `Set missing options using default values on Form`
+    - **`.COMMAND`** [`LoadFormErrors`](#call-sequence) `Load form errors from session and set on Form`
+    - **`.COMMAND`** [`AuthorizeForm`](#call-sequence) `Uses the permissions option to authorize`
     - **`.COMMAND`** [`LockFormModel`](#call-sequence) `..`
-    - **`.COMMAND`** [`BuildFields`](#call-sequence) `..`
+    - **`.COMMAND`** [`BuildFields`](#call-sequence) `Transforms the FormBuilder fields array items to Field instances and adds it to Form`
       - [`FieldBuilder::build()`](#buildfields) `..`
         - [`FieldInput::read()`](#buildfields) `..`
           - **`.COMMAND`** [`FieldResolver`](#resolver) `..`
@@ -133,7 +141,7 @@ protected $buttons = [
           - **`.COMMAND`** [`FieldPopulator`](#populator) `..`
         - [`FieldFactory::make()`](#buildfields) `..`
         - [`FormBuilder::addFormField()`](#buildfields) `..`
-    - **`.COMMAND`** [`BuildSections`](#call-sequence)
+    - **`.COMMAND`** [`BuildSections`](#call-sequence) `Transforms the FormBuilder sections array and adds it to Form`
       - [`SectionBuilder::build()`](#buildsections) `..`
         - **`.COMMAND`** [`SectionResolver`](#resolver) `..`
         - **`.COMMAND`** [`SectionNormalizer`](#normalizer) `..`
