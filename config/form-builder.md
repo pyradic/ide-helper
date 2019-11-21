@@ -43,22 +43,22 @@
 
 - `FormBuilder::build()`
   - **`CALLBACK`** `ready`
-  - **`.COMMAND`** [`BuildForm`](form-builder.md) `..`
-    - **`.COMMAND`** [`AddAssets`](form-builder.md) <small>`add assets to form`</small>
-    - **`.COMMAND`** [`SetFormModel`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetFormStream`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetRepository`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetFormEntry`](form-builder.md) `..`
+  - **`.COMMAND`** [`BuildForm`](#call-sequence) `..`
+    - **`.COMMAND`** [`AddAssets`](#call-sequence) <small>`add assets to form`</small>
+    - **`.COMMAND`** [`SetFormModel`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetFormStream`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetRepository`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetFormEntry`](#call-sequence) `..`
       - **`CALLBACK`** `setting_entry`
       - **`CALLBACK`** `entry_set`
-    - **`.COMMAND`** [`SetFormVersion`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetDefaultParameters`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetFormOptions`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetDefaultOptions`](form-builder.md) `..`
-    - **`.COMMAND`** [`LoadFormErrors`](form-builder.md) `..`
-    - **`.COMMAND`** [`AuthorizeForm`](form-builder.md) `..`
-    - **`.COMMAND`** [`LockFormModel`](form-builder.md) `..`
-    - **`.COMMAND`** [`BuildFields`](form-builder.md) `..`
+    - **`.COMMAND`** [`SetFormVersion`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetDefaultParameters`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetFormOptions`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetDefaultOptions`](#call-sequence) `..`
+    - **`.COMMAND`** [`LoadFormErrors`](#call-sequence) `..`
+    - **`.COMMAND`** [`AuthorizeForm`](#call-sequence) `..`
+    - **`.COMMAND`** [`LockFormModel`](#call-sequence) `..`
+    - **`.COMMAND`** [`BuildFields`](#call-sequence) `..`
       - [`FieldBuilder::build()`](#buildfields) `..`
         - [`FieldInput::read()`](#buildfields) `..`
           - **`.COMMAND`** [`FieldResolver`](#resolver) `..`
@@ -85,12 +85,12 @@
           - **`.COMMAND`** [`FieldPopulator`](#populator) `..`
         - [`FieldFactory::make()`](#buildfields) `..`
         - [`FormBuilder::addFormField()`](#buildfields) `..`
-    - **`.COMMAND`** [`BuildSections`](form-builder.md)
+    - **`.COMMAND`** [`BuildSections`](#call-sequence)
       - [`SectionBuilder::build()`](#buildsections) `..`
         - **`.COMMAND`** [`SectionResolver`](#resolver) `..`
         - **`.COMMAND`** [`SectionNormalizer`](#normalizer) `..`
         - **`.COMMAND`** [`SectionEvaluator`](#evaluator) `..`
-    - **`.COMMAND`** [`BuildActions`](form-builder.md)
+    - **`.COMMAND`** [`BuildActions`](#call-sequence)
       - [`ActionBuilder::build()`](#buildactions) `..`
         - **`.COMMAND`** [`ActionResolver`](#resolver) `..`
         - **`.COMMAND`** [`ActionDefaults`](#defaults) `..`
@@ -102,8 +102,8 @@
         - **`.COMMAND`** [`ActionParser`](#parser) `..`
         - **`.COMMAND`** [`ActionDropdown`](#dropdown) `..`
         - **`.COMMAND`** [`ActionTranslator`](#translator) `..`
-    - **`.COMMAND`** [`SetActiveAction`](form-builder.md)
-    - **`.COMMAND`** [`BuildButtons`](form-builder.md) `...`
+    - **`.COMMAND`** [`SetActiveAction`](#call-sequence)
+    - **`.COMMAND`** [`BuildButtons`](#call-sequence) `...`
       - [`ButtonBuilder::build()`](#buildbuttons) `..`
         - **`.COMMAND`** [`ButtonResolver`](#resolver) `..`
         - **`.COMMAND`** [`ButtonEvaluator`](#evaluator) `..`
@@ -114,28 +114,32 @@
         - **`.COMMAND`** [`ButtonGuesser`](#guesser) `..`
         - **`.COMMAND`** [`ButtonParser`](#parser) `..`
         - **`.COMMAND`** [`ButtonDropdown`](#dropdown) `..`
-    - **`...EVENT`** FormWasBuilt
+    - **`...EVENT`** **FormWasBuilt**
     - **`CALLBACK`** `BuildButtons`
-- FormBuilder::make()
+- `FormBuilder::make()`
   - **`CALLBACK`** make
-  - **`.COMMAND`** LoadForm
-  - **`.COMMAND`** MakeForm
-- FormBuilder::post()
+  - **`.COMMAND`** [`LoadForm`](#call-sequence) `..`
+  - **`.COMMAND`** [`MakeForm`](#call-sequence) `..`
+- `FormBuilder::post()`
   - **`CALLBACK`** post
-  - **`.COMMAND`** PostForm
+  - **`.COMMAND`** [`PostForm`](#call-sequence) `..`
     - **`CALLBACK`** posting
-    - **`.COMMAND`** [`LoadFormValues`](form-builder.md) `..`
-    - **`.COMMAND`** [`RemoveSkippedFields`](form-builder.md) `..`
-    - **`.COMMAND`** [`HandleForm`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetSuccessMessage`](form-builder.md) `..`
-    - **`.COMMAND`** [`HandleVersioning`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetActionResponse`](form-builder.md) `..`
-    - **`.COMMAND`** [`SetJsonResponse`](form-builder.md) `..`
+    - **`.COMMAND`** [`LoadFormValues`](#call-sequence) `..`
+    - **`.COMMAND`** [`RemoveSkippedFields`](#call-sequence) `..`
+    - **`.COMMAND`** [`HandleForm`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetSuccessMessage`](#call-sequence) `..`
+    - **`.COMMAND`** [`HandleVersioning`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetActionResponse`](#call-sequence) `..`
+    - **`.COMMAND`** [`SetJsonResponse`](#call-sequence) `..`
     - **`CALLBACK`** posted
-    - **`...EVENT`** FormWasPosted
-- FormBuilder::validate()
-- FormBuilder::flash()
-- FormBuilder::render()
+    - **`...EVENT`** **FormWasPosted**
+- `FormBuilder::validate()`
+  - **`CALLBACK`** validating
+  - **`.COMMAND`** [`ValidateForm`](#call-sequence) `..`
+  - **`CALLBACK`** validated
+  - **`...EVENT`** **FormWasValidated**
+- `FormBuilder::flash()`
+- `FormBuilder::render()`
 
 ## MultipleFormBuilder:
 
