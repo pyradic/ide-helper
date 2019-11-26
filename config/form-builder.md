@@ -282,16 +282,38 @@ Set...
 ## Component Builders
 
 ### Resolver
-Handler pattern that let's you defer the value or handling of something to a handler class.
-Handlers is a generic term for a class that handles the value for an attribute that has an setter or mutator method like setFoo.
+The Resolver allows you to use a handler pattern that let's you defer the value or handling of something to a handler class.
+
 ```php
-// Where a typical attribute in an array might look like:
-$array = [
-    'example' => 'Test',
+// Normally you define a button like:
+protected $buttons = [
+    'example' => [
+        'text' => 'Hello',
+        'href' => '/admin/to/controller'
+    ]   
 ];
-// A value handler for example might look like this:
+
+// But using the handler pattern:
+// You define a class like:
+class ExampleButtonHandler {
+    public function handle(FormBuilder $builder){
+        return [
+            'text' => 'Example Hello',
+            'href' => '/admin/to/builder'
+        ];
+    }
+}
+// Define the button like:
+protected $buttons = [
+    'example' => \Example\ExampleButtonHandler::class
+];
+
+// And when the Resolver is called, it will run the class and transform the array. Resulting in something like:  
 $array = [
-    'example' => \Example\TestHandler::class,
+    'example' => [
+        'text' => 'Example Hello',
+        'href' => '/admin/to/builder'
+    ]
 ];
 ```
 
@@ -328,7 +350,9 @@ A `Defaults` will do something..
 A `Filler` will do something..
 
 ### Guesser
-A `Guesser` will do something..
+The `<Component>Guesser` tries to resolve various settings and options that haven't been defined explicitly.  
+For example a `Table` `Button` has `permissions`, but often is not set. The `PermissionGuesser` will try and  
+determine what the `permissions` should be based on for example the table `permissions` or the current `module` permissions.
 
 ### Parser
 The Parser class is a simple service that parses data into a string. The parser leverages the (https://packagist.org/packages/nicmart/string-template) package.
@@ -339,7 +363,7 @@ The parse method recursively parses the target value with given data.
 
 
 ### Translator
-A `Translator` will do something..
+Translates a string or the values a deep assoc array. Is used to translate option arrays.
 
 ### Populator
 A `Populator` will do something..
