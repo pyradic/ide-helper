@@ -87,7 +87,7 @@ class GenerateStreamMeta
     protected function generateFieldAttributeMethods()
     {
         $repository = "{$this->namespace}\\{$this->classPrefix}Repository";
-        $model     = get_class($this->model);
+        $model      = get_class($this->model);
         if ( ! class_exists($repository)) {
             return;
         }
@@ -97,13 +97,13 @@ class GenerateStreamMeta
             'language'   => 'php',
             'signatures' => [
                 [ 'class' => $repository, 'method' => 'create', 'type' => 'array_key', ],
-                [ 'class' => $repository, 'method' => 'update', 'type' => 'array_key', ],
+//                [ 'class' => $repository, 'method' => 'update', 'type' => 'array_key', ],
 //                [ 'class' => $interface, 'method' => 'create', 'type' => 'array_key', ],
 //                [ 'class' => $interface, 'method' => 'update', 'type' => 'array_key', ],
             ],
             'signature'  => [
                 "{$repository}:create",
-                "{$repository}:update",
+//                "{$repository}:update",
 //                "{$interface}::create",
 //                "{$interface}::update",
             ],
@@ -112,15 +112,18 @@ class GenerateStreamMeta
 
     protected function generateFieldsProvider()
     {
-        $fields = $this->getFields();
-        $items  = [];
+        $repository = "{$this->namespace}\\{$this->classPrefix}Repository";
+        $fields     = $this->getFields();
+        $items      = [];
         foreach ($fields as $field) {
 
             $rules = implode('|', $field[ 'rules' ]);
             $item  = [
+                'type'          => $repository,
                 'lookup_string' => $field[ 'slug' ],
                 'type_text'     => $field[ 'php_type' ],
                 'tail_text'     => " ({$field['sql_type']}) {$rules}",
+                'icon'          => 'com.jetbrains.php.PhpIcons.FIELD',
             ];
 
             if ($field[ 'type' ] === null) {
@@ -135,12 +138,8 @@ class GenerateStreamMeta
             $items[] = $item;
         }
         $this->meta->push('providers', [
-            'name'     => $this->key . '_fields',
-            'defaults' => [
-                'icon'   => 'com.jetbrains.php.PhpIcons.FIELD',
-                'target' => get_class($this->model),
-            ],
-            'items'    => $items,
+            'name'  => $this->key . '_fields',
+            'items' => $items,
         ]);
     }
 

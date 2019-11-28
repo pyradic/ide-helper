@@ -65,7 +65,8 @@ class IdeHelperStreamsCommand extends Command
     public function handle(CompletionGenerator $generator, StreamRepositoryInterface $streams)
     {
         $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
-        $this->warn('Consider compiling streams before running this command');
+        $this->warn('- You might need to run this command twice (fixing this issue is on the todo list)');
+        $this->warn('- Consider compiling streams before running this command');
 
         $generator->before(function ($pipe) {
             $class = get_class($pipe);

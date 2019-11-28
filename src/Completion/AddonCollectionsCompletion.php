@@ -2,8 +2,8 @@
 
 namespace Pyro\IdeHelper\Completion;
 
-use Anomaly\AddonsModule\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\Addon;
+use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\Extension\Extension;
 use Anomaly\Streams\Platform\Addon\Extension\ExtensionCollection;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;

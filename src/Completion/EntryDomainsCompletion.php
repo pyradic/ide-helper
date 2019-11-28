@@ -2,12 +2,10 @@
 
 namespace Pyro\IdeHelper\Completion;
 
-use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CollectionCompletion;
 use Laradic\Generators\Completion\CompletionInterface;
-use Laradic\Generators\DocBlock\ClassDoc;
 use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
 use Pyro\IdeHelper\Command\FindAllEntryDomains;
@@ -51,7 +49,7 @@ class EntryDomainsCompletion implements CompletionInterface
     {
         $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Laradic\Generators\DocBlock\Definition\ClassDefinition[]|\Illuminate\Support\Collection $c */
-        /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc}  $c         */
+        /** @var array{model:ClassDefinition, collection:ClassDefinition, criteria:ClassDefinition, observer:ClassDefinition, presenter:ClassDefinition, repository:ClassDefinition, queryBuilder:ClassDefinition, router:ClassDefinition, seeder:ClassDefinition, interface:ClassDefinition, repositoryInterface:ClassDefinition}  $c         */
         $c = collect([
             'model'               => "\\{$namespace}\\{$name}\\{$name}Model",
             'collection'          => "\\{$namespace}\\{$name}\\{$name}Collection",
@@ -94,7 +92,7 @@ class EntryDomainsCompletion implements CompletionInterface
             ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
             ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
             ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c['model']))
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
             ->ensureMethod('getModel', $c[ 'model' ])
             ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
             ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
@@ -103,7 +101,7 @@ class EntryDomainsCompletion implements CompletionInterface
 
         $c[ 'queryBuilder' ]->ensureTag('property', $c[ 'model' ] . ' $model');
 
-        /** @var \Illuminate\Support\Collection|ClassDoc[] $process */
+        /** @var \Illuminate\Support\Collection|ClassDefinition[] $process */
         $process = $c->values()->filter(function (ClassDefinition $classDoc) {
             return ! $this->isFallbackClass($classDoc->getReflectionName());
         });
@@ -136,23 +134,26 @@ class EntryDomainsCompletion implements CompletionInterface
         return in_array($class, $this->fallbacks, true);
     }
 
-    protected function getAttributesString($model){
-        $string = ['['];
-        foreach($this->getAttributes($model) as $attr){
+    protected function getAttributesString($model)
+    {
+        $string = [ '[' ];
+        foreach ($this->getAttributes($model) as $attr) {
             $string[] = "'{$attr}' => '',";
         }
         $string[] = ']';
-        return implode('',$string);
+        return implode('', $string);
     }
+
     protected function getAttributes($model)
     {
-        if($model instanceof ClassDefinition){
+        if ($model instanceof ClassDefinition) {
             $model = $model->getReflectionName();
             $model = new $model;
         }
         try {
             return array_unique(array_merge($model->getAssignments()->fieldSlugs(), $model->getRelationshipAssignments()->fieldSlugs()));
-        }catch (\Exception $e){
+        }
+        catch (\Exception $e) {
             return [];
         }
     }

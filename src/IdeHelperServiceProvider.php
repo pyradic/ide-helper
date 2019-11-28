@@ -14,6 +14,7 @@ use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
+use Pyro\IdeHelper\Metas\AddonsMeta;
 
 class IdeHelperServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,7 @@ class IdeHelperServiceProvider extends ServiceProvider
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
         unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);
+        $metas[AddonsMeta::class] = [];
         $config->set('laradic.idea.meta.metas', $metas);
 
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
@@ -54,5 +56,10 @@ class IdeHelperServiceProvider extends ServiceProvider
             if (env('INSTALLED')) {
             }
         });
+    }
+
+    public function ser()
+    {
+
     }
 }

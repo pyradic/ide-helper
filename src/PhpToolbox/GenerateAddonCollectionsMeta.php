@@ -4,7 +4,10 @@ namespace Pyro\IdeHelper\PhpToolbox;
 
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\Extension\ExtensionCollection;
+use Anomaly\Streams\Platform\Addon\FieldType\FieldTypeCollection;
 use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
+use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
+use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laradic\Idea\PhpToolbox\Metadata;
@@ -25,7 +28,6 @@ class GenerateAddonCollectionsMeta
     public function handle(AddonCollection $addons, Filesystem $fs)
     {
         $fs->ensureDirectory(path_get_directory($this->path));
-
         $meta    = Metadata::create($this->path);
         $data    = [
             'modules'    => [],
@@ -35,20 +37,24 @@ class GenerateAddonCollectionsMeta
             'extensions' => [],
         ];
         $classes = [
-            'addons' => AddonCollection::class,
-            'modules'    => ModuleCollection::class,
-//            'themes'     => ThemeCollection::class,
-//            'plugins'    => PluginCollection::class,
-            'extensions' => ExtensionCollection::class,
+//            'addons' => AddonCollection::class,
+            'modules'     => ModuleCollection::class,
+            'themes'      => ThemeCollection::class,
+            'plugins'     => PluginCollection::class,
+            'field_types' => FieldTypeCollection::class,
+            'extensions'  => ExtensionCollection::class,
         ];
         /** @var AddonCollection|\Anomaly\Streams\Platform\Addon\Addon[] $addons */
         foreach ($addons as $addon) {
-            $type               = $addon->getType();
-            $typePlural         = Str::plural($type);
+            $type       = $addon->getType();
+            $typePlural = Str::plural($type);
+            if ( ! array_key_exists($typePlural, $classes)) {
+                continue;
+            }
             $class              = get_class($addon);
-            $data[ 'addons' ][] = $data[ $typePlural ][] = [
+            $data[ $typePlural ][] = [
                 'lookup_string' => $addon->getNamespace(),
-                'type'          => $class,
+                'type'          => $classes[ $typePlural ],
                 'target'        => $class,
                 'type_text'     => $class,
                 'icon'          => 'com.jetbrains.php.PhpIcons.CLASS',
