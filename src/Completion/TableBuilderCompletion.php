@@ -36,7 +36,15 @@ class TableBuilderCompletion implements CompletionInterface
             'views'   => [ 'var', 'array = \\' . static::class . '::views()' ],
             'columns' => [ 'var', 'array = \\' . static::class . '::columns()' ],
         ]);
-        $class->cleanTag('property');
+        $class->cleanTag('method');
+        $class->methods([
+            'setButtons'  => [ 'param', 'array $buttons = \\' . static::class . '::buttons()' ],
+            'getButtons'  => [ 'return', 'array = \\' . static::class . '::buttons()' ],
+            'setActions'  => [ 'param', 'array $actions = \\' . static::class . '::actions()' ],
+            'getActions'  => [ 'return', 'array = \\' . static::class . '::actions()' ],
+            'setOptions'  => [ 'param', 'array $options = \\' . static::class . '::options()' ],
+            'getOptions'  => [ 'return', 'array = \\' . static::class . '::options()' ],
+        ]);
     }
 
     public static function columns($i = null, $i2 = null)

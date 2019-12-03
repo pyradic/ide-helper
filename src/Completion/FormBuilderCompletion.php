@@ -19,6 +19,16 @@ class FormBuilderCompletion implements CompletionInterface
             'actions'  => [ 'var', 'array = \\' . static::class . '::actions()' ],
             'options'  => [ 'var', 'array = \\' . static::class . '::options()' ],
         ]);
+        $class->methods([
+            'setButtons'  => [ 'param', 'array $buttons = \\' . static::class . '::buttons()' ],
+            'getButtons'  => [ 'return', 'array = \\' . static::class . '::buttons()' ],
+            'setSections' => [ 'param', 'array $sections = \\' . static::class . '::sections()' ],
+            'getSections' => [ 'return', 'array = \\' . static::class . '::sections()' ],
+            'setActions'  => [ 'param', 'array $actions = \\' . static::class . '::actions()' ],
+            'getActions'  => [ 'return', 'array = \\' . static::class . '::actions()' ],
+            'setOptions'  => [ 'param', 'array $options = \\' . static::class . '::options()' ],
+            'getOptions'  => [ 'return', 'array = \\' . static::class . '::options()' ],
+        ]);
     }
 
     public static function sectionRow()
@@ -53,11 +63,24 @@ class FormBuilderCompletion implements CompletionInterface
     public static function sectionBase()
     {
         return [
-            'view'       => '',
-            'html'       => '',
-            'stacked'    => true,
-            'fields'     => [],
-            'attributes' => [],
+            'view'                 => '',
+            'html'                 => '',
+            'icon'                 => Examples::icon(),
+            'title'                => '',
+            'description'          => '',
+            'attributes'           => [],
+            'classes'              => [],
+            'container_classes'    => [],
+            'container_attributes' => [],
+            /**
+             * Only in groups. Defaults to 'deck'
+             * @see form/partials/groups.twig
+             * @example
+             * `class="card-{{ section.type ?: 'deck' }}"`
+             */
+            'type'                 => '',
+            'stacked'              => true,
+            'fields'               => [],
         ];
     }
 
@@ -78,15 +101,15 @@ class FormBuilderCompletion implements CompletionInterface
 
     public static function sections()
     {
-        return [ static::section() ];
+        return [ static::section(), null => static::section() ];
     }
 
     public static function sections2()
     {
         $rows             = <<<DOC
 [
-    [ 
-        'columns' =>[ 
+    [
+        'columns' =>[
              [
                 'classes' => '',
                 'size' => 24,
@@ -113,7 +136,7 @@ DOC;
         $formSectionStart = <<<DOC
         'view' => '',
         'html' => '',
-        'stacked' => true, 
+        'stacked' => true,
         'fields' => [],
         'attributes' => [],
         'rows' => {$rows},
@@ -125,12 +148,12 @@ DOC;
      [
         {$formSectionStart}
         'groups' => [],
-     ]  
+     ]
 ]
 DOC;
 
         $formSection = <<<DOC
-[     
+[
         {$formSectionStart}
         'groups' => {$groups},
 ]
