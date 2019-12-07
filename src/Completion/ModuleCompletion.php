@@ -5,6 +5,7 @@ namespace Pyro\IdeHelper\Completion;
 use Anomaly\Streams\Platform\Addon\Module\Module;
 use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
+use Pyro\IdeHelper\Examples\Examples;
 
 class ModuleCompletion implements CompletionInterface
 {

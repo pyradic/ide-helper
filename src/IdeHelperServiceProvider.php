@@ -3,7 +3,11 @@
 namespace Pyro\IdeHelper;
 
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
+use Laradic\Idea\Command\ResolveSourceFolders;
+use Laradic\Idea\Console\IdeaFoldersCommand;
+use Laradic\Support\FS;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
 use Pyro\IdeHelper\Completion\AuthCompletion;
@@ -41,10 +45,32 @@ class IdeHelperServiceProvider extends ServiceProvider
             return $command;
         });
         $this->commands('command.ide.streams');
+
+        ResolveSourceFolders::extend(function($match){
+            /** @var ResolveSourceFolders $this */
+            if ($match[ 'hasPackageJson' ]) {
+                $pkgName = str_replace('/', '\\', $match['pkg'][ 'name' ]);
+                if ($match['pkg']->has('pyro')) {
+                    $this->addFolder(path_join($match[ 'packagePath' ], $match['pkg'][ 'pyro.srcPath' ]), $pkgName, false, $match);
+                }
+            }
+
+            if (FS::isDirectory($match[ 'viewsPath' ])) {
+                if(isset($pkgName)) {
+                    $prefix = $pkgName . '.views';
+                } else {
+                    $prefix = $match[ 'composer' ]->collect('autoload.psr-4', [])->keys()->first() . 'views';
+                }
+                if(isset($prefix)) {
+                    $this->addFolder($match[ 'viewsPath' ], $prefix , false, $match);
+                }
+            }
+        });
     }
 
     public function boot(Repository $config)
     {
+        $this->publishes([dirname(__DIR__).'/resources/examples' =>resource_path('ide-helper')],['ide-helper']);
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
         unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);
