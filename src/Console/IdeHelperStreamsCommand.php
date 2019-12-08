@@ -14,6 +14,8 @@ use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Laradic\Support\Bench;
 use Laradic\Support\MultiBench;
+use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
+use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
@@ -78,6 +80,14 @@ class IdeHelperStreamsCommand extends Command
             $generator->append($this->completions)->generate()->cleanSourceFiles();
             return $this->info('Cleaned all files');
         }
+
+
+        $this->line('<options=bold>Generating examples...</>');
+        $namespace = 'Pyro\\IdeHelper\\Examples';
+        $this->line('  - GenerateAddonCollectionExamples',null,'v');
+        dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
+        $this->line('  - GenerateFieldTypeExamples',null,'v');
+        dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
 
 
         $this->line('<options=bold>Generating completions...</>');

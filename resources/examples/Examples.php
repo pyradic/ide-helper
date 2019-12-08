@@ -52,20 +52,24 @@ class Examples
         $boolean[ '<CARET>' ];
     }
 
-    public static function addonType()
+    public static function addonTypeFqns()
     {
         return [
-            /** tail_text:"field type", type:"Anomaly\\CheckboxFieldType\\CheckboxFieldType", type_text:"CheckboxFieldType", icon:"com.jetbrains.php.PhpIcons.CLASS" */
-            'anomaly.field_type.checkbox',
-            /** tail_text:"module", type:"Anomaly\\UsersModule\\UsersModule", type_text:"UsersModule", icon:"com.jetbrains.php.PhpIcons.CLASS" */
-            'anomaly.module.users',
+            /** ['tail_text' => "field type", 'type_text' => "CheckboxesFieldType", 'icon' => "com.jetbrains.php.PhpIcons.CLASS" */
+            'anomaly.field_type.checkbox' => \Anomaly\CheckboxesFieldType\CheckboxesFieldType::class,
+            'anomaly.module.users' => \Anomaly\UsersModule\UsersModule::class,
         ];
     }
 
+    public static function addonType()
+    {
+        return array_keys(self::addonTypeFqns());
+    }
+
     /**
-     * @param string $namespace = static::addonType()
+     * @param string $namespace = static::addonType()[$any]
      *
-     * @return mixed
+     * @return object = new (self::addonTypeFqns()[$namespace])
      */
     public function getAddon($namespace)
     {
@@ -74,8 +78,9 @@ class Examples
 
     public function handleAddon()
     {
-        $this->getAddon('<CARET>');
-        $module = $this->getAddon('anomaly.module.users'); // returns type Anomaly\UsersModule\UsersModule
+        $module = $this->getAddon('anomaly.module.users');
+        $module->onRegistered();
+        $fieldType = $this->getAddon('anomaly.field_type.checkbox');
         $module->foo(); // resolves properly to Anomaly\UsersModule\UsersModule->foo()
     }
 
