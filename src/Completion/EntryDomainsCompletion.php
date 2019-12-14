@@ -92,7 +92,10 @@ class EntryDomainsCompletion implements CompletionInterface
             ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
             ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
             ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            //->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            // 'create' will be provided by php toolbox
+            // 'update' cannot be provided by php toolbox. it messes things up. So it will be provided here, utilizing deep-assoc-completion
+            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
             ->ensureMethod('getModel', $c[ 'model' ])
             ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
             ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')

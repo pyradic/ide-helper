@@ -4,6 +4,7 @@ namespace Pyro\IdeHelper\PhpToolbox;
 
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Application\Application;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -88,21 +89,33 @@ class GenerateConfigMeta
             return true;
         });
 
-        $md = Metadata::create($this->path);
+        $signature = function ($method) {
+            return [
+                'class'  => Repository::class,
+                'method' => $method,
+                'type'   => 'type',
+            ];
+        };
+        $md        = Metadata::create($this->path);
         $md->merge([
             'registrar' => [
                 [
                     'provider'   => 'pyro_config',
                     'language'   => 'php',
                     'signatures' => [
-                        [
-                            'function' => 'config',
-                            'type'     => 'type',
-                        ],
+                        $signature('get'),
+                        $signature('has'),
+                        $signature('set'),
+                        $signature('forget'),
+                        ['function' => 'config', 'type' => 'type']
                     ],
                     'signature'  => [
+                        Repository::class . ':get',
+                        Repository::class . ':has',
+                        Repository::class . ':set',
+                        Repository::class . ':forget',
                         'config',
-                        'config:1',
+                        'config:1'
                     ],
                 ],
             ],
@@ -181,7 +194,7 @@ class GenerateConfigMeta
                     $item[ 'icon' ]      .= 'PHP_FILE';
                     $item[ 'tail_text' ] = ' file';
                 } elseif ($resolved[ 'type' ] === 'array') {
-                    $item[ 'icon' ] .= 'FUNCTION';
+                    $item[ 'icon' ]      .= 'FUNCTION';
                     $item[ 'tail_text' ] = ' => [...]';
                 } else {
                     $item[ 'icon' ] .= 'VARIABLE';
@@ -194,7 +207,7 @@ class GenerateConfigMeta
                     }
                 }
 
-                $items[$item['lookup_string']] = $item;
+                $items[ $item[ 'lookup_string' ] ] = $item;
             }
         }
 
