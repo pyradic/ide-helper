@@ -77,6 +77,7 @@ class EntryDomainsCompletion implements CompletionInterface
 
         $c[ 'interface' ]->ensureTag('mixin', $c[ 'model' ]);
         $c[ 'presenter' ]->ensureTag('mixin', $c[ 'model' ]);
+        $c[ 'presenter' ]->cleanTag('property')->ensureTag('property', $c[ 'model' ]. ' $object');
         $c[ 'repositoryInterface' ]->ensureTag('mixin', $c[ 'repository' ]);
         $c[ 'criteria' ]->ensureTag('mixin', $c[ 'queryBuilder' ]);
 

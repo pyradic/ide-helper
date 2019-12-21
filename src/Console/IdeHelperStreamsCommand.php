@@ -12,7 +12,6 @@ use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Completion\ProcessedCompletions;
 use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
-use Laradic\Support\Bench;
 use Laradic\Support\MultiBench;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
 use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
@@ -26,7 +25,10 @@ class IdeHelperStreamsCommand extends Command
 {
     use DispatchesJobs;
 
-    protected $signature = 'ide-helper:streams {--out= : output path} {--clean} {--pick}';
+    protected $signature = 'ide-helper:streams
+                                                {--out= : output path}
+                                                {--clean}
+                                                {--pick}';
 
     protected $description = '';
 
@@ -76,71 +78,88 @@ class IdeHelperStreamsCommand extends Command
         });
 
         if ($this->option('clean')) {
-            $this->line('<options=bold>Cleaning all files...</>');
-            $generator->append($this->completions)->generate()->cleanSourceFiles();
-            return $this->info('Cleaned all files');
+            return $this->warn('Not implemented');
+//            $this->line('<options=bold>Cleaning all files...</>');
+//            $generator->append($this->completions)->generate()->cleanSourceFiles();
+//            return $this->info('Cleaned all files');
         }
 
+        $generate = [
+            'completions' => true,
+            'models'      => true,
+            'toolbox'     => true,
+        ];
+
+        if ($this->option('pick')) {
+            $generators = $this->select('Pick generators', array_keys($generate), true);
+            foreach($generate as $key=>$value){
+                $generate[$key] = in_array($key, $generators);
+            }
+//            $this->completions = $this->select('Pick completions', array_map(function($item){ return is_object($item) ? get_},$this->completions), true);
+        }
 
         $this->line('<options=bold>Generating examples...</>');
         $namespace = 'Pyro\\IdeHelper\\Examples';
-        $this->line('  - GenerateAddonCollectionExamples',null,'v');
+        $this->line('  - GenerateAddonCollectionExamples', null, 'v');
         dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
-        $this->line('  - GenerateFieldTypeExamples',null,'v');
+        $this->line('  - GenerateFieldTypeExamples', null, 'v');
         dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
 
+        if($generate['completions']) {
+            $this->line('<options=bold>Generating completions...</>');
+            MultiBench::on('completions')->start(true);
+            $generated = $generator->append($this->completions)->generate();
+            MultiBench::on('completions')->stop(true)->dump();
 
-        $this->line('<options=bold>Generating completions...</>');
-        MultiBench::on('completions')->start(true);
-        $generated = $generator->append($this->completions)->generate();
-        MultiBench::on('completions')->stop(true)->dump();
-
-        $this->line('<options=bold>Writing completions to file(s)...</>');
-        if ($this->option('out')) {
-            $generated->writeToCompletionFile($this->option('out'));
-        } else {
-            $generated->writeToSourceFiles();
-        }
-
-        $this->line('<options=bold>Generating model completions...</>');
-        $modelDocGenerator = new ModelDocGenerator(app('files'));
-        $modelDocGenerator
-            ->setReset(true)
-            ->setKeepText(true)
-            ->setWriteModelMagicWhere(true)
-            ->setWrite(true);
-
-        $generated->getResults()->filter(function (ClassDefinition $doc) use ($modelDocGenerator) {
-            if ($doc->getReflection()->isSubclassOf(Model::class)) {
-                $this->line("  - Generating model '{$doc->getReflectionName()}' completions...'", null, 'v');
-                $modelDocGenerator->generateForModel($doc->getReflectionName());
+            $this->line('<options=bold>Writing completions to file(s)...</>');
+            if ($this->option('out')) {
+                $generated->writeToCompletionFile($this->option('out'));
+            } else {
+                $generated->writeToSourceFiles();
             }
-        });
 
-        $this->line('<options=bold>Generating toolbox completions...</>');
-        $this->line('  - Generating stream classes completions...', null, 'v');
-        $excludes = config('pyro.ide.toolbox.streams.exclude', []);
-        foreach ($streams->all() as $stream) {
-            $name = $stream->getNamespace() . '::' . $stream->getSlug();
-            if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {
-                $this->line("     <warning>></warning> Skipped stream '{$name}' completions...", null, 'vv');
-                continue;
-            }
-            try {
-                $this->dispatchNow(new GenerateStreamMeta($stream));
-                $this->line("     <info>></info> Generated stream '{$name}' completions", null, 'vv');
-            }
-            catch (\Exception $e) {
-                $this->line("<fg=red;options=bold>Error generating {$name}</> <fg=red>{$e->getMessage()}</>", null, 'vv');
+            if($generate['models']) {
+                $this->line('<options=bold>Generating model completions...</>');
+                $modelDocGenerator = new ModelDocGenerator(app('files'));
+                $modelDocGenerator
+                    ->setReset(true)
+                    ->setKeepText(true)
+                    ->setWriteModelMagicWhere(true)
+                    ->setWrite(true);
+
+                $generated->getResults()->filter(function (ClassDefinition $doc) use ($modelDocGenerator) {
+                    if ($doc->getReflection()->isSubclassOf(Model::class)) {
+                        $this->line("  - Generating model '{$doc->getReflectionName()}' completions...'", null, 'v');
+                        $modelDocGenerator->generateForModel($doc->getReflectionName());
+                    }
+                });
             }
         }
-        $this->line('  - Generating addon collections completions...', null, 'v');
-        $this->dispatchNow(new GenerateAddonCollectionsMeta());
-        $this->line('  - Generating config completions...', null, 'v');
-        $this->dispatchNow(new GenerateConfigMeta());
-        $this->line('  - Generating view completions...', null, 'v');
-        $this->dispatchNow(new GenerateViewsMeta());
-
+        if($generate['toolbox']) {
+            $this->line('<options=bold>Generating toolbox completions...</>');
+            $this->line('  - Generating stream classes completions...', null, 'v');
+            $excludes = config('pyro.ide.toolbox.streams.exclude', []);
+            foreach ($streams->all() as $stream) {
+                $name = $stream->getNamespace() . '::' . $stream->getSlug();
+                if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {
+                    $this->line("     <warning>></warning> Skipped stream '{$name}' completions...", null, 'vv');
+                    continue;
+                }
+                try {
+                    $this->dispatchNow(new GenerateStreamMeta($stream));
+                    $this->line("     <info>></info> Generated stream '{$name}' completions", null, 'vv');
+                }
+                catch (\Exception $e) {
+                    $this->line("<fg=red;options=bold>Error generating {$name}</> <fg=red>{$e->getMessage()}</>", null, 'vv');
+                }
+            }
+            $this->line('  - Generating addon collections completions...', null, 'v');
+            $this->dispatchNow(new GenerateAddonCollectionsMeta());
+            $this->line('  - Generating config completions...', null, 'v');
+            $this->dispatchNow(new GenerateConfigMeta());
+            $this->line('  - Generating view completions...', null, 'v');
+            $this->dispatchNow(new GenerateViewsMeta());
+        }
         $this->info('Streams completion generated');
     }
 
@@ -202,9 +221,9 @@ class IdeHelperStreamsCommand extends Command
             },
         ];
 
-        if($this->option('pick')){
+        if ($this->option('pick')) {
             $picked = $this->select('Select generators', array_keys($steps), true);
-            foreach($picked as $key){
+            foreach ($picked as $key) {
 //                $steps[$key]($generated);
             }
             $this->info('Streams completion generated');

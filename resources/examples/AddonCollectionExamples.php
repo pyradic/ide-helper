@@ -96,6 +96,7 @@ class AddonCollectionExamples
 'crvs.module.core' => \Crvs\CoreModule\CoreModule::class,
 'crvs.module.departments' => \Crvs\DepartmentsModule\DepartmentsModule::class,
 'crvs.module.faq' => \Crvs\FaqModule\FaqModule::class,
+'crvs.field_type.multiple' => \Crvs\MultipleFieldType\MultipleFieldType::class,
 'crvs.extension.todo_widget' => \Crvs\TodoWidgetExtension\TodoWidgetExtension::class,
 'crvs.module.todos' => \Crvs\TodosModule\TodosModule::class,
 'examples.module.ex1' => \Examples\Ex1Module\Ex1Module::class,
