@@ -155,7 +155,7 @@ class TableBuilderExamples
                  * @see \Anomaly\Streams\Platform\Ui\Table\Command\SetDefaultOptions
                  */
                 'table_view'         => '',
-                'wrapper_view'       => '',
+                'wrapper_view'       => 'streams::',
                 /** If provided, enables displaying the heading view with the given title */
                 'title'              => '', // sadfsdf
                 /** If provided, enables displaying the heading view with the given description */
