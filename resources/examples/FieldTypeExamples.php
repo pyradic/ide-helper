@@ -24,7 +24,6 @@ class FieldTypeExamples
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
 'anomaly.field_type.multiple',
-'crvs.field_type.multiple',
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
 'anomaly.field_type.repeater',
@@ -73,7 +72,6 @@ null => static::icon(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
-null => static::multiple(),
 null => static::multiple(),
 null => static::polymorphic(),
 null => static::relationship(),
@@ -300,18 +298,6 @@ public static function multiple_config(){
 }
 public static function multiple(){
     return ['type' => 'anomaly.field_type.multiple', 'config' => static::multiple_config() ];
-}
-public static function multiple_config(){
-    return array (
-  'related' => '',
-  'mode' => 'tags',
-  'title_name' => '',
-  'min' => '',
-  'max' => '',
-);
-}
-public static function multiple(){
-    return ['type' => 'crvs.field_type.multiple', 'config' => static::multiple_config() ];
 }
 public static function polymorphic_config(){
     return array (
