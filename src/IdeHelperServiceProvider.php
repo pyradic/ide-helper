@@ -33,14 +33,14 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->app->singleton('command.ide.streams', function ($app) {
             $command = new IdeHelperStreamsCommand();
             $command->addCompletions([
-//                new AddonCollectionsCompletion([ 'get' ]),
-//                AddonServiceProviderCompletion::class,
-//                AuthCompletion::class,
+                new AddonCollectionsCompletion([ 'get' ]),
+                AddonServiceProviderCompletion::class,
+                AuthCompletion::class,
                 new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
-//                FormBuilderCompletion::class,
-//                ModuleCompletion::class,
-//                RequestCompletion::class,
-//                TableBuilderCompletion::class,
+                FormBuilderCompletion::class,
+                ModuleCompletion::class,
+                RequestCompletion::class,
+                TableBuilderCompletion::class,
             ]);
             return $command;
         });

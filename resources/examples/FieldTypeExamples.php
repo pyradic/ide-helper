@@ -24,6 +24,7 @@ class FieldTypeExamples
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
 'anomaly.field_type.multiple',
+'crvs.field_type.multiple_departments',
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
 'anomaly.field_type.repeater',
@@ -73,6 +74,7 @@ null => static::integer(),
 null => static::language(),
 null => static::markdown(),
 null => static::multiple(),
+null => static::multiple_departments(),
 null => static::polymorphic(),
 null => static::relationship(),
 null => static::repeater(),
@@ -298,6 +300,18 @@ public static function multiple_config(){
 }
 public static function multiple(){
     return ['type' => 'anomaly.field_type.multiple', 'config' => static::multiple_config() ];
+}
+public static function multiple_departments_config(){
+    return array (
+  'related' => '',
+  'mode' => 'lookup',
+  'title_name' => '',
+  'min' => '',
+  'max' => '',
+);
+}
+public static function multiple_departments(){
+    return ['type' => 'crvs.field_type.multiple_departments', 'config' => static::multiple_departments_config() ];
 }
 public static function polymorphic_config(){
     return array (
