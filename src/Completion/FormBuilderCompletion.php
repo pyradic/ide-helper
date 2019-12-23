@@ -26,6 +26,9 @@ class FormBuilderCompletion implements CompletionInterface
             'getSections' => [ 'return', 'array = \\' . FormBuilderExamples::class . '::sections()' ],
             'setActions'  => [ 'param', 'array $actions = \\' . FormBuilderExamples::class . '::actions()' ],
             'getActions'  => [ 'return', 'array = \\' . FormBuilderExamples::class . '::actions()' ],
+            'setOption'   => [ 'param', 'string $key = \\' . FormBuilderExamples::class . '::option()[$any]' ],
+            'hasOption'   => [ 'param', 'string $key = \\' . FormBuilderExamples::class . '::option()[$any]' ],
+            'getOption'   => [ 'param', 'string $key = \\' . FormBuilderExamples::class . '::option()[$any]' ],
             'setOptions'  => [ 'param', 'array $options = \\' . FormBuilderExamples::class . '::options()' ],
             'getOptions'  => [ 'return', 'array = \\' . FormBuilderExamples::class . '::options()' ],
         ], true);

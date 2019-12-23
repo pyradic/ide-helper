@@ -181,6 +181,11 @@ class TableBuilderExamples
             ];
     }
 
+    public static function option()
+    {
+        return array_keys(static::options());
+    }
+
     public static function views($view = null)
     {
         /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry::$views */

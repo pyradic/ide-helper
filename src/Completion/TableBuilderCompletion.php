@@ -28,6 +28,9 @@ class TableBuilderCompletion implements CompletionInterface
             'getButtons' => [ 'return', 'array = \\' . TableBuilderExamples::class . '::buttons()' ],
             'setActions' => [ 'param', 'array $actions = \\' . TableBuilderExamples::class . '::actions()' ],
             'getActions' => [ 'return', 'array = \\' . TableBuilderExamples::class . '::actions()' ],
+            'setOption'  => [ 'param', 'string $key = \\' . TableBuilderExamples::class . '::option()[$any]' ],
+            'hasOption'  => [ 'param', 'string $key = \\' . TableBuilderExamples::class . '::option()[$any]' ],
+            'getOption'  => [ 'param', 'string $key = \\' . TableBuilderExamples::class . '::option()[$any]' ],
             'setOptions' => [ 'param', 'array $options = \\' . TableBuilderExamples::class . '::options()' ],
             'getOptions' => [ 'return', 'array = \\' . TableBuilderExamples::class . '::options()' ],
         ]);

@@ -224,4 +224,9 @@ DOC;
                 'success_message_type' => '',
             ];
     }
+
+    public static function option()
+    {
+        return array_keys(static::options());
+    }
 }

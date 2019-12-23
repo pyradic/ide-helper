@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper\Completion;
 
+use Anomaly\UsersModule\User\Contract\UserInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionInterface;
@@ -16,5 +17,8 @@ class RequestCompletion implements CompletionInterface
         $model = Str::ensureLeft(config('auth.providers.users.model'), '\\');
         $class->ensureMethodTag('user()')->setType($model);
 
+        $class->methods([
+            'user' => ['return', '\\'.UserInterface::class . '|' . $model]
+        ]);
     }
 }
