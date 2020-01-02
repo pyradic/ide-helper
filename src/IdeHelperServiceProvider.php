@@ -19,6 +19,7 @@ use Pyro\IdeHelper\Completion\TableBuilderCompletion;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
 use Pyro\IdeHelper\Metas\AddonsMeta;
+use Pyro\IdeHelper\Overrides\FieldTypeParser;
 
 class IdeHelperServiceProvider extends ServiceProvider
 {
@@ -80,6 +81,7 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
         $this->app->booted(function () {
             if (env('INSTALLED')) {
+                $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
             }
         });
     }

@@ -45,7 +45,7 @@ class FindAllEntryDomains
         foreach ($this->addons->all() as $addon) {
             /** @var \Anomaly\Streams\Platform\Addon\Addon $addon */
             $p               = $addon->getPath('src');
-            $models          = rglob($p . '/**/*Model.php');
+            $models          = array_merge(rglob($p . '/**/*Model.php'),rglob($p . '/**/*Pivot.php'));
             $addonClass      = get_class($addon);
             $addonReflection = new ReflectionClass($addonClass);
             $namespace       = $addonReflection->getNamespaceName();

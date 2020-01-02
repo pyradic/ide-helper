@@ -6,6 +6,7 @@ use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
 use Pyro\IdeHelper\Examples\Examples;
+use Pyro\IdeHelper\Examples\FieldTypeExamples;
 use Pyro\IdeHelper\Examples\FormBuilderExamples;
 
 class FormBuilderCompletion implements CompletionInterface
@@ -15,6 +16,7 @@ class FormBuilderCompletion implements CompletionInterface
         $class = $generator->class(FormBuilder::class);
         $class->properties([
             'buttons'  => [ 'var', 'array = \\' . Examples::class . '::buttons()' ],
+            'fields'  => [ 'var', 'array = \\' . FieldTypeExamples::class . '::values()' ],
             'sections' => [ 'var', 'array = \\' . FormBuilderExamples::class . '::sections()' ],
             'actions'  => [ 'var', 'array = \\' . FormBuilderExamples::class . '::actions()' ],
             'options'  => [ 'var', 'array = \\' . FormBuilderExamples::class . '::options()' ],

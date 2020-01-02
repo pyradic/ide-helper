@@ -41,8 +41,17 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
     protected function findAddonModelLocations(Addon $addon)
     {
         /** @var \Illuminate\Support\Collection $paths */
-        $paths = collect($addon->getPath('src/*/*Model.php'));
-        $paths = $paths->call('glob', [], false)->filter()->flatten();
+        $globs = [
+            'src/**/*Model.php',
+            'src/**/*Pivot.php',
+        ];
+        $paths = collect($globs)
+            ->map([$addon, 'getPath'])
+            ->call('rglob',[],false)
+            ->filter()
+            ->flatten();
+//        $paths = collect($addon->getPath('src/*/*Model.php'))->merge($addon->getPath('src/*/*Pivot.php'));
+//        $paths = $paths->call('glob', [], false)->filter()->flatten();
         return collect($paths->toArray())
             ->filter(function ($path) {
                 return ends_with($path, [ 'BlocksModel.php', 'StatusFilterQuery.php' ]) === false;
@@ -120,17 +129,19 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
         $assigns = $stream->getAssignments();
 //        $rassigns = $stream->getRelationshipAssignments();
         foreach ($assigns as $assign) {
-            $field     = $assign->getField();
-            $slug      = $field->getSlug();
-            $type      = $field->getType();
-            $namespace = $type->getNamespace();
+            $field              = $assign->getField();
+            $fieldSlug          = $field->getSlug();
+            $fieldType          = $field->getType();
+            $fieldTypeNamespace = $fieldType->getNamespace();
 //            $columnType = $type->getColumnType();
-            if ( ! array_key_exists($slug, $this->properties)
-                || in_array($namespace, $this->forceTypes, true)) {
-                $this->setProperty($slug, $this->streamsFieldToPhpType($field));
+            if (
+                ! array_key_exists($fieldSlug, $this->properties)
+                || in_array($fieldTypeNamespace, $this->forceTypes, true)
+            ) {
+                $this->setProperty($fieldSlug, $this->streamsFieldToPhpType($field));
                 if ($this->write_model_magic_where) {
                     $this->setMethod(
-                        Str::camel("where_" . $slug),
+                        Str::camel("where_" . $fieldSlug),
                         '\Illuminate\Database\Eloquent\Builder|\\' . get_class($model),
                         [ '$value' ]
                     );

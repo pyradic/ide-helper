@@ -41,6 +41,9 @@ class AddonCollectionExamples
 'anomaly.module.files' => \Anomaly\FilesModule\FilesModule::class,
 'anomaly.module.forms' => \Anomaly\FormsModule\FormsModule::class,
 'anomaly.module.forum' => \Anomaly\ForumModule\ForumModule::class,
+'anomaly.module.grids' => \Anomaly\GridsModule\GridsModule::class,
+'anomaly.module.grids' => \Anomaly\GridsModule\GridsModule::class,
+'anomaly.field_type.grid' => \Anomaly\GridFieldType\GridFieldType::class,
 'anomaly.plugin.helper' => \Anomaly\HelperPlugin\HelperPlugin::class,
 'anomaly.extension.html_block' => \Anomaly\HtmlBlockExtension\HtmlBlockExtension::class,
 'anomaly.extension.html_widget' => \Anomaly\HtmlWidgetExtension\HtmlWidgetExtension::class,
@@ -119,6 +122,7 @@ class AddonCollectionExamples
 'pyro.module.menus' => \Pyro\MenusModule\MenusModule::class,
 'pyro.module.news' => \Pyro\NewsModule\NewsModule::class,
 'pyro.module.permission_tree' => \Pyro\PermissionTreeModule\PermissionTreeModule::class,
+'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
 'anomaly.module.sites' => \Anomaly\SitesModule\SitesModule::class,
         ];

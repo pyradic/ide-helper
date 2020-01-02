@@ -75,10 +75,11 @@ class EntryDomainsCompletion implements CompletionInterface
         });
 //        $cs = collect($c->all())->evaluate('getNameArray()', 'map'); //cast('string')->evaluate('item ~ "[]"','map');
 
-        $c[ 'interface' ]->ensureTag('mixin', $c[ 'model' ]);
+        $c[ 'interface' ]->ensureMixinTag($c[ 'model' ]);
         $c[ 'presenter' ]->ensureTag('mixin', $c[ 'model' ]);
         $c[ 'presenter' ]->cleanTag('property')->ensureTag('property', $c[ 'model' ]. ' $object');
-        $c[ 'repositoryInterface' ]->ensureTag('mixin', $c[ 'repository' ]);
+        $c[ 'repositoryInterface' ]->cleanTag('mixin')
+            ->ensureMixinTag( $c[ 'repository' ]);
         $c[ 'criteria' ]->ensureTag('mixin', $c[ 'queryBuilder' ]);
 
         $c[ 'repository' ]->cleanTag('method')

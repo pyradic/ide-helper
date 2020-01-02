@@ -19,12 +19,14 @@ class FieldTypeExamples
 'anomaly.field_type.encrypted',
 'anomaly.field_type.file',
 'anomaly.field_type.files',
+'anomaly.field_type.grid',
 'anomaly.field_type.icon',
 'anomaly.field_type.integer',
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
 'anomaly.field_type.multiple',
 'crvs.field_type.multiple_departments',
+'pyro.field_type.pivot',
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
 'anomaly.field_type.repeater',
@@ -69,12 +71,14 @@ null => static::email(),
 null => static::encrypted(),
 null => static::file(),
 null => static::files(),
+null => static::grid(),
 null => static::icon(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
 null => static::multiple(),
 null => static::multiple_departments(),
+null => static::pivot(),
 null => static::polymorphic(),
 null => static::relationship(),
 null => static::repeater(),
@@ -246,6 +250,17 @@ public static function files_config(){
 public static function files(){
     return ['type' => 'anomaly.field_type.files', 'config' => static::files_config() ];
 }
+public static function grid_config(){
+    return array (
+  'related' => '',
+  'add_row' => '',
+  'min' => '',
+  'max' => '',
+);
+}
+public static function grid(){
+    return ['type' => 'anomaly.field_type.grid', 'config' => static::grid_config() ];
+}
 public static function icon_config(){
     return array (
   'mode' => 'search',
@@ -312,6 +327,28 @@ public static function multiple_departments_config(){
 }
 public static function multiple_departments(){
     return ['type' => 'crvs.field_type.multiple_departments', 'config' => static::multiple_departments_config() ];
+}
+public static function pivot_config(){
+    return array (
+  'related' => '',
+  'mode' => 'tags',
+  'title_name' => '',
+  'min' => '',
+  'max' => '',
+  'couple' => 
+  array (
+    'department' => 
+    array (
+      'name' => 'department',
+      'related' => 'FQ\\Class\\Name',
+      'unique' => false,
+      'required' => false,
+    ),
+  ),
+);
+}
+public static function pivot(){
+    return ['type' => 'pyro.field_type.pivot', 'config' => static::pivot_config() ];
 }
 public static function polymorphic_config(){
     return array (
