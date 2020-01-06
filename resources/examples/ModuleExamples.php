@@ -14,7 +14,7 @@ class ModuleExamples
 
     public static function section()
     {
-        return [
+        $section= [
             'slug'        => 'blocks',
             'permalink'   => '',
             'attributes'  => [],
@@ -23,7 +23,7 @@ class ModuleExamples
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-href'   => 'admin/blocks/areas/{request.route.parameters.area}',
-            'href'        => 'admin/blocks/choose',
+            'href'        => '',
             'buttons'     => Examples::buttons(),
             'sections'    => [
                 null => [
@@ -33,6 +33,11 @@ class ModuleExamples
                 ],
             ],
         ];
+        foreach(RoutesExamples::uris() as $uri){
+            $section['href'] = $uri;
+        }
+
+        return $section;
     }
 
     public static function shortcuts()
@@ -46,7 +51,7 @@ class ModuleExamples
     {
         return [
             'icon'  => 'fa fa-database',
-            'href'  => '',
+            'href'        => RoutesExamples::uris(),
             'title' => '',
             'label' => '',
         ];

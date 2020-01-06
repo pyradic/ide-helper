@@ -24,7 +24,7 @@ class FormBuilderExamples
 
     public static function sectionTab($row = null)
     {
-        return [
+        $tab = [
             'title'  => '',
             'fields' => [],
             'icon'   => '',
@@ -34,11 +34,16 @@ class FormBuilderExamples
                 $row => self::sectionRow(),
             ],
         ];
+
+        foreach (IconExamples::all() as $icon) {
+            $tab[ 'icon' ] = $icon;
+        }
+        return $tab;
     }
 
     public static function sectionBase()
     {
-        return [
+        return IconExamples::mergeWith([
             'view'                 => '',
             'html'                 => '',
             'icon'                 => Examples::icon(),
@@ -58,7 +63,7 @@ class FormBuilderExamples
             'type'                 => '',
             'stacked'              => true,
             'fields'               => [],
-        ];
+        ]);
     }
 
     public static function section($row = null, $tab = null, $group = null)
@@ -149,7 +154,8 @@ DOC;
             ],
             'save_exit'      => [
                 'button' => 'save',
-                'text'   => 'streams::button.save_exit',            ],
+                'text'   => 'streams::button.save_exit',
+            ],
             'save_edit'      => [
                 'button' => 'save',
                 'text'   => 'streams::button.save_edit',
@@ -166,24 +172,31 @@ DOC;
                 'button' => 'save',
                 'text'   => 'streams::button.save_edit_next',
             ],
-            $action          => [
-                'handler'    => ActionHandler::class,
-                'redirect'   => '',
-                'action'     => Action::class,
-                'slug'       => '',
-                'size'       => 'sm',
-                'class'      => '',
-                'type'       => '',
-                'icon'       => '',
-                'text'       => '',
-                'dropdown'   => '',
-                'enabled'    => '',
-                'disabled'   => '',
-                'attributes' => [],
-                'button'     => Examples::button(),
-                'button'     => Examples::buttons(),
-            ],
+            null => static::action()
         ];
+    }
+
+    public static function action()
+    {
+        $action = [
+            'handler'    => ActionHandler::class,
+            'redirect'   => '',
+            'action'     => Action::class,
+            'slug'       => '',
+            'size'       => 'sm',
+            'class'      => '',
+            'type'       => '',
+            'icon'       => '',
+            'text'       => '',
+            'dropdown'   => '',
+            'enabled'    => '',
+            'disabled'   => '',
+            'attributes' => [],
+            'button'     => Examples::button(),
+            'button'     => Examples::buttons(),
+        ];
+        $action=IconExamples::mergeWith($action);
+        return $action;
     }
 
     public static function options()

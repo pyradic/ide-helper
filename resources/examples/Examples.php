@@ -86,7 +86,7 @@ class Examples
 
     public static function button()
     {
-        return [
+        $button=[
             'slug'        => 'blocks',
             'data-toggle' => 'modal',
             'data-toggle'  => 'confirm',
@@ -114,6 +114,10 @@ class Examples
             'enabled'     => 'admin/dashboard/view/*',
             'href'        => 'admin/blocks/areas/{request.route.parameters.area}/choose',
         ];
+
+        $button=IconExamples::addTo($button);
+
+        return $button;
     }
 
     public static function buttons()
@@ -132,7 +136,7 @@ class Examples
 
 
     /**
-     * @param array $rr = static::buttons()
+     * @param array $rr = static::button()
      *
      * @return void
      */
@@ -140,7 +144,8 @@ class Examples
     {
         /** @noinspection InfinityLoopInspection */
         $this->sadf([
-            'success'=>['icon']
+            'success'=>['icon'],
+            'icon' => ''
         ]);
     }
 }

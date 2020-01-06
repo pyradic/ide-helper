@@ -15,11 +15,13 @@ use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Laradic\Support\MultiBench;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
 use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
+use Pyro\IdeHelper\Command\GenerateRoutesExamples;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
+use Pyro\Platform\Console\RouteListCommand;
 
 class IdeHelperStreamsCommand extends Command
 {
@@ -98,12 +100,16 @@ class IdeHelperStreamsCommand extends Command
 //            $this->completions = $this->select('Pick completions', array_map(function($item){ return is_object($item) ? get_},$this->completions), true);
         }
 
+
+
         $this->line('<options=bold>Generating examples...</>');
         $namespace = 'Pyro\\IdeHelper\\Examples';
         $this->line('  - GenerateAddonCollectionExamples', null, 'v');
         dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
         $this->line('  - GenerateFieldTypeExamples', null, 'v');
         dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
+        $this->line('  - GenerateRouteExamples', null, 'v');
+        dispatch_now(new GenerateRoutesExamples(__DIR__ . '/../../resources/examples/RoutesExamples.php', $namespace));
 
         if($generate['completions']) {
             $this->line('<options=bold>Generating completions...</>');

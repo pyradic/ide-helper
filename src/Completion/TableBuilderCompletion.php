@@ -33,7 +33,14 @@ class TableBuilderCompletion implements CompletionInterface
             'getOption'  => [ 'param', 'string $key = \\' . TableBuilderExamples::class . '::option()[$any]' ],
             'setOptions' => [ 'param', 'array $options = \\' . TableBuilderExamples::class . '::options()' ],
             'getOptions' => [ 'return', 'array = \\' . TableBuilderExamples::class . '::options()' ],
+
+            'setViews' => [ 'param', 'array $views = \\' . TableBuilderExamples::class . '::views()' ],
+            'getViews' => [ 'return', 'array = \\' . TableBuilderExamples::class . '::views()' ],
         ]);
+
+        //@todo removes other param, fix it
+        $class->method('addView')
+            ->ensureParamTag('array $view = \\' . TableBuilderExamples::class . '::view()')->setVariableName('$view');
     }
 
 }

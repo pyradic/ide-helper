@@ -16,7 +16,7 @@ class FormBuilderCompletion implements CompletionInterface
         $class = $generator->class(FormBuilder::class);
         $class->properties([
             'buttons'  => [ 'var', 'array = \\' . Examples::class . '::buttons()' ],
-            'fields'  => [ 'var', 'array = \\' . FieldTypeExamples::class . '::values()' ],
+            'fields'   => [ 'var', 'array = \\' . FieldTypeExamples::class . '::values()' ],
             'sections' => [ 'var', 'array = \\' . FormBuilderExamples::class . '::sections()' ],
             'actions'  => [ 'var', 'array = \\' . FormBuilderExamples::class . '::actions()' ],
             'options'  => [ 'var', 'array = \\' . FormBuilderExamples::class . '::options()' ],
@@ -34,6 +34,9 @@ class FormBuilderCompletion implements CompletionInterface
             'setOptions'  => [ 'param', 'array $options = \\' . FormBuilderExamples::class . '::options()' ],
             'getOptions'  => [ 'return', 'array = \\' . FormBuilderExamples::class . '::options()' ],
         ], true);
+
+        $addButton = $class->method('addButton');
+        $addButton->ensureParamTag('array $definition = \\' . Examples::class . '::button()')->setVariableName('$definition');
     }
 
 }

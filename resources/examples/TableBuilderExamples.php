@@ -28,9 +28,15 @@ class TableBuilderExamples
             $i  => [
                 'wrapper'     => '',
                 'entry'       => '',
+                /**
+                 * The table thead th title
+                 * @see \Anomaly\Streams\Platform\Ui\Table\Component\Header\Guesser\HeadingsGuesser
+                 */
                 'heading'     => '',
                 'value'       => '',
                 'field'       => '',
+                /** @see \Anomaly\Streams\Platform\Ui\Table\Component\Row\RowBuilder */
+                'row_class' => '',
                 'sort_column' => 'name',
             ],
             $i2 => [
@@ -74,6 +80,7 @@ class TableBuilderExamples
             ],
             $filter      => [
                 'slug'        => '',
+                'filter'      => '',
                 'field'       => '',
                 'stream'      => '',
                 'prefix'      => '',
@@ -84,6 +91,33 @@ class TableBuilderExamples
                 'query'       => '',
             ],
         ];
+    }
+
+    public static function action()
+    {
+        $action = [
+            'handler'    => ActionHandler::class,
+            'redirect'   => '',
+            'action'     => Action::class,
+            'slug'       => '',
+            'size'       => 'sm',
+            'class'      => '',
+            'type'       => '',
+            'icon'       => '',
+            'text'       => '',
+            'dropdown'   => '',
+            'enabled'    => '',
+            'disabled'   => '',
+            'permission' => '',
+            'attributes' => [],
+            'button'     => Examples::button(),
+            'button'     => Examples::buttons(),
+        ];
+
+        foreach (IconExamples::all() as $icon) {
+            $action[ 'icon' ] = $icon;
+        }
+        return $action;
     }
 
     public static function actions($action = null)
@@ -120,24 +154,7 @@ class TableBuilderExamples
                     'data-ignore',
                 ],
             ],
-            $action        => [
-                'handler'    => ActionHandler::class,
-                'redirect'   => '',
-                'action'     => Action::class,
-                'slug'       => '',
-                'size'       => 'sm',
-                'class'      => '',
-                'type'       => '',
-                'icon'       => Examples::icon(),
-                'text'       => '',
-                'dropdown'   => '',
-                'enabled'    => '',
-                'disabled'   => '',
-                'permission' => '',
-                'attributes' => [],
-                'button'     => Examples::button(),
-                'button'     => Examples::buttons(),
-            ],
+            null           => static::action(),
         ];
     }
 
@@ -169,6 +186,11 @@ class TableBuilderExamples
                 'heading'            => 'streams::table/partials/heading',
                 'class'              => '',
                 'container_class'    => '',
+                /**
+                 * Option to disable table views
+                 * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewBuilder
+                 */
+                'enable_views' => true,
                 'sortable'           => false,
                 'attributes'         => [],
                 'no_results_message' => 'streams::message.no_results',
@@ -186,42 +208,75 @@ class TableBuilderExamples
         return array_keys(static::options());
     }
 
-    public static function views($view = null)
+    public static function view()
+    {
+        $view = [
+            'slug'       => '',
+            'text'       => '',
+            'view'       => '',
+            'icon'       => IconExamples::all() ,
+            /**
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Contract\ViewQueryInterface The interface that a query needs to implement
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Query\RecentlyCreatedQuery An example query
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Guesser\QueryGuesser::guess() The query value is finalized here
+             */
+            'query'      => '',
+            /**
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Contract\ViewHandlerInterface The interface that a view needs to implement
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Type\RecentlyCreated An example view
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Guesser\HandlerGuesser::guess() The handler value is finalized here
+             */
+            'handler'    => '',
+
+            /**
+             * Appends a `tag` label to the item text, the `context` option can be used to provide the tag type
+             * @see vendor/anomaly/streams-platform/resources/views/table/partials/views.twig
+             */
+            'label' => '',
+            /** The value of `context` is used for the `label` element classname. like so: `class="tag tag-{{ context }}"`  */
+            'context' => '',
+
+            'class'      => '',
+            'attributes' => [],
+            'buttons'    => Examples::buttons(),
+            'actions'    => static::actions(),
+            'options'    => static::options(),
+        ];
+        foreach (IconExamples::all() as $icon) {
+            $view[ 'icon' ] = $icon;
+        }
+        return $view;
+    }
+
+    public static function views()
     {
         /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry::$views */
         return [
+            /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry */
             'all'               => [
                 'slug' => 'all',
                 'text' => 'streams::view.all',
                 'view' => All::class,
             ],
+            /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry */
             'trash'             => [
                 'slug' => 'trash',
                 'text' => 'streams::view.trash',
                 'view' => Trash::class,
             ],
+            /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry */
             'recently_created'  => [
                 'slug' => 'recently_created',
                 'text' => 'streams::view.recently_created',
                 'view' => RecentlyCreated::class,
             ],
+            /** @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewRegistry */
             'recently_modified' => [
                 'slug' => 'recently_modified',
                 'text' => 'streams::view.recently_modified',
                 'view' => RecentlyModified::class,
             ],
-            $view               => [
-                'slug'       => '',
-                'text'       => '',
-                'view'       => '',
-                'query'      => '',
-                'icon'       => Examples::icon(),
-                'class'      => '',
-                'attributes' => [],
-                'buttons'    => Examples::buttons(),
-                'actions'    => static::actions(),
-                'options'    => static::options(),
-            ],
+            null                => static::view(),
         ];
     }
 }
