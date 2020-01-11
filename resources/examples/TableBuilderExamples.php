@@ -191,6 +191,11 @@ class TableBuilderExamples
                  * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewBuilder
                  */
                 'enable_views' => true,
+                /**
+                 * Option to disable pagination
+                 * @see \Anomaly\Streams\Platform\Ui\Table\Command\LoadTablePagination
+                 */
+                'enable_pagination' => false,
                 'sortable'           => false,
                 'attributes'         => [],
                 'no_results_message' => 'streams::message.no_results',

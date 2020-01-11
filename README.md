@@ -7,60 +7,103 @@ Although this package has various PHPStorm specific features, it\'s still able t
 
 **This package is very much a WIP** but can already be used if wanted.
 
-### ToC
-- Todos
-  - Docblocks
-  - Others
-- Installation
-- Streams Platform & Addon related resolving & code completion
-  - Addon collections
-  - Views
-- Docblock based
-- Model Completion
-- Class properties
-  - AddonServiceProvider
-  - Module
-  - FormBuilder
-  - TableBuilder
-- Twig Completion
+### Progress
 
+- **`DONE`** Discover possibilities / limitations of various completion providers (IntelliJ plugins, docblocks, metafiles, php helper files)
+- **`ALMOST DONE`** Use the appropriate completion provider for each completion.
+- **`IN PROGRESS`** Revisit all code, improve/introduce logical structure to it, cleanup mess
+- **`IN PROGRESS`** Make it extendable and configurable
 
-### Todos
-
-##### Docblocks
+##### Completions
 
 - [ ] Streams Platform
-  - [ ] Addons
+  - [x] Addons
+    - [x] Module
+      - [x] Properties
+          - [x] Sections
+          - [x] Shortcuts
+      - [x] Methods
+          - [x] setSections
+          - [x] getSections
+          - [x] addSection
+          - [x] setShortcuts
+          - [x] getShortcuts
+          - [x] addShortcut
     - [x] AddonCollection
     - [x] ModuleCollection
     - [x] ExtensionCollection
     - [x] ThemeCollection
     - [x] PluginCollection
     - [x] FieldTypeCollection
-    - [ ] AddonServiceProvider
+    - [x] AddonServiceProvider
       - [x] Routes
   - [ ] UI
     - [x] Button
     - [ ] Form
-        - [ ] Action
-        - [x] Button
-        - [ ] Field
-        - [x] Section
+        - [x] Properties
+            - [x] Action
+            - [x] Button
+            - [x] Field
+            - [x] Section
+            - [x] Options
+        - [ ] Methods
+            - [x] setActions
+            - [x] getActions
+            - [ ] addAction
+            - [x] setButtons
+            - [x] getButtons
+            - [ ] addButton
+            - [x] setSections
+            - [x] getSections
+            - [ ] addSection
+            - [x] setOption
+            - [x] hasOption
+            - [x] getOption
+            - [x] setOptions
+            - [x] getOptions
     - [ ] Table
-        - [ ] Action
-        - [x] Button
-        - [ ] Column
-        - [ ] Filter
-        - [ ] Header
-        - [ ] Row
-        - [ ] View
+        - [x] Properties
+            - [x] Action
+            - [x] Button
+            - [x] Column
+            - [x] Filter
+            - [x] Header
+            - [x] Row
+            - [x] View
+        - [x] Methods
+            - [x] setActions
+            - [x] getActions
+            - [ ] addAction
+            - [x] setButtons
+            - [x] getButtons
+            - [ ] addButton
+            - [ ] setColumns
+            - [ ] getColumns
+            - [ ] addColumn
+            - [ ] setFilters
+            - [ ] getFilters
+            - [ ] addFilter
+            - [ ] setHeaders
+            - [ ] getHeaders
+            - [ ] addHeader
+            - [ ] setRows
+            - [ ] getRows
+            - [ ] addRow
+            - [ ] setViews
+            - [ ] getViews
+            - [ ] addView
+            - [x] setOption
+            - [x] hasOption
+            - [x] getOption
+            - [x] setOptions
+            - [x] getOptions
     - [ ] Tree
 - [ ] Streams
   - [x] Collections
   - [ ] Criterias
-  - [ ] Factorys
+  - [ ] Factories
   - [ ] Models
-      - [ ] Translation fields
+      - [x] Translation fields
       - [x] Fields, methods
   - [ ] QueryBuilders
   - [x] Repositories

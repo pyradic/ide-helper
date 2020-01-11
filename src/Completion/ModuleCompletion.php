@@ -21,7 +21,6 @@ class ModuleCompletion implements CompletionInterface
             'setSections'  => [ 'param', 'array $sections = \\' . ModuleExamples::class . '::sections()' ],
             'getSections'  => [ 'return', 'array = \\' . ModuleExamples::class . '::sections()' ],
             'addSection'  => [ 'param', 'array $section = \\' . ModuleExamples::class . '::section()' ],
-
             'setShortcuts' => [ 'param', 'array $shortcuts = \\' . ModuleExamples::class . '::shortcuts()' ],
             'getShortcuts' => [ 'return', 'array = \\' . ModuleExamples::class . '::shortcuts()' ],
             'addShortcut' => [ 'param', 'array $shortcut = \\' . ModuleExamples::class . '::shortcut()' ],

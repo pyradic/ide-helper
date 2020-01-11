@@ -26,7 +26,6 @@ class IdeHelperServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(dirname(__DIR__) . '/config/pyro.ide.php', 'pyro.ide');
-
         $this->app->register(\Laradic\Support\SupportServiceProvider::class);
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);

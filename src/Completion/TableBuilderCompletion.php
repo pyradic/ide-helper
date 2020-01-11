@@ -2,6 +2,12 @@
 
 namespace Pyro\IdeHelper\Completion;
 
+use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
+use Anomaly\Streams\Platform\Ui\Button\Button;
+use Anomaly\Streams\Platform\Ui\Button\ButtonCollection;
+use Anomaly\Streams\Platform\Ui\Table\Component\Column\Column;
+use Anomaly\Streams\Platform\Ui\Table\Component\Column\ColumnCollection;
+use Anomaly\Streams\Platform\Ui\Table\Component\Row\Row;
 use Anomaly\Streams\Platform\Ui\Table\TableBuilder;
 use Laradic\Generators\Completion\CompletionInterface;
 use Laradic\Generators\DocBlock\DocBlockGenerator;
@@ -15,12 +21,12 @@ class TableBuilderCompletion implements CompletionInterface
         $class = $generator->class(TableBuilder::class);
         $class->cleanTag('property');
         $class->properties([
-            'buttons' => [ 'var', 'array = \\' . Examples::class . '::buttons()' ],
             'actions' => [ 'var', 'array = \\' . TableBuilderExamples::class . '::actions()' ],
-            'options' => [ 'var', 'array = \\' . TableBuilderExamples::class . '::options()' ],
+            'buttons' => [ 'var', 'array = \\' . Examples::class . '::buttons()' ],
             'filters' => [ 'var', 'array = \\' . TableBuilderExamples::class . '::filters()' ],
             'views'   => [ 'var', 'array = \\' . TableBuilderExamples::class . '::views()' ],
             'columns' => [ 'var', 'array = \\' . TableBuilderExamples::class . '::columns()' ],
+            'options' => [ 'var', 'array = \\' . TableBuilderExamples::class . '::options()' ],
         ]);
         $class->cleanTag('method');
         $class->methods([
@@ -41,6 +47,16 @@ class TableBuilderCompletion implements CompletionInterface
         //@todo removes other param, fix it
         $class->method('addView')
             ->ensureParamTag('array $view = \\' . TableBuilderExamples::class . '::view()')->setVariableName('$view');
+
+        $generator->class(Row::class)
+            ->methods([
+                'getButtons' => [ 'return', '\\' . ButtonCollection::class . '|\\' . Button::class . '[]' ],
+                'getColumns' => [ 'return', '\\' . ColumnCollection::class . '|\\' . Column::class . '[]' ],
+            ]);
+        $generator->class(Column::class)
+            ->methods([
+                'getEntry' => [ 'return', '\\' . EntryInterface::class . '|mixed' ],
+            ]);
     }
 
 }
