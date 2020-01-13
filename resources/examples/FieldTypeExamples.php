@@ -7,6 +7,7 @@ class FieldTypeExamples
     public static function types()
     {
         return ['anomaly.field_type.addon',
+'pyro.field_type.availability',
 'anomaly.field_type.blocks',
 'anomaly.field_type.boolean',
 'anomaly.field_type.checkboxes',
@@ -59,6 +60,7 @@ class FieldTypeExamples
     public static function values(){
         return [
             null => static::addon(),
+null => static::availability(),
 null => static::blocks(),
 null => static::boolean(),
 null => static::checkboxes(),
@@ -106,6 +108,15 @@ null => static::wysiwyg(),
 }
 public static function addon(){
     return ['type' => 'anomaly.field_type.addon', 'config' => static::addon_config() ];
+}
+public static function availability_config(){
+    return array (
+  'type' => 'text',
+  'max' => 255,
+);
+}
+public static function availability(){
+    return ['type' => 'pyro.field_type.availability', 'config' => static::availability_config() ];
 }
 public static function blocks_config(){
     return array (
