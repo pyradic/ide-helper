@@ -49,7 +49,7 @@ class EntryDomainsCompletion implements CompletionInterface
     {
         $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Laradic\Generators\DocBlock\Definition\ClassDefinition[]|\Illuminate\Support\Collection $c */
-        /** @var array{model:ClassDefinition, collection:ClassDefinition, criteria:ClassDefinition, observer:ClassDefinition, presenter:ClassDefinition, repository:ClassDefinition, queryBuilder:ClassDefinition, router:ClassDefinition, seeder:ClassDefinition, interface:ClassDefinition, repositoryInterface:ClassDefinition}  $c         */
+        /** @var array{model:ClassDefinition, collection:ClassDefinition, criteria:ClassDefinition, observer:ClassDefinition, presenter:ClassDefinition, repository:ClassDefinition, queryBuilder:ClassDefinition, router:ClassDefinition, seeder:ClassDefinition, interface:ClassDefinition, repositoryInterface:ClassDefinition}  $c */
         $c = collect([
             'model'               => "\\{$namespace}\\{$name}\\{$name}Model",
             'collection'          => "\\{$namespace}\\{$name}\\{$name}Collection",
@@ -77,9 +77,8 @@ class EntryDomainsCompletion implements CompletionInterface
 
         $c[ 'interface' ]->ensureMixinTag($c[ 'model' ]);
         $c[ 'presenter' ]->ensureTag('mixin', $c[ 'model' ]);
-        $c[ 'presenter' ]->cleanTag('property')->ensureTag('property', $c[ 'model' ]. ' $object');
-        $c[ 'repositoryInterface' ]->cleanTag('mixin')
-            ->ensureMixinTag( $c[ 'repository' ]);
+        $c[ 'presenter' ]->cleanTag('property')->ensureTag('property', $c[ 'model' ] . ' $object');
+        $c[ 'repositoryInterface' ]->ensureMixinTag($c[ 'repository' ]);
         $c[ 'criteria' ]->ensureTag('mixin', $c[ 'queryBuilder' ]);
 
         $c[ 'repository' ]->cleanTag('method')

@@ -129,6 +129,7 @@ class AddonCollectionExamples
 'pyro.module.news' => \Pyro\NewsModule\NewsModule::class,
 'pyro.module.permission_tree' => \Pyro\PermissionTreeModule\PermissionTreeModule::class,
 'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
+'pyro.field_type.relationship_through' => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
 'anomaly.module.sites' => \Anomaly\SitesModule\SitesModule::class,
         ];

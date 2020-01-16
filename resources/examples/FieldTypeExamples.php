@@ -30,6 +30,7 @@ class FieldTypeExamples
 'pyro.field_type.pivot',
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
+'pyro.field_type.relationship_through',
 'anomaly.field_type.repeater',
 'anomaly.field_type.select',
 'anomaly.field_type.slider',
@@ -83,6 +84,7 @@ null => static::multiple_departments(),
 null => static::pivot(),
 null => static::polymorphic(),
 null => static::relationship(),
+null => static::relationship_through(),
 null => static::repeater(),
 null => static::select(),
 null => static::slider(),
@@ -354,8 +356,10 @@ public static function pivot_config(){
       'related' => 'FQ\\Class\\Name',
       'unique' => false,
       'required' => false,
+      'handler' => NULL,
     ),
   ),
+  'relation_handler' => NULL,
 );
 }
 public static function pivot(){
@@ -377,6 +381,18 @@ public static function relationship_config(){
 }
 public static function relationship(){
     return ['type' => 'anomaly.field_type.relationship', 'config' => static::relationship_config() ];
+}
+public static function relationship_through_config(){
+    return array (
+  'related' => '',
+  'mode' => 'dropdown',
+  'title_name' => '',
+  'through' => '',
+  'related_key' => '',
+);
+}
+public static function relationship_through(){
+    return ['type' => 'pyro.field_type.relationship_through', 'config' => static::relationship_through_config() ];
 }
 public static function repeater_config(){
     return array (
