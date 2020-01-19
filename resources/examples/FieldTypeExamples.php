@@ -113,8 +113,6 @@ public static function addon(){
 }
 public static function availability_config(){
     return array (
-  'type' => 'text',
-  'max' => 255,
 );
 }
 public static function availability(){
