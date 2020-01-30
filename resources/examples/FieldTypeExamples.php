@@ -19,7 +19,7 @@ class FieldTypeExamples
 'anomaly.field_type.email',
 'anomaly.field_type.encrypted',
 'anomaly.field_type.file',
-'anomaly.field_type.files',
+'crvs.field_type.files',
 'anomaly.field_type.grid',
 'anomaly.field_type.icon',
 'anomaly.field_type.integer',
@@ -259,7 +259,7 @@ public static function files_config(){
 );
 }
 public static function files(){
-    return ['type' => 'anomaly.field_type.files', 'config' => static::files_config() ];
+    return ['type' => 'crvs.field_type.files', 'config' => static::files_config() ];
 }
 public static function grid_config(){
     return array (

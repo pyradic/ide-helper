@@ -35,7 +35,7 @@ class AddonCollectionsCompletion implements CompletionInterface
         [ 'name' => 'module', 'collection' => ModuleCollection::class, 'item' => Module::class, ],
         [ 'name' => 'theme', 'collection' => ThemeCollection::class, 'item' => Theme::class, ],
         [ 'name' => 'extension', 'collection' => ExtensionCollection::class, 'item' => Extension::class, ],
-        [ 'name' => 'fieldType', 'collection' => FieldTypeCollection::class, 'item' => FieldType::class, ],
+        [ 'name' => 'field_type', 'collection' => FieldTypeCollection::class, 'item' => FieldType::class, ],
         [ 'name' => 'plugin', 'collection' => PluginCollection::class, 'item' => Plugin::class, ],
     ];
 

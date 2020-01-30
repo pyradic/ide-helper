@@ -3,16 +3,15 @@
 namespace Pyro\IdeHelper;
 
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Laradic\Idea\Command\ResolveSourceFolders;
-use Laradic\Idea\Console\IdeaFoldersCommand;
 use Laradic\Support\FS;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
 use Pyro\IdeHelper\Completion\AddonServiceProviderCompletion;
 use Pyro\IdeHelper\Completion\AuthCompletion;
 use Pyro\IdeHelper\Completion\EntryDomainsCompletion;
 use Pyro\IdeHelper\Completion\FormBuilderCompletion;
+use Pyro\IdeHelper\Completion\MigrationCompletion;
 use Pyro\IdeHelper\Completion\ModuleCompletion;
 use Pyro\IdeHelper\Completion\RequestCompletion;
 use Pyro\IdeHelper\Completion\TableBuilderCompletion;
@@ -38,6 +37,7 @@ class IdeHelperServiceProvider extends ServiceProvider
                 AuthCompletion::class,
                 new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
                 FormBuilderCompletion::class,
+                MigrationCompletion::class,
                 ModuleCompletion::class,
                 RequestCompletion::class,
                 TableBuilderCompletion::class,
