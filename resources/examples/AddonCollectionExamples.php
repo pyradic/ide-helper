@@ -104,6 +104,7 @@ class AddonCollectionExamples
 'crvs.field_type.files' => \Crvs\FilesFieldType\FilesFieldType::class,
 'crvs.module.files' => \Crvs\FilesModule\FilesModule::class,
 'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
+'crvs.field_type.image' => \Crvs\ImageFieldType\ImageFieldType::class,
 'crvs.field_type.multiple_departments' => \Crvs\MultipleDepartmentsFieldType\MultipleDepartmentsFieldType::class,
 'crvs.extension.private_storage_adapter' => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
 'crvs.module.registrations' => \Crvs\RegistrationsModule\RegistrationsModule::class,

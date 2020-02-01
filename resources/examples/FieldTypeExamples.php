@@ -22,6 +22,7 @@ class FieldTypeExamples
 'crvs.field_type.files',
 'anomaly.field_type.grid',
 'anomaly.field_type.icon',
+'crvs.field_type.image',
 'anomaly.field_type.integer',
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
@@ -76,6 +77,7 @@ null => static::file(),
 null => static::files(),
 null => static::grid(),
 null => static::icon(),
+null => static::image(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
@@ -284,6 +286,19 @@ public static function icon_config(){
 }
 public static function icon(){
     return ['type' => 'anomaly.field_type.icon', 'config' => static::icon_config() ];
+}
+public static function image_config(){
+    return array (
+  'folders' => 
+  array (
+  ),
+  'aspect_ratio' => NULL,
+  'mode' => 'default',
+  'max' => '2',
+);
+}
+public static function image(){
+    return ['type' => 'crvs.field_type.image', 'config' => static::image_config() ];
 }
 public static function integer_config(){
     return array (
