@@ -45,7 +45,6 @@ class AddonCollectionExamples
 'anomaly.field_type.grid' => \Anomaly\GridFieldType\GridFieldType::class,
 'anomaly.plugin.helper' => \Anomaly\HelperPlugin\HelperPlugin::class,
 'anomaly.extension.html_block' => \Anomaly\HtmlBlockExtension\HtmlBlockExtension::class,
-'anomaly.extension.html_widget' => \Anomaly\HtmlWidgetExtension\HtmlWidgetExtension::class,
 'anomaly.field_type.icon' => \Anomaly\IconFieldType\IconFieldType::class,
 'anomaly.module.installer' => \Anomaly\InstallerModule\InstallerModule::class,
 'anomaly.field_type.integer' => \Anomaly\IntegerFieldType\IntegerFieldType::class,
@@ -104,7 +103,6 @@ class AddonCollectionExamples
 'crvs.field_type.files' => \Crvs\FilesFieldType\FilesFieldType::class,
 'crvs.module.files' => \Crvs\FilesModule\FilesModule::class,
 'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
-'crvs.field_type.image' => \Crvs\ImageFieldType\ImageFieldType::class,
 'crvs.field_type.multiple_departments' => \Crvs\MultipleDepartmentsFieldType\MultipleDepartmentsFieldType::class,
 'crvs.extension.private_storage_adapter' => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
 'crvs.module.registrations' => \Crvs\RegistrationsModule\RegistrationsModule::class,
@@ -115,8 +113,11 @@ class AddonCollectionExamples
 'examples.module.ex3' => \Examples\Ex3Module\Ex3Module::class,
 'pyro.module.activity_log' => \Pyro\ActivityLogModule\ActivityLogModule::class,
 'pyro.theme.admin' => \Pyro\AdminTheme\AdminTheme::class,
+'pyro.module.api' => \Pyro\ApiModule\ApiModule::class,
 'pyro.field_type.availability' => \Pyro\AvailabilityFieldType\AvailabilityFieldType::class,
+'pyro.extension.confluence_widget' => \Pyro\ConfluenceWidgetExtension\ConfluenceWidgetExtension::class,
 'pyro.module.diagnose' => \Pyro\DiagnoseModule\DiagnoseModule::class,
+'pyro.extension.html_widget' => \Pyro\HtmlWidgetExtension\HtmlWidgetExtension::class,
 'pyro.extension.divider_link_type' => \Pyro\DividerLinkTypeExtension\DividerLinkTypeExtension::class,
 'pyro.extension.divider_link_type' => \Pyro\DividerLinkTypeExtension\DividerLinkTypeExtension::class,
 'pyro.extension.header_link_type' => \Pyro\HeaderLinkTypeExtension\HeaderLinkTypeExtension::class,
@@ -135,7 +136,6 @@ class AddonCollectionExamples
 'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
 'pyro.field_type.relationship_through' => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
-'anomaly.module.sites' => \Anomaly\SitesModule\SitesModule::class,
         ];
     }
 }
