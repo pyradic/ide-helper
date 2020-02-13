@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Completion\ProcessedCompletions;
 use Laradic\Generators\DocBlock\Definition\ClassDefinition;
+use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Laradic\Support\MultiBench;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
@@ -165,6 +166,8 @@ class IdeHelperStreamsCommand extends Command
             $this->dispatchNow(new GenerateConfigMeta());
             $this->line('  - Generating view completions...', null, 'v');
             $this->dispatchNow(new GenerateViewsMeta());
+            $this->line('  - Generating route completions...', null, 'v');
+            $this->dispatchNow(new GenerateRoutesMeta());
         }
         $this->info('Streams completion generated');
     }

@@ -17,6 +17,7 @@ class AddonCollectionExamples
 'anomaly.module.preferences' => \Anomaly\PreferencesModule\PreferencesModule::class,
 'anomaly.field_type.addon' => \Anomaly\AddonFieldType\AddonFieldType::class,
 'anomaly.module.addons' => \Anomaly\AddonsModule\AddonsModule::class,
+'anomaly.module.api' => \Anomaly\ApiModule\ApiModule::class,
 'anomaly.module.blocks' => \Anomaly\BlocksModule\BlocksModule::class,
 'anomaly.field_type.blocks' => \Anomaly\BlocksFieldType\BlocksFieldType::class,
 'anomaly.field_type.boolean' => \Anomaly\BooleanFieldType\BooleanFieldType::class,
