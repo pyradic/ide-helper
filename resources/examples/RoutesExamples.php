@@ -52,7 +52,7 @@ class RoutesExamples
 'streams/file-field_type/choose/{key}',
 'streams/file-field_type/selected',
 'streams/file-field_type/exists/{folder}',
-'streams/file-field_type/upload/{folder}',
+'streams/file-field_type/upload/{folder}/{key}',
 'streams/file-field_type/handle',
 'streams/file-field_type/recent',
 'grid-field_type/choose/{field}',
