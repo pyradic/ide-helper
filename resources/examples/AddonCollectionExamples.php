@@ -95,6 +95,8 @@ class AddonCollectionExamples
 'crvs.extension.clients_caretaker_role_type' => \Crvs\ClientsCaretakerRoleTypeExtension\ClientsCaretakerRoleTypeExtension::class,
 'crvs.extension.clients_courses_role_type' => \Crvs\ClientsCoursesRoleTypeExtension\ClientsCoursesRoleTypeExtension::class,
 'crvs.extension.clients_default_role_type' => \Crvs\ClientsDefaultRoleTypeExtension\ClientsDefaultRoleTypeExtension::class,
+'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
+'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
 'crvs.extension.clients_requester_role_type' => \Crvs\ClientsRequesterRoleTypeExtension\ClientsRequesterRoleTypeExtension::class,
 'crvs.extension.clients_volunteer_role_type' => \Crvs\ClientsVolunteerRoleTypeExtension\ClientsVolunteerRoleTypeExtension::class,
 'crvs.module.contacts' => \Crvs\ContactsModule\ContactsModule::class,
@@ -103,7 +105,6 @@ class AddonCollectionExamples
 'crvs.module.faq' => \Crvs\FaqModule\FaqModule::class,
 'crvs.field_type.files' => \Crvs\FilesFieldType\FilesFieldType::class,
 'crvs.module.files' => \Crvs\FilesModule\FilesModule::class,
-'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
 'crvs.field_type.multiple_departments' => \Crvs\MultipleDepartmentsFieldType\MultipleDepartmentsFieldType::class,
 'crvs.extension.private_storage_adapter' => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
 'crvs.module.registrations' => \Crvs\RegistrationsModule\RegistrationsModule::class,
@@ -137,6 +138,7 @@ class AddonCollectionExamples
 'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
 'pyro.field_type.relationship_through' => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
+'crvs.module.client_reports' => \Crvs\ClientReportsModule\ClientReportsModule::class,
         ];
     }
 }
