@@ -47,7 +47,7 @@ class EntryDomainsCompletion implements CompletionInterface
 
     public function getClasses($path, $namespace)
     {
-        $name = pathinfo($path, PATHINFO_BASENAME);
+        $name       = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Laradic\Generators\DocBlock\Definition\ClassDefinition[]|\Illuminate\Support\Collection $c */
         /** @var array{model:ClassDefinition, collection:ClassDefinition, criteria:ClassDefinition, observer:ClassDefinition, presenter:ClassDefinition, repository:ClassDefinition, queryBuilder:ClassDefinition, router:ClassDefinition, seeder:ClassDefinition, interface:ClassDefinition, repositoryInterface:ClassDefinition}  $c */
         $c = collect([
@@ -62,7 +62,18 @@ class EntryDomainsCompletion implements CompletionInterface
             'seeder'              => "\\{$namespace}\\{$name}\\{$name}Seeder",
             'interface'           => "\\{$namespace}\\{$name}\\Contract\\{$name}Interface",
             'repositoryInterface' => "\\{$namespace}\\{$name}\\Contract\\{$name}RepositoryInterface",
-        ])->map(function ($className, $key) {
+        ]);
+
+        $pivotFiles = glob(path_join($path, '*Pivot.php'), GLOB_NOSORT);
+        foreach($pivotFiles as $pivotFile){
+            $pivotName = path_get_filename_without_extension($pivotFile);
+            $pivotClassName = "\\{$namespace}\\{$name}\\{$pivotName}";
+            if(class_exists($pivotClassName)) {
+                $c[ lcfirst($pivotName) ] = "\\{$namespace}\\{$name}\\{$pivotName}";
+            }
+        }
+
+        $c = $c->map(function ($className, $key) {
             if ( ! class_exists($className) && ! interface_exists($className)) {
                 $className = $this->getFallbackClass($key);
                 return $this->generator->class($className);

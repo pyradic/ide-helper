@@ -90,6 +90,7 @@ class AddonCollectionExamples
 'pyrocms.theme.starter' => \Pyrocms\StarterTheme\StarterTheme::class,
 'anomaly.module.api' => \Anomaly\ApiModule\ApiModule::class,
 'crvs.module.activities' => \Crvs\ActivitiesModule\ActivitiesModule::class,
+'crvs.module.client_reports' => \Crvs\ClientReportsModule\ClientReportsModule::class,
 'crvs.module.clients' => \Crvs\ClientsModule\ClientsModule::class,
 'crvs.extension.clients_care_role_type' => \Crvs\ClientsCareRoleTypeExtension\ClientsCareRoleTypeExtension::class,
 'crvs.extension.clients_caretaker_role_type' => \Crvs\ClientsCaretakerRoleTypeExtension\ClientsCaretakerRoleTypeExtension::class,
@@ -138,7 +139,6 @@ class AddonCollectionExamples
 'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
 'pyro.field_type.relationship_through' => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
-'crvs.module.client_reports' => \Crvs\ClientReportsModule\ClientReportsModule::class,
         ];
     }
 }
