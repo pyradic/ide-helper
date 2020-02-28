@@ -2,8 +2,10 @@
 
 namespace Pyro\IdeHelper;
 
+use Barryvdh\Reflection\DocBlock\Tag;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
+use Laradic\Generators\DocBlock\Tags\MixinTag;
 use Laradic\Idea\Command\ResolveSourceFolders;
 use Laradic\Support\FS;
 use Pyro\IdeHelper\Completion\AddonCollectionsCompletion;
@@ -29,19 +31,21 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);
 
+        Tag::registerTagHandler('mixin', MixinTag::class);
+
         $this->app->singleton('command.ide.streams', function ($app) {
             $command = new IdeHelperStreamsCommand();
-            $command->addCompletions([
-                new AddonCollectionsCompletion([ 'get' ]),
-                AddonServiceProviderCompletion::class,
-                AuthCompletion::class,
-                new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
-                FormBuilderCompletion::class,
-                MigrationCompletion::class,
-                ModuleCompletion::class,
-                RequestCompletion::class,
-                TableBuilderCompletion::class,
-            ]);
+//            $command->addCompletions([
+//                new AddonCollectionsCompletion([ 'get' ]),
+//                AddonServiceProviderCompletion::class,
+//                AuthCompletion::class,
+//                new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
+//                FormBuilderCompletion::class,
+//                MigrationCompletion::class,
+////                ModuleCompletion::class,
+//                RequestCompletion::class,
+//                TableBuilderCompletion::class,
+//            ]);
             return $command;
         });
         $this->commands('command.ide.streams');
