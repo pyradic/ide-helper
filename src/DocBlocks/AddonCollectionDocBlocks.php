@@ -50,7 +50,7 @@ class AddonCollectionDocBlocks
             foreach (static::$data as $item) {
                 $cd->ensureProperty(
                     Str::plural($item[ 'name' ]),
-                    Str::ensureLeft($data[ 'collection' ], '\\')
+                    [$item[ 'collection' ], $item[ 'item' ] . '[]']
                 );
             }
             $cd->getMethod('get')->ensureParam('$namespace', 'string', ' = ' . \Pyro\IdeHelper\Examples\AddonCollectionExamples::class . '::addonType()[$any]');

@@ -38,9 +38,7 @@ class TableBuilderDocBlocks
         $cd->getMethod('getActions')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::actions()');
         $cd->getMethod('getViews')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::views()');
 
-        //@todo removes other param, fix it
-        $cd->getMethod('addView')
-            ->ensureParam('array', '$view', ' = \\' . TableBuilderExamples::class . '::view()');
+        $cd->getMethod('addView')->ensureParam('array', '$view', ' = \\' . TableBuilderExamples::class . '::view()');
 
         $cd = $registry->getClass(Row::class);
         $cd->getMethod('getButtons')->ensureReturn('\\' . ButtonCollection::class . '|\\' . Button::class . '[]');

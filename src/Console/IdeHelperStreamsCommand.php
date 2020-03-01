@@ -25,6 +25,7 @@ use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
@@ -128,6 +129,7 @@ class IdeHelperStreamsCommand extends Command
             MigrationDocBlocks::class,
             ModuleDocBlocks::class,
             RequestDocBlocks::class,
+            ControlPanelDocBlocks::class,
             TableBuilderDocBlocks::class,
         ]);
         $executor->transform();
