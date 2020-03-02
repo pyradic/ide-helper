@@ -9,9 +9,9 @@
 
     "license": "MIT",
     "require": {
-        "laradic/support": "~2.1",
-        "laradic/generators": "~2.1",
-        "laradic/idea": "~2.1",
+        "laradic/support": "~2.0",
+        "laradic/generators": "~2.0",
+        "laradic/idea": "~2.0",
         "barryvdh/laravel-ide-helper": "~2.6"
     },
     "autoload": {
