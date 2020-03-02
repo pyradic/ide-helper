@@ -2,7 +2,6 @@
 
 namespace Pyro\IdeHelper\DocBlocks;
 
-use Anomaly\Streams\Platform\Addon\Module\Module;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
@@ -48,7 +47,7 @@ class EntryDomainsDocBlocks
 
     public function getClasses($path, $namespace)
     {
-        $name       = pathinfo($path, PATHINFO_BASENAME);
+        $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Illuminate\Support\Collection|ClassDoc[] $c */
         /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc}  $c */
         $c = collect([
@@ -66,10 +65,10 @@ class EntryDomainsDocBlocks
         ]);
 
         $pivotFiles = glob(path_join($path, '*Pivot.php'), GLOB_NOSORT);
-        foreach($pivotFiles as $pivotFile){
-            $pivotName = path_get_filename_without_extension($pivotFile);
+        foreach ($pivotFiles as $pivotFile) {
+            $pivotName      = path_get_filename_without_extension($pivotFile);
             $pivotClassName = "\\{$namespace}\\{$name}\\{$pivotName}";
-            if(class_exists($pivotClassName)) {
+            if (class_exists($pivotClassName)) {
                 $c[ lcfirst($pivotName) ] = "\\{$namespace}\\{$name}\\{$pivotName}";
             }
         }
@@ -83,16 +82,17 @@ class EntryDomainsDocBlocks
         });
 
         $cs = $c->map(function (ClassDoc $class) {
-            return Str::ensureLeft($class->getReflection()->getName() . '[]','\\');
+            return Str::ensureLeft($class->getReflection()->getName() . '[]', '\\');
         });
 //        $cs = collect($c->all())->evaluate('getNameArray()', 'map'); //cast('string')->evaluate('item ~ "[]"','map');
 
         $c[ 'interface' ]->ensureMixin($c[ 'model' ]);
         $c[ 'presenter' ]->ensureMixin($c[ 'model' ]);
-        $c[ 'presenter' ]->cleanTag('property')->ensureProperty('$object', $c['model']);
+        $c[ 'presenter' ]->cleanTag('property')->ensureProperty('$object', $c[ 'model' ]);
         $c[ 'repositoryInterface' ]->ensureMixin($c[ 'repository' ]);
-        $c[ 'criteria' ]->ensureMixin( $c[ 'queryBuilder' ]);
+        $c[ 'criteria' ]->ensureMixin($c[ 'queryBuilder' ]);
 
+        $c[ 'model' ]->ensureMethod('getPresenter', $c[ 'presenter' ]);
         $c[ 'repository' ]->cleanTag('method')
             ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
             ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])

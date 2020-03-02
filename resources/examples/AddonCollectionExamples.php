@@ -95,8 +95,6 @@ class AddonCollectionExamples
 'crvs.extension.clients_caretaker_role_type' => \Crvs\ClientsCaretakerRoleTypeExtension\ClientsCaretakerRoleTypeExtension::class,
 'crvs.extension.clients_courses_role_type' => \Crvs\ClientsCoursesRoleTypeExtension\ClientsCoursesRoleTypeExtension::class,
 'crvs.extension.clients_default_role_type' => \Crvs\ClientsDefaultRoleTypeExtension\ClientsDefaultRoleTypeExtension::class,
-'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
-'crvs.module.help_requests' => \Crvs\HelpRequestsModule\HelpRequestsModule::class,
 'crvs.extension.clients_requester_role_type' => \Crvs\ClientsRequesterRoleTypeExtension\ClientsRequesterRoleTypeExtension::class,
 'crvs.extension.clients_volunteer_role_type' => \Crvs\ClientsVolunteerRoleTypeExtension\ClientsVolunteerRoleTypeExtension::class,
 'crvs.module.contacts' => \Crvs\ContactsModule\ContactsModule::class,
