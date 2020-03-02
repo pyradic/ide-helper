@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
-use Laradic\Generators\Completion\ProcessedCompletions;
 use Laradic\Generators\Doc\Doc\ClassDoc;
 use Laradic\Generators\Doc\DocChainExecutor;
-use Laradic\Generators\DocBlock\Definition\ClassDefinition;
 use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
@@ -20,18 +18,19 @@ use Pyro\IdeHelper\Command\GenerateRoutesExamples;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
 use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
 use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
-use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
+use Symfony\Component\Process\Process;
 
 class IdeHelperStreamsCommand extends Command
 {
@@ -39,6 +38,8 @@ class IdeHelperStreamsCommand extends Command
 
     protected $signature = 'ide-helper:streams
                                                 {--out= : output path}
+                                                {--models}
+                                                {--docblocks}
                                                 {--clean}
                                                 {--pick}';
 
@@ -79,46 +80,8 @@ class IdeHelperStreamsCommand extends Command
         }
     }
 
-    public function handle(CompletionGenerator $generator, StreamRepositoryInterface $streams)
+    protected function createExecutor()
     {
-        $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
-        $this->warn('- You might need to run this command twice (fixing this issue is on the todo list)');
-        $this->warn('- Consider compiling streams before running this command');
-
-        $generator->before(function ($pipe) {
-            $class = get_class($pipe);
-            $this->line("  - Generating {$class}", null, 'v');
-        });
-
-        if ($this->option('clean')) {
-            return $this->warn('Not implemented');
-        }
-
-        $generate = [
-            'examples'    => true,
-            'models'      => true,
-            'toolbox'     => true,
-            'docblocks'   => true,
-        ];
-
-        if ($this->option('pick')) {
-            $generators = $this->select('Pick generators', array_keys($generate), true);
-            foreach ($generate as $key => $value) {
-                $generate[ $key ] = in_array($key, $generators);
-            }
-        }
-
-        if ($generate[ 'examples' ]) {
-            $this->line('<options=bold>Generating examples...</>');
-            $namespace = 'Pyro\\IdeHelper\\Examples';
-            $this->line('  - GenerateAddonCollectionExamples', null, 'v');
-            dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
-            $this->line('  - GenerateFieldTypeExamples', null, 'v');
-            dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
-            $this->line('  - GenerateRouteExamples', null, 'v');
-            dispatch_now(new GenerateRoutesExamples(__DIR__ . '/../../resources/examples/RoutesExamples.php', $namespace));
-        }
-
         $executor = resolve(DocChainExecutor::class);
         $executor->appendToChain([
             AddonCollectionDocBlocks::class,
@@ -132,10 +95,38 @@ class IdeHelperStreamsCommand extends Command
             ControlPanelDocBlocks::class,
             TableBuilderDocBlocks::class,
         ]);
-        $executor->transform();
+        return $executor;
+    }
 
-        if ($generate[ 'models' ]) {
-            $this->line('<options=bold>Generating model completions...</>');
+    protected function spawnCall($args)
+    {
+        $phpBin = $_SERVER[ '_' ];
+        $out=$this->getOutput();
+
+        $verbosity = $out->isVerbose() ? '-v' : '';
+        $verbosity = $out->isVeryVerbose() ? '-vv' : $verbosity;
+        $verbosity = $out->isDebug() ? '-vvv' : $verbosity;
+        $process = new Process("{$phpBin} artisan {$verbosity} {$args}");
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo $buffer;
+            } else {
+                echo $buffer;
+            }
+        });
+//        $this->line(exec("{$phpBin} artisan {$verbosity} {$args}"));
+    }
+
+    public function handle(CompletionGenerator $generator, StreamRepositoryInterface $streams)
+    {
+        /*
+         * We run this shell command another 2 times.
+         * First we spawn a process for generating the docblocks for models (using the barryvdh/laravel-ide-helper)
+         * After that we spawn a process for generating the other docblocks.
+         *
+         * This ensures the the php reflection for classes --dockblocks are
+         */
+        if ($this->option('models')) {
             $modelDocGenerator = new ModelDocGenerator(app('files'));
             $modelDocGenerator
                 ->setReset(true)
@@ -143,46 +134,74 @@ class IdeHelperStreamsCommand extends Command
                 ->setWriteModelMagicWhere(true)
                 ->setWrite(true);
 
+            $executor = $this->createExecutor();
+            $executor->transform();
             collect($executor->getRegistry()->getClasses())->filter(function (ClassDoc $doc) use ($modelDocGenerator) {
                 if ($doc->getReflection()->isSubclassOf(Model::class)) {
                     $this->line("  - Generating model '{$doc->getReflection()->getName()}' completions...'", null, 'v');
                     $modelDocGenerator->generateForModel($doc->getReflection()->getName());
                 }
             });
-        }
-
-        if ($generate[ 'docblocks' ]) {
-            $this->line('<options=bold>Generating docblock completions...</>');
+            return;
+        } elseif ($this->option('docblocks')) {
+            $executor = $this->createExecutor();
+            $executor->transform();
             $executor->run();
+            return;
         }
 
-        if ($generate[ 'toolbox' ]) {
-            $this->line('<options=bold>Generating toolbox completions...</>');
-            $this->line('  - Generating stream classes completions...', null, 'v');
-            $excludes = config('pyro.ide.toolbox.streams.exclude', []);
-            foreach ($streams->all() as $stream) {
-                $name = $stream->getNamespace() . '::' . $stream->getSlug();
-                if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {
-                    $this->line("     <warning>></warning> Skipped stream '{$name}' completions...", null, 'vv');
-                    continue;
-                }
-                try {
-                    $this->dispatchNow(new GenerateStreamMeta($stream));
-                    $this->line("     <info>></info> Generated stream '{$name}' completions", null, 'vv');
-                }
-                catch (\Exception $e) {
-                    $this->line("<fg=red;options=bold>Error generating {$name}</> <fg=red>{$e->getMessage()}</>", null, 'vv');
-                }
+
+
+        $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
+        $this->warn('- You might need to run this command twice (fixing this issue is on the todo list)');
+        $this->warn('- Consider compiling streams before running this command');
+
+        $this->line('<options=bold>Generating model completions...</>');
+        $this->spawnCall('ide-helper:streams --models');
+        $this->line('<options=bold>Generating docblock completions...</>');
+        $this->spawnCall('ide-helper:streams --docblocks');
+
+        $generator->before(function ($pipe) {
+            $class = get_class($pipe);
+            $this->line("  - Generating {$class}", null, 'v');
+        });
+
+        // examples
+        $this->line('<options=bold>Generating examples...</>');
+        $namespace = 'Pyro\\IdeHelper\\Examples';
+        $this->line('  - GenerateAddonCollectionExamples', null, 'v');
+        dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
+        $this->line('  - GenerateFieldTypeExamples', null, 'v');
+        dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
+        $this->line('  - GenerateRouteExamples', null, 'v');
+        dispatch_now(new GenerateRoutesExamples(__DIR__ . '/../../resources/examples/RoutesExamples.php', $namespace));
+
+        // toolbox
+        $this->line('<options=bold>Generating toolbox completions...</>');
+        $this->line('  - Generating stream classes completions...', null, 'v');
+        $excludes = config('pyro.ide.toolbox.streams.exclude', []);
+        foreach ($streams->all() as $stream) {
+            $name = $stream->getNamespace() . '::' . $stream->getSlug();
+            if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {
+                $this->line("     <warning>></warning> Skipped stream '{$name}' completions...", null, 'vv');
+                continue;
             }
-            $this->line('  - Generating addon collections completions...', null, 'v');
-            $this->dispatchNow(new GenerateAddonCollectionsMeta());
-            $this->line('  - Generating config completions...', null, 'v');
-            $this->dispatchNow(new GenerateConfigMeta());
-            $this->line('  - Generating view completions...', null, 'v');
-            $this->dispatchNow(new GenerateViewsMeta());
-            $this->line('  - Generating route completions...', null, 'v');
-            $this->dispatchNow(new GenerateRoutesMeta());
+            try {
+                $this->dispatchNow(new GenerateStreamMeta($stream));
+                $this->line("     <info>></info> Generated stream '{$name}' completions", null, 'vv');
+            }
+            catch (\Exception $e) {
+                $this->line("<fg=red;options=bold>Error generating {$name}</> <fg=red>{$e->getMessage()}</>", null, 'vv');
+            }
         }
+        $this->line('  - Generating addon collections completions...', null, 'v');
+        $this->dispatchNow(new GenerateAddonCollectionsMeta());
+        $this->line('  - Generating config completions...', null, 'v');
+        $this->dispatchNow(new GenerateConfigMeta());
+        $this->line('  - Generating view completions...', null, 'v');
+        $this->dispatchNow(new GenerateViewsMeta());
+        $this->line('  - Generating route completions...', null, 'v');
+        $this->dispatchNow(new GenerateRoutesMeta());
 
         $this->info('Streams completion generated');
     }
