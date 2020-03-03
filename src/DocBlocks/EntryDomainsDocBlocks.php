@@ -2,6 +2,8 @@
 
 namespace Pyro\IdeHelper\DocBlocks;
 
+use Anomaly\Streams\Platform\Assignment\AssignmentModel;
+use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
@@ -92,7 +94,11 @@ class EntryDomainsDocBlocks
         $c[ 'repositoryInterface' ]->ensureMixin($c[ 'repository' ]);
         $c[ 'criteria' ]->ensureMixin($c[ 'queryBuilder' ]);
 
-        $c[ 'model' ]->ensureMethod('getPresenter', $c[ 'presenter' ]);
+        $c[ 'model' ]->ensureMethod('getPresenter', $c[ 'presenter' ])
+            ->ensureMethod('newCollection', $c[ 'collection' ])
+            ->ensureMethod('newRouter', $c[ 'router' ])
+            ->ensureMethod('newEloquentBuilder', $c[ 'queryBuilder' ])
+        ;
         $c[ 'repository' ]->cleanTag('method')
             ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
             ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
@@ -117,6 +123,22 @@ class EntryDomainsDocBlocks
             ->ensureMethod('lastModified', $c[ 'interface' ]);
 
         $c[ 'queryBuilder' ]->ensureProperty('$model', $c[ 'model' ]);
+
+        /** @var \Pyro\Platform\Entry\EntryModel $model */
+        $modelClass = $c[ 'model' ]->getClassName();
+        $presenterProps = [];
+        $model = new $modelClass();
+        if($model instanceof EntryModel) {
+            foreach ($model->getAssignments() as $assignment) {
+                $presenterProps[] = [
+                    'class' => get_class($assignment->getFieldType()->getPresenter()),
+                    'slug' => $assignment->getFieldSlug()
+                ];
+            }
+        }
+        foreach($presenterProps as $props) {
+            $c[ 'presenter' ]->ensureProperty($props[ 'slug' ], $props[ 'class' ]);
+            }
 
 //        /** @var \Illuminate\Support\Collection|ClassDefinition[] $process */
 //        $process = $c->values()->filter(function (ClassDoc $classDoc) {

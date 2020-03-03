@@ -20,6 +20,8 @@ use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
 use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
+use Pyro\IdeHelper\DocBlocks\EntryModelDocBlocks;
+use Pyro\IdeHelper\DocBlocks\FieldTypeDocBlocks;
 use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
@@ -88,6 +90,8 @@ class IdeHelperStreamsCommand extends Command
             AddonServiceProviderDocBlocks::class,
             AuthDocBlocks::class,
             new EntryDomainsDocBlocks(),
+            EntryModelDocBlocks::class,
+            FieldTypeDocBlocks::class,
             FormBuilderDocBlocks::class,
             MigrationDocBlocks::class,
             ModuleDocBlocks::class,
