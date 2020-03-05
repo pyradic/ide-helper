@@ -5,129 +5,13 @@ reading the documentation/other code.
 
 Although this package has various PHPStorm specific features, it\'s still able to provide quite a few extras for other ide\'s/editors.
 
-**This package is very much a WIP** but can already be used if wanted.
-
-### Progress
-
-- **`DONE`** Discover possibilities / limitations of various completion providers (IntelliJ plugins, docblocks, metafiles, php helper files)
-- **`ALMOST DONE`** Use the appropriate completion provider for each completion.
-- **`IN PROGRESS`** Revisit all code, improve/introduce logical structure to it, cleanup mess
-- **`IN PROGRESS`** Make it extendable and configurable
-
-##### Completions
-
-- [ ] Streams Platform
-  - [x] Addons
-    - [x] Module
-      - [x] Properties
-          - [x] Sections
-          - [x] Shortcuts
-      - [x] Methods
-          - [x] setSections
-          - [x] getSections
-          - [x] addSection
-          - [x] setShortcuts
-          - [x] getShortcuts
-          - [x] addShortcut
-    - [x] AddonCollection
-    - [x] ModuleCollection
-    - [x] ExtensionCollection
-    - [x] ThemeCollection
-    - [x] PluginCollection
-    - [x] FieldTypeCollection
-    - [x] AddonServiceProvider
-      - [x] Routes
-  - [ ] UI
-    - [x] Button
-    - [ ] Form
-        - [x] Properties
-            - [x] Action
-            - [x] Button
-            - [x] Field
-            - [x] Section
-            - [x] Options
-        - [ ] Methods
-            - [x] setActions
-            - [x] getActions
-            - [ ] addAction
-            - [x] setButtons
-            - [x] getButtons
-            - [ ] addButton
-            - [x] setSections
-            - [x] getSections
-            - [ ] addSection
-            - [x] setOption
-            - [x] hasOption
-            - [x] getOption
-            - [x] setOptions
-            - [x] getOptions
-    - [ ] Table
-        - [x] Properties
-            - [x] Action
-            - [x] Button
-            - [x] Column
-            - [x] Filter
-            - [x] Header
-            - [x] Row
-            - [x] View
-        - [x] Methods
-            - [x] setActions
-            - [x] getActions
-            - [ ] addAction
-            - [x] setButtons
-            - [x] getButtons
-            - [ ] addButton
-            - [ ] setColumns
-            - [ ] getColumns
-            - [ ] addColumn
-            - [ ] setFilters
-            - [ ] getFilters
-            - [ ] addFilter
-            - [ ] setHeaders
-            - [ ] getHeaders
-            - [ ] addHeader
-            - [ ] setRows
-            - [ ] getRows
-            - [ ] addRow
-            - [ ] setViews
-            - [ ] getViews
-            - [ ] addView
-            - [x] setOption
-            - [x] hasOption
-            - [x] getOption
-            - [x] setOptions
-            - [x] getOptions
-    - [ ] Tree
-- [ ] Streams
-  - [x] Collections
-  - [ ] Criterias
-  - [ ] Factories
-  - [ ] Models
-      - [x] Translation fields
-      - [x] Fields, methods
-  - [ ] QueryBuilders
-  - [x] Repositories
-  - [ ] Router
-  - [x] Contract
-    - [x] Interface
-    - [x] RepositoryInterface
-
-
-##### Other
-- [ ] Twig
-- [x] Views
-- [x] Config
-- [ ] ...
-
 
 
 ### Installation
-> As this package is still in development, to install using the `~1.0` version constraint requires you
-> to set `"minimum-stability": "dev"` and `"prefer-stable": true` in your `composer.json`
 
 1. Install using composer
     ```sh
-    composer require pyro/ide-helper:~1.0 --dev
+    composer require pyro/ide-helper:~1.0
     ```
 
 2. Register service provider, preferably only when `APP_ENV=local`
@@ -138,18 +22,34 @@ Although this package has various PHPStorm specific features, it\'s still able t
 3. Run generation
     ```sh
     ide-helper:generate
-    ide-helper:meta 
-    ide-helper:models [--addon anomaly.module.pages]          
     ide-helper:streams
     idea:completion
     idea:meta
+    idea:toolbox
     ```
 
-### Streams Platform & Addon related resolving & code completion
+   You could wrap this in a composer run script:
+   ```json
+   {
+       "scripts": {
+            "ide": [
+                "@php artisan ide-helper:generate",
+                "@php artisan ide-helper:streams",
+                "@php artisan idea:completion",
+                "@php artisan idea:meta",
+                "@php artisan idea:toolbox"
+            ]
+       }
+   }   
+   ```
+   and run it with `composer ide`
 
-> These feature requires:
-> - PHPStorm/IntelliJ IDEA **^2019**. Ensure you have at least `2019.1.1`
-> - PHPStorm/IntelliJ plugin **PHP Toolbox**
+4. Install PHPStorm/IntelliJ Idea Plugins:
+   - `deep-assoc-completion`
+   - `PHP Toolbox`
+
+
+### Examples
 
 ##### Addon collections
 
@@ -181,10 +81,33 @@ For `Repository` classes in all Streams
 ![](screens/ide-helper-repository-create.png)
 
 
+##### Model completion
+screenshots todo...
+
+##### AddonServiceProvider properties
+![](screens/ide-helper-routes.png)
+
+##### Module properties
+![](screens/ide-helper-module-sections.png)
+![](screens/ide-helper-module-sections-buttons.png.png)
+
+##### FormBuilder properties
+![](screens/ide-helper-formbuilder-buttons.png)
+![](screens/ide-helper-formbuilder-sections.png)
+![](screens/ide-helper-formbuilder-sections-tabs.png)
+![](screens/ide-helper-formbuilder-sections-tabs-rows-columns.png)
+
+##### TableBuilder properties
+- Provides the same button completion as FormBuilder
+screenshots todo...
+
+##### Twig completion
+screenshots todo...
+
 ### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.
 This is done using the same way as ide-helper:models
-by generating DocBlock tags in the source files or in a separate file
+by generating DocBlock tags in the source files
 
 Some examples:
 ```php
@@ -223,50 +146,148 @@ class LinkCollection extends EntryCollection{}
 class LinkRepository extends EntryRepository implements LinkRepositoryInterface{}
 ```
 ```php
-/*
- * ...
- * @mixin \Pyro\MenusModule\Link\LinkModel
- */
+/** @mixin \Pyro\MenusModule\Link\LinkRepository */
+interface LinkRepositoryInterface {}
+```
+```php
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
 class LinkPresenter extends EntryPresenter{}
 ```
 ```php
-/*
- * ...
- * @mixin \Pyro\MenusModule\Link\LinkModel
- */
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
 interface LinkInterface {}
 ```
 ```php
-/*
- * ...
- * @mixin \Pyro\MenusModule\Link\LinkModel
- */
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
 class LinkPresenter extends EntryPresenter{}
 ```
 
-### Model completion
-todo...
 
-### Class properties
-The screenshots should make it all clear.
 
-> This feature requires PHPStorm/IntelliJ IDEA with the `deep-assoc-completion` plugin installed
+### Progress
 
-#### AddonServiceProvider properties
-![](screens/ide-helper-routes.png)
+- **`DONE`** Discover possibilities / limitations of various completion providers (IntelliJ plugins, docblocks, metafiles, php helper files)
+- **`ALMOST DONE`** Use the appropriate completion provider for each completion.
+- **`IN PROGRESS`** Revisit all code, improve/introduce logical structure to it, cleanup mess
+- **`IN PROGRESS`** Make it extendable and configurable
 
-#### Module properties
-![](screens/ide-helper-module-sections.png)
-![](screens/ide-helper-module-sections-buttons.png.png)
+##### Todos
 
-#### FormBuilder properties
-![](screens/ide-helper-formbuilder-buttons.png)
-![](screens/ide-helper-formbuilder-sections.png)
-![](screens/ide-helper-formbuilder-sections-tabs.png)
-![](screens/ide-helper-formbuilder-sections-tabs-rows-columns.png)
+- [ ] Streams Platform
+  - [x] Addons
+    - [x] Module
+      - [x] Properties
+          - [x] Sections
+          - [x] Shortcuts
+      - [x] Methods
+          - [x] setSections
+          - [x] getSections
+          - [x] addSection
+          - [x] setShortcuts
+          - [x] getShortcuts
+          - [x] addShortcut
+    - [x] AddonCollection
+    - [x] ModuleCollection
+    - [x] ExtensionCollection
+    - [x] ThemeCollection
+    - [x] PluginCollection
+    - [x] FieldTypeCollection
+    - [x] AddonServiceProvider
+      - [x] Routes
+  - [ ] UI
+    - [x] Button
+    - [x] ControlPanel
+        - [ ] Methods
+            - [ ] setButtons
+            - [x] getButtons
+            - [ ] addButton
+            - [ ] setSections
+            - [x] getSections
+            - [ ] addSection
+            - [ ] setNavigation
+            - [x] getNavigation
+            - [ ] addNavigation
+    - [x] Form
+        - [x] Properties
+            - [x] Action
+            - [x] Button
+            - [x] Field
+            - [x] Section
+            - [x] Options
+        - [x] Methods
+            - [x] setActions
+            - [x] getActions
+            - [x] addAction
+            - [x] setButtons
+            - [x] getButtons
+            - [x] addButton
+            - [x] setSections
+            - [x] getSections
+            - [x] addSection
+            - [x] setOption
+            - [x] hasOption
+            - [x] getOption
+            - [x] setOptions
+            - [x] getOptions
+    - [ ] Table
+        - [x] Row
+            - [x] getButtons
+            - [x] getColumns
+        - [x] Column
+            - [x] getEntry
+        - [x] Properties
+            - [x] Action
+            - [x] Button
+            - [x] Column
+            - [x] Filter
+            - [x] Header
+            - [x] Row
+            - [x] View
+        - [x] Methods
+            - [x] setActions
+            - [x] getActions
+            - [ ] addAction
+            - [x] setButtons
+            - [x] getButtons
+            - [ ] addButton
+            - [ ] setColumns
+            - [ ] getColumns
+            - [ ] addColumn
+            - [ ] setFilters
+            - [ ] getFilters
+            - [ ] addFilter
+            - [ ] setHeaders
+            - [ ] getHeaders
+            - [ ] addHeader
+            - [ ] setRows
+            - [ ] getRows
+            - [ ] addRow
+            - [x] setViews
+            - [x] getViews
+            - [x] addView
+            - [x] setOption
+            - [x] hasOption
+            - [x] getOption
+            - [x] setOptions
+            - [x] getOptions
+    - [ ] Tree
+- [ ] Streams
+  - [x] Collections
+  - [ ] Criterias
+  - [ ] Factories
+  - [ ] Models
+      - [x] Translation fields
+      - [x] Fields, methods
+      - [x] Presenter,Collection,Router,Builder
+  - [ ] QueryBuilders
+  - [x] Repositories
+  - [ ] Router
+  - [x] Contract
+    - [x] Interface
+    - [x] RepositoryInterface
+- [ ] Other
+    - [ ] Twig
+    - [x] Views
+    - [x] Config
+    - [ ] ...
 
-#### TableBuilder properties
-- Provides the same button completion as FormBuilder
-
-### Twig completion
-todo...

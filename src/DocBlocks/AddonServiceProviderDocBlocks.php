@@ -12,6 +12,7 @@ class AddonServiceProviderDocBlocks
     {
         $cd = $registry->getClass(AddonServiceProvider::class);
         $cd->getProperty('routes')->ensureVar('array', '= \\' . AddonServiceProviderExamples::class . '::routes()');
+        $cd->getMethod('getRoutes')->ensureReturn('array', '= \\' . AddonServiceProviderExamples::class . '::routes()');
     }
 
 }

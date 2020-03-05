@@ -33,6 +33,10 @@ class AddonServiceProviderExamples
                 'anomaly.module.users::route' => 'vendor.module.example::route.name',
                 'anomaly.module.users::intended' => '',
                 'anomaly.module.users::message' => 'Sorry, you do not have access.',
+
+                'entry' => '',
+                'breadcrumb' => ['title', 'parent::route.name'],
+                'breadcrumb' => ['title' => '', 'parent' => '::route.name'],
             ]
         ];
     }
