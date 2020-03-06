@@ -91,7 +91,7 @@ class AddonCollectionExamples
 'crvs.module.activities' => \Crvs\ActivitiesModule\ActivitiesModule::class,
 'crvs.extension.care_role_type' => \Crvs\CareRoleTypeExtension\CareRoleTypeExtension::class,
 'crvs.extension.caretaker_role_type' => \Crvs\CaretakerRoleTypeExtension\CaretakerRoleTypeExtension::class,
-'crvs.module.client_reports' => \Crvs\ClientReportsModule\ClientReportsModule::class,
+'crvs.module.client_registrations' => \Crvs\ClientRegistrationsModule\ClientRegistrationsModule::class,
 'crvs.module.clients' => \Crvs\ClientsModule\ClientsModule::class,
 'crvs.module.contacts' => \Crvs\ContactsModule\ContactsModule::class,
 'crvs.module.core' => \Crvs\CoreModule\CoreModule::class,
