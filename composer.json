@@ -13,7 +13,8 @@
         "laradic/generators": "~2.0",
         "laradic/idea": "~2.0",
         "symfony/process": "~3.0|~4.0|~5.0",
-        "barryvdh/laravel-ide-helper": "~2.6"
+        "barryvdh/laravel-ide-helper": "~2.6",
+        "nikic/php-parser": "~3.0|~4.3"
     },
     "autoload": {
         "psr-4": {
