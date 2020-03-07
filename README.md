@@ -5,7 +5,7 @@ reading the documentation/other code.
 
 Although this package has various PHPStorm specific features, it\'s still able to provide quite a few extras for other ide\'s/editors.
 
-
+**Version 1.1** Will feature much easier ways to create customize various auto-completions.
 
 ### Installation
 
@@ -51,6 +51,8 @@ Although this package has various PHPStorm specific features, it\'s still able t
 
 ### Examples
 
+> These are just a few examples, to screenshot everything would be the undertaking.
+
 ##### Addon collections
 
 
@@ -74,11 +76,13 @@ PyroCMS addon config files can have up to 3 locations. Opening resolves to the c
 ![](screens/ide-helper-config.png)
 
 
-##### Streams Repositories
+##### Streams
 
 For `Repository` classes in all Streams
 
 ![](screens/ide-helper-repository-create.png)
+![](screens/ide-helper-streams.png)
+![](screens/ide-helper-create-model.png)
 
 
 ##### Model completion

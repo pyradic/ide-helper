@@ -7,7 +7,6 @@ class FieldTypeExamples
     public static function types()
     {
         return ['anomaly.field_type.addon',
-'pyro.field_type.availability',
 'anomaly.field_type.blocks',
 'anomaly.field_type.boolean',
 'anomaly.field_type.checkboxes',
@@ -19,18 +18,13 @@ class FieldTypeExamples
 'anomaly.field_type.email',
 'anomaly.field_type.encrypted',
 'anomaly.field_type.file',
-'crvs.field_type.files',
-'anomaly.field_type.grid',
-'anomaly.field_type.icon',
+'anomaly.field_type.files',
 'anomaly.field_type.integer',
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
 'anomaly.field_type.multiple',
-'crvs.field_type.multiple_departments',
-'pyro.field_type.pivot',
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
-'pyro.field_type.relationship_through',
 'anomaly.field_type.repeater',
 'anomaly.field_type.select',
 'anomaly.field_type.slider',
@@ -39,7 +33,6 @@ class FieldTypeExamples
 'anomaly.field_type.tags',
 'anomaly.field_type.text',
 'anomaly.field_type.textarea',
-'anomaly.field_type.upload',
 'anomaly.field_type.url',
 'anomaly.field_type.wysiwyg'];
     }
@@ -61,7 +54,6 @@ class FieldTypeExamples
     public static function values(){
         return [
             null => static::addon(),
-null => static::availability(),
 null => static::blocks(),
 null => static::boolean(),
 null => static::checkboxes(),
@@ -74,17 +66,12 @@ null => static::email(),
 null => static::encrypted(),
 null => static::file(),
 null => static::files(),
-null => static::grid(),
-null => static::icon(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
 null => static::multiple(),
-null => static::multiple_departments(),
-null => static::pivot(),
 null => static::polymorphic(),
 null => static::relationship(),
-null => static::relationship_through(),
 null => static::repeater(),
 null => static::select(),
 null => static::slider(),
@@ -93,7 +80,6 @@ null => static::state(),
 null => static::tags(),
 null => static::text(),
 null => static::textarea(),
-null => static::upload(),
 null => static::url(),
 null => static::wysiwyg(),
         ];
@@ -110,13 +96,6 @@ null => static::wysiwyg(),
 }
 public static function addon(){
     return ['type' => 'anomaly.field_type.addon', 'config' => static::addon_config() ];
-}
-public static function availability_config(){
-    return array (
-);
-}
-public static function availability(){
-    return ['type' => 'pyro.field_type.availability', 'config' => static::availability_config() ];
 }
 public static function blocks_config(){
     return array (
@@ -259,31 +238,7 @@ public static function files_config(){
 );
 }
 public static function files(){
-    return ['type' => 'crvs.field_type.files', 'config' => static::files_config() ];
-}
-public static function grid_config(){
-    return array (
-  'related' => '',
-  'add_row' => '',
-  'min' => '',
-  'max' => '',
-);
-}
-public static function grid(){
-    return ['type' => 'anomaly.field_type.grid', 'config' => static::grid_config() ];
-}
-public static function icon_config(){
-    return array (
-  'mode' => 'search',
-  'icon_sets' => 
-  array (
-    0 => 'fontawesome',
-  ),
-  'default_value' => '',
-);
-}
-public static function icon(){
-    return ['type' => 'anomaly.field_type.icon', 'config' => static::icon_config() ];
+    return ['type' => 'anomaly.field_type.files', 'config' => static::files_config() ];
 }
 public static function integer_config(){
     return array (
@@ -327,42 +282,6 @@ public static function multiple_config(){
 public static function multiple(){
     return ['type' => 'anomaly.field_type.multiple', 'config' => static::multiple_config() ];
 }
-public static function multiple_departments_config(){
-    return array (
-  'related' => '',
-  'mode' => 'lookup',
-  'title_name' => '',
-  'min' => '',
-  'max' => '',
-);
-}
-public static function multiple_departments(){
-    return ['type' => 'crvs.field_type.multiple_departments', 'config' => static::multiple_departments_config() ];
-}
-public static function pivot_config(){
-    return array (
-  'related' => '',
-  'mode' => 'tags',
-  'title_name' => '',
-  'min' => '',
-  'max' => '',
-  'couple' => 
-  array (
-    'department' => 
-    array (
-      'name' => 'department',
-      'related' => 'FQ\\Class\\Name',
-      'unique' => false,
-      'required' => false,
-      'handler' => NULL,
-    ),
-  ),
-  'relation_handler' => NULL,
-);
-}
-public static function pivot(){
-    return ['type' => 'pyro.field_type.pivot', 'config' => static::pivot_config() ];
-}
 public static function polymorphic_config(){
     return array (
 );
@@ -379,18 +298,6 @@ public static function relationship_config(){
 }
 public static function relationship(){
     return ['type' => 'anomaly.field_type.relationship', 'config' => static::relationship_config() ];
-}
-public static function relationship_through_config(){
-    return array (
-  'related' => '',
-  'mode' => 'dropdown',
-  'title_name' => '',
-  'through' => '',
-  'related_key' => '',
-);
-}
-public static function relationship_through(){
-    return ['type' => 'pyro.field_type.relationship_through', 'config' => static::relationship_through_config() ];
 }
 public static function repeater_config(){
     return array (
@@ -491,18 +398,6 @@ public static function textarea_config(){
 }
 public static function textarea(){
     return ['type' => 'anomaly.field_type.textarea', 'config' => static::textarea_config() ];
-}
-public static function upload_config(){
-    return array (
-  'folder' => '',
-  'image' => '',
-  'mimes' => '',
-  'max' => '2',
-  'disk' => 'uploads',
-);
-}
-public static function upload(){
-    return ['type' => 'anomaly.field_type.upload', 'config' => static::upload_config() ];
 }
 public static function url_config(){
     return array (

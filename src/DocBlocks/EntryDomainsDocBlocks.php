@@ -2,7 +2,6 @@
 
 namespace Pyro\IdeHelper\DocBlocks;
 
-use Anomaly\Streams\Platform\Assignment\AssignmentModel;
 use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
@@ -51,7 +50,7 @@ class EntryDomainsDocBlocks
     {
         $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Illuminate\Support\Collection|ClassDoc[] $c */
-        /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc}  $c */
+        /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc}  $c */
         $c = collect([
             'model'               => "\\{$namespace}\\{$name}\\{$name}Model",
             'collection'          => "\\{$namespace}\\{$name}\\{$name}Collection",
@@ -64,6 +63,8 @@ class EntryDomainsDocBlocks
             'seeder'              => "\\{$namespace}\\{$name}\\{$name}Seeder",
             'interface'           => "\\{$namespace}\\{$name}\\Contract\\{$name}Interface",
             'repositoryInterface' => "\\{$namespace}\\{$name}\\Contract\\{$name}RepositoryInterface",
+            'formBuilder'         => "\\{$namespace}\\{$name}\\Form\\{$name}FormBuilder",
+            'tableBuilder'        => "\\{$namespace}\\{$name}\\Table\\{$name}TableBuilder",
         ]);
 
         $pivotFiles = glob(path_join($path, '*Pivot.php'), GLOB_NOSORT);
@@ -97,8 +98,7 @@ class EntryDomainsDocBlocks
         $c[ 'model' ]->ensureMethod('getPresenter', $c[ 'presenter' ])
             ->ensureMethod('newCollection', $c[ 'collection' ])
             ->ensureMethod('newRouter', $c[ 'router' ])
-            ->ensureMethod('newEloquentBuilder', $c[ 'queryBuilder' ])
-        ;
+            ->ensureMethod('newEloquentBuilder', $c[ 'queryBuilder' ]);
         $c[ 'repository' ]->cleanTag('method')
             ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
             ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
@@ -124,21 +124,26 @@ class EntryDomainsDocBlocks
 
         $c[ 'queryBuilder' ]->ensureProperty('$model', $c[ 'model' ]);
 
+        $c[ 'formBuilder' ]
+            ->ensureMethod('getFormEntry', $c[ 'interface' ])
+            ->ensureMethod('getFormModelName', $c[ 'model' ])
+            ->ensureMethod('getFormModel', $c[ 'model' ]);
+
         /** @var \Pyro\Platform\Entry\EntryModel $model */
-        $modelClass = $c[ 'model' ]->getClassName();
+        $modelClass     = $c[ 'model' ]->getClassName();
         $presenterProps = [];
-        $model = new $modelClass();
-        if($model instanceof EntryModel) {
+        $model          = new $modelClass();
+        if ($model instanceof EntryModel) {
             foreach ($model->getAssignments() as $assignment) {
                 $presenterProps[] = [
                     'class' => get_class($assignment->getFieldType()->getPresenter()),
-                    'slug' => $assignment->getFieldSlug()
+                    'slug'  => $assignment->getFieldSlug(),
                 ];
             }
         }
-        foreach($presenterProps as $props) {
+        foreach ($presenterProps as $props) {
             $c[ 'presenter' ]->ensureProperty($props[ 'slug' ], $props[ 'class' ]);
-            }
+        }
 
 //        /** @var \Illuminate\Support\Collection|ClassDefinition[] $process */
 //        $process = $c->values()->filter(function (ClassDoc $classDoc) {
@@ -162,6 +167,8 @@ class EntryDomainsDocBlocks
         'seeder'              => \Anomaly\Streams\Platform\Database\Seeder\Seeder::class,
         'interface'           => \Anomaly\Streams\Platform\Entry\Contract\EntryInterface::class,
         'repositoryInterface' => \Anomaly\Streams\Platform\Entry\Contract\EntryRepositoryInterface::class,
+        'formBuilder'         => \Anomaly\Streams\Platform\Ui\Form\FormBuilder::class,
+        'tableBuilder'        => \Anomaly\Streams\Platform\Ui\Table\TableBuilder::class,
     ];
 
     protected function getFallbackClass($key)

@@ -15,6 +15,7 @@ class FormBuilderDocBlocks
     public function handle(DocRegistry $registry)
     {
         $cd = $registry->getClass(FormBuilder::class);
+
         $cd->getProperty('buttons')->ensureVar('array', '= \\' . Examples::class . '::buttons()');
         $cd->getProperty('fields')->ensureVar('array', '= \\' . FieldTypeExamples::class . '::values()');
         $cd->getProperty('sections')->ensureVar('array', '= \\' . FormBuilderExamples::class . '::sections()');
