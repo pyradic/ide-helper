@@ -39,6 +39,7 @@ Although this package has various PHPStorm specific features, it\'s still able t
     ```sh
     ide-helper:generate
     ide-helper:streams
+    ide-helper:meta
     idea:completion
     idea:meta
     idea:toolbox
@@ -51,6 +52,7 @@ Although this package has various PHPStorm specific features, it\'s still able t
             "ide": [
                 "@php artisan ide-helper:generate",
                 "@php artisan ide-helper:streams",
+                "@php artisan ide-helper:meta",
                 "@php artisan idea:completion",
                 "@php artisan idea:meta",
                 "@php artisan idea:toolbox"
