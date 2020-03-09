@@ -193,7 +193,11 @@ class LinkPresenter extends EntryPresenter{}
 
 ### API
 ```php
-\Laradic\Generators\Doc\DocRegistry::class;
+use \Laradic\Generators\Doc\DocRegistry as DR;
+$executor = resolve(Laradic\Generators\Doc\DocChainExecutor::class);
+$executor->appendToChain(function(DR $registry){
+$registry->getClass(\Illuminate\Auth\Authenticatable::class)                             
+});
 
 ```
 
