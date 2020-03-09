@@ -7,6 +7,22 @@ Although this package has various PHPStorm specific features, it\'s still able t
 
 **Version 1.1** Will feature much easier ways to create customize various auto-completions.
 
+- [Installation](#installation)
+- [Examples](#examples)
+  - [Addon Collections](#addon-collections)
+  - [Views](#views)
+  - [Config](#config)
+  - [Streams](#streams)
+  - [Model](#model-completion)
+  - [AddonServiceProvider](#addonserviceprovider-properties)
+  - [FormBuilder](#formbuilder-properties)
+  - [TableBuilder](#tablebuilder-properties)
+  - [Twig](#twig-completion-tip)
+- [Docblocks](#docblock-based)
+- [Progress](#progress)
+  - [Todos](#todos)
+
+
 ### Installation
 
 1. Install using composer
@@ -47,7 +63,6 @@ Although this package has various PHPStorm specific features, it\'s still able t
 4. Install PHPStorm/IntelliJ Idea Plugins:
    - `deep-assoc-completion`
    - `PHP Toolbox`
-
 
 ### Examples
 
@@ -105,8 +120,15 @@ screenshots todo...
 - Provides the same button completion as FormBuilder
 screenshots todo...
 
-##### Twig completion
-screenshots todo...
+##### Twig completion (tip)
+This is just a tip for when you want better code-completion in Twig files.
+![ide-helper-twig_2](screens/ide-helper-twig_2.png)
+
+
+To use this: Install & Enable the symfony plugin.
+![symfony-settings](screens/symfony-settings.png)
+
+
 
 ### Docblock based
 Most methods and properties in stream based related classes will now resolve properly.
@@ -167,6 +189,11 @@ class LinkPresenter extends EntryPresenter{}
 ```
 
 
+### API
+```php
+\Laradic\Generators\Doc\DocRegistry::class;
+
+```
 
 ### Progress
 
