@@ -19,6 +19,7 @@ Although this package has various PHPStorm specific features, it\'s still able t
   - [TableBuilder](#tablebuilder-properties)
   - [Twig](#twig-completion-tip)
 - [Docblocks](#docblock-based)
+- [Progress](#api)
 - [Progress](#progress)
   - [Todos](#todos)
 
