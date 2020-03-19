@@ -116,6 +116,7 @@ class AddonCollectionExamples
 'pyro.extension.confluence_widget' => \Pyro\ConfluenceWidgetExtension\ConfluenceWidgetExtension::class,
 'pyro.module.diagnose' => \Pyro\DiagnoseModule\DiagnoseModule::class,
 'pyro.module.docs' => \Pyro\DocsModule\DocsModule::class,
+'pyro.module.graphql' => \Pyro\GraphqlModule\GraphqlModule::class,
 'pyro.extension.html_widget' => \Pyro\HtmlWidgetExtension\HtmlWidgetExtension::class,
 'pyro.extension.divider_link_type' => \Pyro\DividerLinkTypeExtension\DividerLinkTypeExtension::class,
 'pyro.extension.divider_link_type' => \Pyro\DividerLinkTypeExtension\DividerLinkTypeExtension::class,
