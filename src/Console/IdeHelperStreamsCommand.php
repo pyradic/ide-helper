@@ -140,14 +140,14 @@ class IdeHelperStreamsCommand extends Command
 
             $executor = $this->createExecutor();
             $executor->transform();
-            collect($executor->getRegistry()->getClasses())->filter(function (ClassDoc $doc) use ($modelDocGenerator) {
-                if ($doc->getReflection()->isSubclassOf(Model::class)) {
-                    $this->line("  - Generating model '{$doc->getReflection()->getName()}' completions...'", null, 'v');
-                    $modelDocGenerator->generateForModel($doc->getReflection()->getName());
-                }
-            });
+            $models = collect($executor->getRegistry()->getClasses())->map->getReflection()->filter->isSubclassOf(Model::class);
+            foreach($models as $className => $class){
+                $this->line("  - Generating model '{$className}' completions...'", null, 'v');
+                $modelDocGenerator->generateForModel($className);
+            }
             return;
-        } elseif ($this->option('docblocks')) {
+        }
+        if ($this->option('docblocks')) {
             $executor = $this->createExecutor();
             $executor->transform();
             $executor->run();

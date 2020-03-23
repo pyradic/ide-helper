@@ -25,6 +25,7 @@ class FieldTypeExamples
 'anomaly.field_type.integer',
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
+'pyro.field_type.matrix',
 'anomaly.field_type.multiple',
 'crvs.field_type.multiple_departments',
 'pyro.field_type.pivot',
@@ -79,6 +80,7 @@ null => static::icon(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
+null => static::matrix(),
 null => static::multiple(),
 null => static::multiple_departments(),
 null => static::pivot(),
@@ -315,6 +317,13 @@ public static function markdown_config(){
 public static function markdown(){
     return ['type' => 'anomaly.field_type.markdown', 'config' => static::markdown_config() ];
 }
+public static function matrix_config(){
+    return array (
+);
+}
+public static function matrix(){
+    return ['type' => 'pyro.field_type.matrix', 'config' => static::matrix_config() ];
+}
 public static function multiple_config(){
     return array (
   'related' => '',
@@ -398,6 +407,7 @@ public static function repeater_config(){
   'add_row' => '',
   'min' => '',
   'max' => '',
+  'repeater_title' => '',
 );
 }
 public static function repeater(){

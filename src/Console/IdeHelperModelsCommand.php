@@ -183,7 +183,7 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
             case 'anomaly.field_type.checkboxes': return 'mixed';
             case 'anomaly.field_type.colorpicker': return 'string';
             case 'anomaly.field_type.country': return 'string';
-            case 'anomaly.field_type.datetime': return 'string';
+            case 'anomaly.field_type.datetime': return '\\Carbon\\Carbon';
             case 'anomaly.field_type.decimal': return 'float';
             case 'anomaly.field_type.editor': return 'string';
             case 'anomaly.field_type.email': return 'string';

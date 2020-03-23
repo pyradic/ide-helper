@@ -3,13 +3,15 @@
 namespace Pyro\IdeHelper\Overrides;
 
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ModelDocGenerator extends IdeHelperModelsCommand
 {
-    public function generateForModel($class)
+    public function generateForModel($class, ?OutputInterface $output = null)
     {
-        $this->output = new BufferedOutput();
+        $this->output = $output ?? new BufferedOutput();
         $this->laravel = app();
         return $this->generateDocs([$class]);
     }

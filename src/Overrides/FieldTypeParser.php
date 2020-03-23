@@ -35,13 +35,17 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
             }
             catch (\Exception $e) {
             }
+            catch (\Throwable $e) {
+            }
         } elseif ($type instanceof RelationshipFieldType) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
             try {
-                $relatedModel  = get_class($type->getRelatedModel());
+                $relatedModel  =     get_class($type->getRelatedModel());
                 $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
             }
             catch (\Exception $e) {
+            }
+            catch (\Throwable $e) {
             }
         } elseif ($type instanceof UploadFieldType || $type instanceof FileFieldType) {
             $returnTag[] = '\Illuminate\Database\Eloquent\Relations\BelongsTo';
@@ -50,6 +54,8 @@ class FieldTypeParser extends \Anomaly\Streams\Platform\Addon\FieldType\FieldTyp
                 $returnComment = "// return \$this->belongsTo(\\{$relatedModel}::class);";
             }
             catch (\Exception $e) {
+            }
+            catch (\Throwable $e) {
             }
         }
 
