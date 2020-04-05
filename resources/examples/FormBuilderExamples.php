@@ -7,6 +7,22 @@ use Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionHandler;
 
 class FormBuilderExamples
 {
+    public static function events()
+    {
+
+return ['validating',
+'validated',
+'ready',
+'built',
+'make',
+'post',
+'posting',
+'posted',
+'saving',
+'saved',
+'setting_entry',
+'entry_set',];
+    }
     public static function sectionRow()
     {
         return [

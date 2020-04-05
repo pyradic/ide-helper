@@ -3,6 +3,8 @@
 namespace Pyro\IdeHelper\DocBlocks;
 
 use Anomaly\Streams\Platform\Entry\Contract\EntryInterface;
+use Anomaly\Streams\Platform\Entry\EntryModel;
+use Anomaly\Streams\Platform\Entry\EntryQueryBuilder;
 use Anomaly\Streams\Platform\Ui\Button\Button;
 use Anomaly\Streams\Platform\Ui\Button\ButtonCollection;
 use Anomaly\Streams\Platform\Ui\Table\Component\Column\Column;
@@ -18,6 +20,15 @@ class TableBuilderDocBlocks
     public function handle(DocRegistry $registry)
     {
         $cd = $registry->getClass(TableBuilder::class);
+
+        $cd->cleanTag('method')
+            ->ensureMethod('onReady', 'void', TableBuilder::class . ' $builder')
+            ->ensureMethod('onBuilt', 'void', TableBuilder::class . ' $builder')
+            ->ensureMethod('onRowDeleted', 'void', TableBuilder::class . ' $builder, \\' . EntryModel::class . ' $model, \\' . EntryModel::class . ' $entry')
+            ->ensureMethod('onRowsDeleted', 'void', '$count, '. TableBuilder::class . ' $builder, \\' . EntryModel::class . ' $model')
+            ->ensureMethod('onReordered', 'void', '$count, '. TableBuilder::class . ' $builder, \\' . EntryModel::class . ' $model')
+            ->ensureMethod('onQuerying', 'void', '\\' . TableBuilder::class . ' $builder, \\' . EntryQueryBuilder::class . ' $query')
+            ->ensureMethod('onQueried', 'void', '\\' . TableBuilder::class . ' $builder, \\' . EntryQueryBuilder::class . ' $query');
 
         $cd->getProperty('actions')->ensureVar('array', ' = \\' . TableBuilderExamples::class . '::actions()');
         $cd->getProperty('buttons')->ensureVar('array', ' = \\' . Examples::class . '::buttons()');

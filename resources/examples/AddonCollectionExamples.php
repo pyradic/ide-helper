@@ -28,6 +28,7 @@ class AddonCollectionExamples
 'anomaly.field_type.datetime' => \Anomaly\DatetimeFieldType\DatetimeFieldType::class,
 'anomaly.field_type.decimal' => \Anomaly\DecimalFieldType\DecimalFieldType::class,
 'anomaly.extension.default_authenticator' => \Anomaly\DefaultAuthenticatorExtension\DefaultAuthenticatorExtension::class,
+'anomaly.extension.default_page_handler' => \Anomaly\DefaultPageHandlerExtension\DefaultPageHandlerExtension::class,
 'anomaly.field_type.editor' => \Anomaly\EditorFieldType\EditorFieldType::class,
 'anomaly.field_type.email' => \Anomaly\EmailFieldType\EmailFieldType::class,
 'anomaly.plugin.emoji' => \Anomaly\EmojiPlugin\EmojiPlugin::class,
@@ -48,6 +49,7 @@ class AddonCollectionExamples
 'anomaly.field_type.multiple' => \Anomaly\MultipleFieldType\MultipleFieldType::class,
 'anomaly.module.navigation' => \Anomaly\NavigationModule\NavigationModule::class,
 'anomaly.extension.page_link_type' => \Anomaly\PageLinkTypeExtension\PageLinkTypeExtension::class,
+'anomaly.module.pages' => \Anomaly\PagesModule\PagesModule::class,
 'anomaly.field_type.polymorphic' => \Anomaly\PolymorphicFieldType\PolymorphicFieldType::class,
 'anomaly.extension.reactions' => \Anomaly\ReactionsExtension\ReactionsExtension::class,
 'anomaly.module.redirects' => \Anomaly\RedirectsModule\RedirectsModule::class,
@@ -90,6 +92,7 @@ class AddonCollectionExamples
 'crvs.module.faq' => \Crvs\FaqModule\FaqModule::class,
 'crvs.field_type.files' => \Crvs\FilesFieldType\FilesFieldType::class,
 'crvs.module.files' => \Crvs\FilesModule\FilesModule::class,
+'crvs.theme.frontend' => \Crvs\FrontendTheme\FrontendTheme::class,
 'crvs.field_type.multiple_departments' => \Crvs\MultipleDepartmentsFieldType\MultipleDepartmentsFieldType::class,
 'crvs.extension.private_storage_adapter' => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
 'crvs.extension.requester_role_type' => \Crvs\RequesterRoleTypeExtension\RequesterRoleTypeExtension::class,
@@ -124,6 +127,7 @@ class AddonCollectionExamples
 'pyro.field_type.pivot' => \Pyro\PivotFieldType\PivotFieldType::class,
 'pyro.field_type.relationship_through' => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
 'pyro.module.streams_platform' => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
+'pyro.module.vxe_table' => \Pyro\VxeTableModule\VxeTableModule::class,
 'wmomo.module.zwolle' => \Wmomo\ZwolleModule\ZwolleModule::class,
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper\DocBlocks;
 
+use Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface;
 use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
@@ -87,68 +88,21 @@ class EntryDomainsDocBlocks
         $cs = $c->map(function (ClassDoc $class) {
             return Str::ensureLeft($class->getReflection()->getName() . '[]', '\\');
         });
-//        $cs = collect($c->all())->evaluate('getNameArray()', 'map'); //cast('string')->evaluate('item ~ "[]"','map');
 
-        $c[ 'interface' ]->ensureMixin($c[ 'model' ]);
-        $c[ 'presenter' ]->ensureMixin($c[ 'model' ]);
-        $c[ 'presenter' ]->cleanTag('property')->ensureProperty('$object', $c[ 'model' ]);
-        $c[ 'repositoryInterface' ]->ensureMixin($c[ 'repository' ]);
-        $c[ 'criteria' ]->ensureMixin($c[ 'queryBuilder' ]);
+        $this->handleModel($c[ 'model' ], $c, $cs);
+        $this->handleCollection($c[ 'collection' ], $c, $cs);
+        $this->handleCriteria($c[ 'criteria' ], $c, $cs);
+        $this->handleObserver($c[ 'observer' ], $c, $cs);
+        $this->handlePresenter($c[ 'presenter' ], $c, $cs);
+        $this->handleRepository($c[ 'repository' ], $c, $cs);
+        $this->handleQueryBuilder($c[ 'queryBuilder' ], $c, $cs);
+        $this->handleRouter($c[ 'router' ], $c, $cs);
+        $this->handleSeeder($c[ 'seeder' ], $c, $cs);
+        $this->handleInterface($c[ 'interface' ], $c, $cs);
+        $this->handleRepositoryInterface($c[ 'repositoryInterface' ], $c, $cs);
+        $this->handleFormBuilder($c[ 'formBuilder' ], $c, $cs);
+        $this->handleTableBuilder($c[ 'tableBuilder' ], $c, $cs);
 
-        $c[ 'model' ]->ensureMethod('getPresenter', $c[ 'presenter' ])
-            ->ensureMethod('newCollection', $c[ 'collection' ])
-            ->ensureMethod('newRouter', $c[ 'router' ])
-            ->ensureMethod('newEloquentBuilder', $c[ 'queryBuilder' ]);
-        $c[ 'repository' ]->cleanTag('method')
-            ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
-            ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
-            ->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ])
-            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
-            ->ensureMethod('find', $c[ 'interface' ], '$id')
-            ->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id')
-            ->ensureMethod('findBy', $c[ 'interface' ], '$key, $value')
-            ->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids')
-            ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
-            ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
-            ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
-            //->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
-            // 'create' will be provided by php toolbox
-            // 'update' cannot be provided by php toolbox. it messes things up. So it will be provided here, utilizing deep-assoc-completion
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
-            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
-            ->ensureMethod('getModel', $c[ 'model' ])
-            ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
-            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
-            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
-            ->ensureMethod('lastModified', $c[ 'interface' ]);
-
-        $c[ 'queryBuilder' ]->ensureProperty('$model', $c[ 'model' ]);
-
-        $c[ 'formBuilder' ]
-            ->ensureMethod('getFormEntry', $c[ 'interface' ])
-            ->ensureMethod('getFormModelName', $c[ 'model' ])
-            ->ensureMethod('getFormModel', $c[ 'model' ]);
-
-        /** @var \Pyro\Platform\Entry\EntryModel $model */
-        $modelClass     = $c[ 'model' ]->getClassName();
-        $presenterProps = [];
-        $model          = new $modelClass();
-        if ($model instanceof EntryModel) {
-            foreach ($model->getAssignments() as $assignment) {
-                $presenterProps[] = [
-                    'class' => get_class($assignment->getFieldType()->getPresenter()),
-                    'slug'  => $assignment->getFieldSlug(),
-                ];
-            }
-        }
-        foreach ($presenterProps as $props) {
-            $c[ 'presenter' ]->ensureProperty($props[ 'slug' ], $props[ 'class' ]);
-        }
-
-//        /** @var \Illuminate\Support\Collection|ClassDefinition[] $process */
-//        $process = $c->values()->filter(function (ClassDoc $classDoc) {
-//            return ! $this->isFallbackClass($classDoc->getReflection()->getName());
-//        });
         (new CollectionDocBlock(
             $c[ 'collection' ]->getReflection()->getName(),
             $c[ 'interface' ]->getReflection()->getName())
@@ -170,6 +124,205 @@ class EntryDomainsDocBlocks
         'formBuilder'         => \Anomaly\Streams\Platform\Ui\Form\FormBuilder::class,
         'tableBuilder'        => \Anomaly\Streams\Platform\Ui\Table\TableBuilder::class,
     ];
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleModel(ClassDoc $cd, $c, $cs)
+    {
+        $cd
+            ->ensureMethod('getPresenter', $c[ 'presenter' ])
+            ->ensureMethod('newCollection', $c[ 'collection' ])
+            ->ensureMethod('newRouter', $c[ 'router' ])
+            ->ensureMethod('newEloquentBuilder', $c[ 'queryBuilder' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleCollection(ClassDoc $cd, $c, $cs)
+    {
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleCriteria(ClassDoc $cd, $c, $cs)
+    {
+        $cd->ensureMixin($c[ 'queryBuilder' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleObserver(ClassDoc $cd, $c, $cs)
+    {
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc} $c
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handlePresenter(ClassDoc $cd, $c, $cs)
+    {
+        $cd
+            ->cleanTag('property')
+            ->ensureProperty('$object', $c[ 'model' ])
+            ->ensureMethod('getObject', $c[ 'model' ])
+            ->ensureMixin($c[ 'model' ]);
+
+        /** @var \Pyro\Platform\Entry\EntryModel $model */
+        $modelClass = $c[ 'model' ]->getClassName();
+        $model      = new $modelClass();
+        if ($model instanceof EntryModel) {
+            $presenterProps = collect($model->getAssignments())->map(function (AssignmentInterface $assignment) {
+                return [
+                    'class' => get_class($assignment->getFieldType()->getPresenter()),
+                    'slug'  => $assignment->getFieldSlug(),
+                ];
+            });
+            foreach ($presenterProps as $props) {
+                $cd->ensureProperty($props[ 'slug' ], $props[ 'class' ]);
+            }
+        }
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleRepository(ClassDoc $cd, $c, $cs)
+    {
+
+        $cd->cleanTag('method')
+            ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ])
+            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
+            ->ensureMethod('find', $c[ 'interface' ], '$id')
+            ->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id')
+            ->ensureMethod('findBy', $c[ 'interface' ], '$key, $value')
+            ->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids')
+            ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
+            ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
+            ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
+            //->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            // 'create' will be provided by php toolbox
+            // 'update' cannot be provided by php toolbox. it messes things up. So it will be provided here, utilizing deep-assoc-completion
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('getModel', $c[ 'model' ])
+            ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
+            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
+            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
+            ->ensureMethod('lastModified', $c[ 'interface' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleQueryBuilder(ClassDoc $cd, $c, $cs)
+    {
+        $c[ 'queryBuilder' ]->ensureProperty('$model', $c[ 'model' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleRouter(ClassDoc $cd, $c, $cs)
+    {
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleSeeder(ClassDoc $cd, $c, $cs)
+    {
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleInterface(ClassDoc $cd, $c, $cs)
+    {
+        $cd->ensureMixin($c[ 'model' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleRepositoryInterface(ClassDoc $cd, $c, $cs)
+    {
+        $cd->ensureMixin($c[ 'repository' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleFormBuilder(ClassDoc $cd, $c, $cs)
+    {
+        $cd
+            ->ensureMethod('getFormEntry', $c[ 'interface' ])
+            ->ensureMethod('getFormModelName', $c[ 'model' ])
+            ->ensureMethod('getFormModel', $c[ 'model' ]);
+    }
+
+    /**
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param array $c = static::cexample()
+     * @param array $cs = static::cexample()
+     *
+     * @return void
+     */
+    protected function handleTableBuilder(ClassDoc $cd, $c, $cs)
+    {
+    }
 
     protected function getFallbackClass($key)
     {
@@ -228,4 +381,25 @@ class EntryDomainsDocBlocks
         }
         return static::$tableColumns[ $table ];
     }
+
+
+    public static function cexample()
+    {
+        return [
+            'model'               => new ClassDoc(null),
+            'collection'          => new ClassDoc(null),
+            'criteria'            => new ClassDoc(null),
+            'observer'            => new ClassDoc(null),
+            'presenter'           => new ClassDoc(null),
+            'repository'          => new ClassDoc(null),
+            'queryBuilder'        => new ClassDoc(null),
+            'router'              => new ClassDoc(null),
+            'seeder'              => new ClassDoc(null),
+            'interface'           => new ClassDoc(null),
+            'repositoryInterface' => new ClassDoc(null),
+            'formBuilder'         => new ClassDoc(null),
+            'tableBuilder'        => new ClassDoc(null),
+        ];
+    }
+
 }
