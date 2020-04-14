@@ -12,6 +12,13 @@ class ModuleDocBlocks
     public function handle(DocRegistry $registry)
     {
         $cd = $registry->getClass(Module::class);
+        $cd->cleanTag('method')
+            ->ensureMethod('onUninstalling', 'void', Module::class . ' $module')
+            ->ensureMethod('onUninstalled', 'void', Module::class . ' $module')
+            ->ensureMethod('onInstalling', 'void', Module::class . ' $module')
+            ->ensureMethod('onInstalled', 'void', Module::class . ' $module')
+            ->ensureMethod('onMigrating', 'void', Module::class . ' $module')
+            ->ensureMethod('onMigrated', 'void', Module::class . ' $module');
         $cd->getProperty('sections')->ensureVar('array', '= \\' . ModuleExamples::class . '::sections()');
         $cd->getProperty('shortcuts')->ensureVar('array', '= \\' . ModuleExamples::class . '::shortcuts()');
         $cd->getMethod('setSections')->ensureParam('sections', 'array', '= \\' . ModuleExamples::class . '::sections()');

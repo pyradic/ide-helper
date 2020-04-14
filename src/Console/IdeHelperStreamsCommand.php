@@ -21,6 +21,7 @@ use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
 use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
 use Pyro\IdeHelper\DocBlocks\EntryModelDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ExtensionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\FieldTypeDocBlocks;
 use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
@@ -94,6 +95,7 @@ class IdeHelperStreamsCommand extends Command
             FieldTypeDocBlocks::class,
             FormBuilderDocBlocks::class,
             MigrationDocBlocks::class,
+            ExtensionDocBlocks::class,
             ModuleDocBlocks::class,
             RequestDocBlocks::class,
             ControlPanelDocBlocks::class,
