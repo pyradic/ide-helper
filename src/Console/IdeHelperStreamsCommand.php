@@ -159,8 +159,7 @@ class IdeHelperStreamsCommand extends Command
 
 
         $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
-        $this->warn('- You might need to run this command twice (fixing this issue is on the todo list)');
-        $this->warn('- Consider compiling streams before running this command');
+        $this->warn('It\'s advised to compile the streams before running this command by running <options=bold>php artisan streams:compile</>');
 
         $this->line('<options=bold>Generating model completions...</>');
         $this->spawnCall('ide-helper:streams --models');
