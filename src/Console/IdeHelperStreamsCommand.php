@@ -14,6 +14,7 @@ use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
 use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
+use Pyro\IdeHelper\Command\GeneratePermissionsExamples;
 use Pyro\IdeHelper\Command\GenerateRoutesExamples;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
@@ -32,6 +33,7 @@ use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
+use Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
 use Symfony\Component\Process\Process;
 
@@ -180,6 +182,8 @@ class IdeHelperStreamsCommand extends Command
         dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
         $this->line('  - GenerateRouteExamples', null, 'v');
         dispatch_now(new GenerateRoutesExamples(__DIR__ . '/../../resources/examples/RoutesExamples.php', $namespace));
+        $this->line('  - GeneratePermissionsExamples', null, 'v');
+        dispatch_now(new GeneratePermissionsExamples(__DIR__ . '/../../resources/examples/PermissionsExamples.php', $namespace));
 
         // toolbox
         $this->line('<options=bold>Generating toolbox completions...</>');
@@ -207,6 +211,8 @@ class IdeHelperStreamsCommand extends Command
         $this->dispatchNow(new GenerateViewsMeta());
         $this->line('  - Generating route completions...', null, 'v');
         $this->dispatchNow(new GenerateRoutesMeta());
+        $this->line('  - Generating permission completions...', null, 'v');
+        $this->dispatchNow(new GeneratePermissionsMeta());
 
         $this->info('Streams completion generated');
     }

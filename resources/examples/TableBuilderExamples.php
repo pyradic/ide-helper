@@ -36,7 +36,7 @@ class TableBuilderExamples
                 'value'       => '',
                 'field'       => '',
                 /** @see \Anomaly\Streams\Platform\Ui\Table\Component\Row\RowBuilder */
-                'row_class' => '',
+                'row_class'   => '',
                 'sort_column' => 'name',
             ],
             $i2 => [
@@ -179,7 +179,6 @@ class TableBuilderExamples
                 'description'        => '',
                 /**
                  * Instead of using title/description, override the heading view itself
-                 *
                  * @see  /etc/hosts
                  * @link /composer.json
                  */
@@ -190,14 +189,16 @@ class TableBuilderExamples
                  * Option to disable table views
                  * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\ViewBuilder
                  */
-                'enable_views' => true,
+                'enable_views'       => true,
                 /**
                  * Option to disable pagination
                  * @see \Anomaly\Streams\Platform\Ui\Table\Command\LoadTablePagination
                  */
-                'enable_pagination' => false,
+                'enable_pagination'  => false,
                 'sortable'           => false,
                 'attributes'         => [],
+                /** {@see \Anomaly\Streams\Platform\Ui\Table\TableAuthorizer} {@see \Anomaly\Streams\Platform\Ui\Table\Command\AuthorizeTable} */
+                'permission'         => PermissionsExamples::permissions(),
                 'no_results_message' => 'streams::message.no_results',
                 'filters'            => [
                     'filter_icon' => Examples::icon(),
@@ -216,28 +217,28 @@ class TableBuilderExamples
     public static function view()
     {
         $view = [
-            'slug'       => '',
-            'text'       => '',
-            'view'       => '',
-            'icon'       => IconExamples::all() ,
+            'slug'    => '',
+            'text'    => '',
+            'view'    => '',
+            'icon'    => IconExamples::all(),
             /**
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Contract\ViewQueryInterface The interface that a query needs to implement
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Query\RecentlyCreatedQuery An example query
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Guesser\QueryGuesser::guess() The query value is finalized here
              */
-            'query'      => '',
+            'query'   => '',
             /**
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Contract\ViewHandlerInterface The interface that a view needs to implement
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Type\RecentlyCreated An example view
              * @see \Anomaly\Streams\Platform\Ui\Table\Component\View\Guesser\HandlerGuesser::guess() The handler value is finalized here
              */
-            'handler'    => '',
+            'handler' => '',
 
             /**
              * Appends a `tag` label to the item text, the `context` option can be used to provide the tag type
              * @see vendor/anomaly/streams-platform/resources/views/table/partials/views.twig
              */
-            'label' => '',
+            'label'   => '',
             /** The value of `context` is used for the `label` element classname. like so: `class="tag tag-{{ context }}"`  */
             'context' => '',
 
