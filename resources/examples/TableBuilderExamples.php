@@ -197,7 +197,10 @@ class TableBuilderExamples
                 'enable_pagination'  => false,
                 'sortable'           => false,
                 'attributes'         => [],
-                /** {@see \Anomaly\Streams\Platform\Ui\Table\TableAuthorizer} {@see \Anomaly\Streams\Platform\Ui\Table\Command\AuthorizeTable} */
+                /**
+                 * Only show if has permission
+                 * @see \Anomaly\Streams\Platform\Ui\Table\TableAuthorizer
+                 */
                 'permission'         => PermissionsExamples::permissions(),
                 'no_results_message' => 'streams::message.no_results',
                 'filters'            => [
