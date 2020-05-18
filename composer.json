@@ -9,7 +9,7 @@
 
     "license": "MIT",
     "require": {
-        "laradic/support": "|~8.0~2.0",
+        "laradic/support": "~2.0",
         "laradic/generators": "~2.0",
         "laradic/idea": "~2.0",
         "symfony/process": "~3.0|~4.0|~5.0",
