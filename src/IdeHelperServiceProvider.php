@@ -17,7 +17,7 @@ class IdeHelperServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(dirname(__DIR__) . '/config/pyro.ide.php', 'pyro.ide');
+        $this->mergeConfigFrom(dirname(__DIR__) . '/config/pyro.ide-helper.php', 'pyro.ide-helper');
         $this->app->register(\Laradic\Support\SupportServiceProvider::class);
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);
@@ -30,7 +30,7 @@ class IdeHelperServiceProvider extends ServiceProvider
 //                new AddonCollectionsCompletion([ 'get' ]),
 //                AddonServiceProviderCompletion::class,
 //                AuthCompletion::class,
-//                new EntryDomainsCompletion(config('pyro.ide.toolbox.streams.exclude', [])),
+//                new EntryDomainsCompletion(config('pyro.ide-helper.toolbox.streams.exclude', [])),
 //                FormBuilderCompletion::class,
 //                MigrationCompletion::class,
 ////                ModuleCompletion::class,
@@ -41,23 +41,23 @@ class IdeHelperServiceProvider extends ServiceProvider
         });
         $this->commands('command.ide.streams');
 
-        ResolveSourceFolders::extend(function($match){
+        ResolveSourceFolders::extend(function ($match) {
             /** @var ResolveSourceFolders $this */
             if ($match[ 'hasPackageJson' ]) {
-                $pkgName = str_replace('/', '\\', $match['pkg'][ 'name' ]);
-                if ($match['pkg']->has('pyro')) {
-                    $this->addFolder(path_join($match[ 'packagePath' ], $match['pkg'][ 'pyro.srcPath' ]), $pkgName, false, $match);
+                $pkgName = str_replace('/', '\\', $match[ 'pkg' ][ 'name' ]);
+                if ($match[ 'pkg' ]->has('pyro')) {
+                    $this->addFolder(path_join($match[ 'packagePath' ], $match[ 'pkg' ][ 'pyro.srcPath' ]), $pkgName, false, $match);
                 }
             }
 
             if (FS::isDirectory($match[ 'viewsPath' ])) {
-                if(isset($pkgName)) {
+                if (isset($pkgName)) {
                     $prefix = $pkgName . '.views';
                 } else {
                     $prefix = $match[ 'composer' ]->collect('autoload.psr-4', [])->keys()->first() . 'views';
                 }
-                if(isset($prefix)) {
-                    $this->addFolder($match[ 'viewsPath' ], $prefix , false, $match);
+                if (isset($prefix)) {
+                    $this->addFolder($match[ 'viewsPath' ], $prefix, false, $match);
                 }
             }
         });
@@ -65,11 +65,13 @@ class IdeHelperServiceProvider extends ServiceProvider
 
     public function boot(Repository $config)
     {
-        $this->publishes([dirname(__DIR__).'/resources/examples' =>resource_path('ide-helper')],['ide-helper']);
+        $this->publishes([ dirname(__DIR__) . '/resources/examples' => resource_path('ide-helper') ], [ 'ide-helper' ]);
+        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro/ide-helper.php') ], [ 'config','ide-helper' ]);
+
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
         unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);
-        $metas[AddonsMeta::class] = [];
+        $metas[ AddonsMeta::class ] = [];
         $config->set('laradic.idea.meta.metas', $metas);
 
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);

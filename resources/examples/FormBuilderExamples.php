@@ -4,25 +4,88 @@ namespace Pyro\IdeHelper\Examples;
 
 use Anomaly\Streams\Platform\Ui\Form\Component\Action\Action;
 use Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionHandler;
+use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
 
 class FormBuilderExamples
 {
+    public static function field()
+    {
+        return [
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\EnabledGuesser */
+            'enabled'      => true,
+            'enabled'      => false,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\DisabledGuesser */
+            'disabled'     => true,
+            'disabled'     => false,
+            'field'        => '',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\LabelsGuesser */
+            'label'        => '',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\WarningsGuesser */
+            'warning'      => '',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\RequiredGuesser */
+            'required'     => false,
+            'rules'        => [
+                /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\UniqueGuesser */
+                'unique'   => false,
+                'unique'   => '<field>',
+                'unique'   => [],
+                'unique:<field>',
+                'unique:<table>:<field>',
+                /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\NullableGuesser */
+                'nullable' => false,
+            ],
+            'value'        => null,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\ReadOnlyGuesser */
+            'read_only'    => false,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\ReadOnlyGuesser */
+            'read_only'    => true,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\TranslatableGuesser */
+            'translatable' => false,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\TranslatableGuesser */
+            'translatable' => true,
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\InstructionsGuesser */
+            'instructions' => '',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\PlaceholdersGuesser */
+            'placeholder'  => '',
+            'type'         => implode('|',FieldTypeExamples::types()),
+            'config'       => FieldTypeExamples::configs(),
+        ];
+    }
+
+    public static function fields()
+    {
+        return [ static::field(), null => static::field() ];
+    }
+
     public static function events()
     {
 
-return ['validating',
-'validated',
-'ready',
-'built',
-'make',
-'post',
-'posting',
-'posted',
-'saving',
-'saved',
-'setting_entry',
-'entry_set',];
+        return [
+            'validating',
+            'validated',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\FormBuilder::build() */
+            'ready',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\FormBuilder::build() */
+            'built',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\FormBuilder::make() */
+            'make',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\FormBuilder::post() */
+            'post',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\PostForm::handle() */
+            'posting',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\PostForm::handle() */
+            'posted',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\SaveForm::handle() */
+            'saving',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\SaveForm::handle() */
+            'saved',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\SetFormEntry::handle() */
+            'setting_entry',
+            /** @see \Anomaly\Streams\Platform\Ui\Form\Command\SetFormEntry::handle() */
+            'entry_set',
+        ];
     }
+
     public static function sectionRow()
     {
         return [
@@ -71,7 +134,6 @@ return ['validating',
             'container_attributes' => [],
             /**
              * Only in groups. Defaults to 'deck'
-             *
              * @see form/partials/groups.twig
              * @example
              * `class="card-{{ section.type ?: 'deck' }}"`
@@ -160,9 +222,45 @@ DOC;
         return $formSection;
     }
 
-    public function actions($action = null)
+    public static function actions($action = null)
     {
-        /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionRegistry::$actions */
+        /**
+         * Set the actions config.
+         *
+         * Uses {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionDefaults::defaults() ActionDefaults::defaults()} if not set/empty
+         *
+         *
+         * Can (optionally) use pre-defined actions registered at {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionRegistry::$actions ActionRegistry}. Note that some of them modify the form's redirect option as instructed by {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\Guesser\RedirectGuesser::guess() RedirectGuesser::guess()}
+         *
+         *
+         * The builder actions array is populated/modified using:
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\FormBuilder::make() FormBuilder::make()} [dispatches] {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\Command\BuildActions BuildActions}
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\Command\BuildActions BuildActions} [runs] {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionBuilder::build() ActionBuilder::build()}
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionBuilder::build() ActionBuilder::build()} [runs] {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionInput::read() ActionInput::read()}
+         *
+         *
+         * Once all values of the builder its actions array have been populated/modified.
+         * It will create a class for each entry in the builder actions array and add it to the form:
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionBuilder::build() ActionBuilder::build()} [runs] {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionFactory::make() ActionFactory::make()}
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionFactory::make() ActionFactory::make()} [creates and hydrates] {@see \Anomaly\Streams\Platform\Ui\Table\Component\Action\Action Action} and {@see \Anomaly\Streams\Platform\Support\Hydrator Hydrator}
+         * - {@see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionFactory::build() ActionFactory::build()} [adds it to form] {@see \Anomaly\Streams\Platform\Ui\Form\Form Form}
+         *
+         *
+         * ```php
+         * $builder->setActions([
+         * 'save',
+         * 'save_exit'
+         * ]);
+         * ```
+         *
+         * @param array $actions = \Pyro\IdeHelper\Examples\FormBuilderExamples::actions()
+         *
+         * @return $this
+         * @see \Anomaly\Streams\Platform\Ui\Form\Component\Action\Guesser\RedirectGuesser::guess() RedirectGuesser::guess()
+         *
+         * @see \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionRegistry::$actions ActionRegistry::$actions
+         *
+         */
         return [
             'update'         => [
                 'button' => 'update',
@@ -188,7 +286,7 @@ DOC;
                 'button' => 'save',
                 'text'   => 'streams::button.save_edit_next',
             ],
-            null => static::action()
+            null             => static::action(),
         ];
     }
 
@@ -211,7 +309,7 @@ DOC;
             'button'     => Examples::button(),
             'button'     => Examples::buttons(),
         ];
-        $action=IconExamples::mergeWith($action);
+        $action = IconExamples::mergeWith($action);
         return $action;
     }
 

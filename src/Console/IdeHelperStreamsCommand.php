@@ -9,6 +9,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\ClassDoc;
+use Laradic\Generators\Doc\Doc\Doc;
+use Laradic\Generators\Doc\DocBlock;
 use Laradic\Generators\Doc\DocChainExecutor;
 use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
 use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
@@ -88,21 +90,7 @@ class IdeHelperStreamsCommand extends Command
     protected function createExecutor()
     {
         $executor = resolve(DocChainExecutor::class);
-        $executor->appendToChain([
-            AddonCollectionDocBlocks::class,
-            AddonServiceProviderDocBlocks::class,
-            AuthDocBlocks::class,
-            new EntryDomainsDocBlocks(),
-            EntryModelDocBlocks::class,
-            FieldTypeDocBlocks::class,
-            FormBuilderDocBlocks::class,
-            MigrationDocBlocks::class,
-            ExtensionDocBlocks::class,
-            ModuleDocBlocks::class,
-            RequestDocBlocks::class,
-            ControlPanelDocBlocks::class,
-            TableBuilderDocBlocks::class,
-        ]);
+        $executor->appendToChain(config('pyro.ide-helper.docblock.docblocks'));
         return $executor;
     }
 
@@ -154,9 +142,20 @@ class IdeHelperStreamsCommand extends Command
         if ($this->option('docblocks')) {
             $executor = $this->createExecutor();
             $executor->transform();
+            $executor->getSerializer()->on('write', function(Doc $classDoc){
+                $name = $classDoc->getReflection()->getName();
+                $this->line("     <info>></info> {$name}",null,'vv');
+            });
+            $executor->on('call', function($item){
+                $class = get_class($item);
+                $this->line(" - {$class}",null,'v');
+            });
             $executor->run();
             return;
         }
+
+//        $this->line('<options=bold>Generating idea completions...</>');
+//        $this->spawnCall('idea:completion');
 
 
 
@@ -188,7 +187,7 @@ class IdeHelperStreamsCommand extends Command
         // toolbox
         $this->line('<options=bold>Generating toolbox completions...</>');
         $this->line('  - Generating stream classes completions...', null, 'v');
-        $excludes = config('pyro.ide.toolbox.streams.exclude', []);
+        $excludes = config('pyro.ide-helper.toolbox.streams.exclude', []);
         foreach ($streams->all() as $stream) {
             $name = $stream->getNamespace() . '::' . $stream->getSlug();
             if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {

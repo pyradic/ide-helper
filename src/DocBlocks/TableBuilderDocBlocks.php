@@ -13,6 +13,7 @@ use Anomaly\Streams\Platform\Ui\Table\Component\Row\Row;
 use Anomaly\Streams\Platform\Ui\Table\TableBuilder;
 use Laradic\Generators\Doc\DocRegistry;
 use Pyro\IdeHelper\Examples\Examples;
+use Pyro\IdeHelper\Examples\FormBuilderExamples;
 use Pyro\IdeHelper\Examples\TableBuilderExamples;
 
 class TableBuilderDocBlocks
@@ -22,6 +23,7 @@ class TableBuilderDocBlocks
         $cd = $registry->getClass(TableBuilder::class);
 
         $cd->cleanTag('method')
+            ->ensureMethod('on', '$this', 'string $trigger = \\' . TableBuilderExamples::class . '::events()[null], $listener')
             ->ensureMethod('onReady', 'void', TableBuilder::class . ' $builder')
             ->ensureMethod('onBuilt', 'void', TableBuilder::class . ' $builder')
             ->ensureMethod('onRowDeleted', 'void', TableBuilder::class . ' $builder, \\' . EntryModel::class . ' $model, \\' . EntryModel::class . ' $entry')
@@ -37,19 +39,21 @@ class TableBuilderDocBlocks
         $cd->getProperty('columns')->ensureVar('array', ' = \\' . TableBuilderExamples::class . '::columns()');
         $cd->getProperty('options')->ensureVar('array', ' = \\' . TableBuilderExamples::class . '::options()');
 
-        $cd->getMethod('setButtons')->ensureParam('$buttons', 'array', ' = \\' . TableBuilderExamples::class . '::buttons()');
+        $cd->getMethod('getActions')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::actions()');
         $cd->getMethod('setActions')->ensureParam('$actions', 'array', ' = \\' . TableBuilderExamples::class . '::actions()');
+        $cd->getMethod('getOptions')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::options()');
+        $cd->getMethod('setOptions')->ensureParam('$options', 'array', ' = \\' . TableBuilderExamples::class . '::options()');
+        $cd->getMethod('getOption')->ensureParam('$key', 'string', ' = \\' . TableBuilderExamples::class . '::option()[$any]');
         $cd->getMethod('setOption')->ensureParam('$key', 'string', ' = \\' . TableBuilderExamples::class . '::option()[$any]');
         $cd->getMethod('hasOption')->ensureParam('$key', 'string', ' = \\' . TableBuilderExamples::class . '::option()[$any]');
-        $cd->getMethod('getOption')->ensureParam('$key', 'string', ' = \\' . TableBuilderExamples::class . '::option()[$any]');
-        $cd->getMethod('setOptions')->ensureParam('$options', 'array', ' = \\' . TableBuilderExamples::class . '::options()');
-        $cd->getMethod('setViews')->ensureParam('$views', 'array', ' = \\' . TableBuilderExamples::class . '::views()');
-        $cd->getMethod('getOptions')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::options()');
         $cd->getMethod('getButtons')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::buttons()');
-        $cd->getMethod('getActions')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::actions()');
+        $cd->getMethod('setButtons')->ensureParam('$buttons', 'array', ' = \\' . TableBuilderExamples::class . '::buttons()');
+        $cd->getMethod('setViews')->ensureParam('$views', 'array', ' = \\' . TableBuilderExamples::class . '::views()');
         $cd->getMethod('getViews')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::views()');
-
         $cd->getMethod('addView')->ensureParam('array', '$view', ' = \\' . TableBuilderExamples::class . '::view()');
+        $cd->getMethod('getColumns')->ensureReturn('array', ' = \\' . TableBuilderExamples::class . '::columns()');
+        $cd->getMethod('setColumns')->ensureParam('$columns', 'array', ' = \\' . TableBuilderExamples::class . '::columns()');
+        $cd->getMethod('addColumn')->ensureParam('$column', 'array', ' = \\' . TableBuilderExamples::class . '::column()');
 
         $cd = $registry->getClass(Row::class);
         $cd->getMethod('getButtons')->ensureReturn('\\' . ButtonCollection::class . '|\\' . Button::class . '[]');

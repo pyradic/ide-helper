@@ -21,27 +21,42 @@ use Anomaly\Streams\Platform\Ui\Table\Component\View\Type\Trash;
 
 class TableBuilderExamples
 {
-
-    public static function columns($i = null, $i2 = null)
+    public static function events()
     {
         return [
-            $i  => [
-                'wrapper'     => '',
-                'entry'       => '',
-                /**
-                 * The table thead th title
-                 * @see \Anomaly\Streams\Platform\Ui\Table\Component\Header\Guesser\HeadingsGuesser
-                 */
-                'heading'     => '',
-                'value'       => '',
-                'field'       => '',
-                /** @see \Anomaly\Streams\Platform\Ui\Table\Component\Row\RowBuilder */
-                'row_class'   => '',
-                'sort_column' => 'name',
-            ],
-            $i2 => [
-                'value' => [ '(column)' => '' ],
-            ],
+            'ready',
+            'built',
+            'querying',
+            'queried',
+            'row_deleted',
+            'rows_deleted',
+            'reordered',
+        ];
+    }
+
+    public static function columns()
+    {
+        return [
+            null => static::column(),
+        ];
+    }
+
+    public static function column()
+    {
+        return [
+            'wrapper'     => '',
+            'entry'       => '',
+            /**
+             * The table thead th title
+             * @see \Anomaly\Streams\Platform\Ui\Table\Component\Header\Guesser\HeadingsGuesser
+             */
+            'heading'     => '',
+            'value'       => '',
+            'value'       => [ '(column)' => '' ],
+            'field'       => '',
+            /** @see \Anomaly\Streams\Platform\Ui\Table\Component\Row\RowBuilder */
+            'row_class'   => '',
+            'sort_column' => 'name',
         ];
     }
 
@@ -195,6 +210,11 @@ class TableBuilderExamples
                  * @see \Anomaly\Streams\Platform\Ui\Table\Command\LoadTablePagination
                  */
                 'enable_pagination'  => false,
+                /**
+                 * Equals QueryBuilder with() method
+                 * @see \Anomaly\Streams\Platform\Ui\Table\TableRepository::get()
+                 */
+                'eager'              => [],
                 'sortable'           => false,
                 'attributes'         => [],
                 /**
@@ -287,5 +307,15 @@ class TableBuilderExamples
             ],
             null                => static::view(),
         ];
+    }
+
+    public static function buttons()
+    {
+        return Examples::buttons();
+    }
+
+    public static function button()
+    {
+        return Examples::button();
     }
 }

@@ -46,6 +46,9 @@ class GeneratePermissionsExamples
         $keys =$permissions->pluck('key')->map(function($val){
             return $val = "'{$val}',";
         })->implode("\n");
+        $assoc = $permissions->pluck('key')->map(function($val){
+            return $val = "'{$val}' => '{$val}',";
+        })->implode("\n");
         $result =  <<<EOF
 <?php /** @noinspection AutoloadingIssuesInspection *//** @noinspection PhpUnused */
 
@@ -58,6 +61,13 @@ class PermissionsExamples
         return [
         {$keys}
         ];
+    }
+
+    public static function permissionsAssoc()
+    {
+        return [
+        {$assoc}
+        ]
     }
 }
 EOF;

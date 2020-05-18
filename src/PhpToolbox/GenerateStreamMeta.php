@@ -53,7 +53,7 @@ class GenerateStreamMeta
         $this->streamSlug      = $slug;
 
         $path       = path_join(
-            config('pyro.ide.toolbox.path'),
+            config('pyro.ide-helper.toolbox.path'),
             'streams',
             $this->key = $slug . '_' . $namespace . '_' . $slug . '_' . $namespace,
             '.ide-toolbox.metadata.json'

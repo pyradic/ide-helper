@@ -3,6 +3,19 @@
 namespace Pyro\IdeHelper\Examples;
 
 use Anomaly\Streams\Platform\Ui\Icon\IconRegistry;
+use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
+use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
+use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
+use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
+use Pyro\IdeHelper\DocBlocks\EntryModelDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ExtensionDocBlocks;
+use Pyro\IdeHelper\DocBlocks\FieldTypeDocBlocks;
+use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
+use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
+use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
+use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
+use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 
 class Examples
 {
@@ -25,6 +38,30 @@ class Examples
             'default_value' => false,
             /** type:"App\\BooleanHandler", type_text:"BooleanHandler", tail_text:"true|false", icon:"com.jetbrains.php.PhpIcons.FUNCTION" */
             'handler' => Examples::class,
+        ];
+    }
+
+    public static function config()
+    {
+        return [
+            'docblock' => [
+                'docblocks' => [
+
+                    AddonCollectionDocBlocks::class,
+                    AddonServiceProviderDocBlocks::class,
+                    AuthDocBlocks::class,
+                    new EntryDomainsDocBlocks(),
+                    EntryModelDocBlocks::class,
+                    FieldTypeDocBlocks::class,
+                    FormBuilderDocBlocks::class,
+                    MigrationDocBlocks::class,
+                    ExtensionDocBlocks::class,
+                    ModuleDocBlocks::class,
+                    RequestDocBlocks::class,
+                    ControlPanelDocBlocks::class,
+                    TableBuilderDocBlocks::class,
+                ]
+            ]
         ];
     }
 
