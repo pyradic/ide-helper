@@ -32,7 +32,7 @@ class ControlPanelDocBlocks
         $cd=$registry->getClass(ControlPanel::class);
         $cd->getMethod('getNavigation')->ensureReturn([NavigationCollection::class, NavigationLink::class . '[]']);
         $cd->getMethod('getSections')->ensureReturn([SectionCollection::class, Section::class . '[]']);
-        $cd->getMethod('getButtons')->ensureReturn([ButtonCollection::class, \Pyro\Platform\Ui\ControlPanel\Component\Button::class . '[]']);
+        $cd->getMethod('getButtons')->ensureReturn([ButtonCollection::class, \Crvs\Platform\Ui\ControlPanel\Component\Button::class . '[]']);
 
 
         $cd=$registry->getClass(ControlPanelBuilder::class);

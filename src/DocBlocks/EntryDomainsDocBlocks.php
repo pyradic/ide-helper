@@ -190,7 +190,7 @@ class EntryDomainsDocBlocks
             ->ensureMethod('getObject', $c[ 'model' ])
             ->ensureMixin($c[ 'model' ]);
 
-        /** @var \Pyro\Platform\Entry\EntryModel $model */
+        /** @var \Crvs\Platform\Entry\EntryModel $model */
         $modelClass = $c[ 'model' ]->getClassName();
         $model      = new $modelClass();
         if ($model instanceof EntryModel) {

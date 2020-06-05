@@ -13,10 +13,10 @@ use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
 use Anomaly\Streams\Platform\Addon\Plugin\Plugin;
 use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
 use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
+use Crvs\Platform\Addon\Theme\Theme;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
 use Laradic\Generators\Doc\DocRegistry;
-use Pyro\Platform\Addon\Theme\Theme;
 
 class AddonCollectionDocBlocks
 {

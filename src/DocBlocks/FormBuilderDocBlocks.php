@@ -4,11 +4,11 @@ namespace Pyro\IdeHelper\DocBlocks;
 
 use Anomaly\Streams\Platform\Entry\EntryQueryBuilder;
 use Anomaly\Streams\Platform\Ui\Form\FormBuilder;
+use Crvs\Platform\Entry\EntryModel;
 use Laradic\Generators\Doc\DocRegistry;
 use Pyro\IdeHelper\Examples\Examples;
 use Pyro\IdeHelper\Examples\FieldTypeExamples;
 use Pyro\IdeHelper\Examples\FormBuilderExamples;
-use Pyro\Platform\Entry\EntryModel;
 
 class FormBuilderDocBlocks
 {
