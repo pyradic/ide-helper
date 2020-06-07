@@ -8,6 +8,9 @@ Although this package has various PHPStorm specific features, it\'s still able t
 **Version 1.1** Will feature much easier ways to create customize various auto-completions.
 
 - [Installation](#installation)
+- [Custom Generators](#custom-generators)
+  - [Docblock Generators](#docblock-generators)
+  - [Toolbox Generators](#toolbox-generators)
 - [Examples](#examples)
   - [Addon Collections](#addon-collections)
   - [Views](#views)
@@ -18,8 +21,6 @@ Although this package has various PHPStorm specific features, it\'s still able t
   - [FormBuilder](#formbuilder-properties)
   - [TableBuilder](#tablebuilder-properties)
   - [Twig](#twig-completion-tip)
-- [Docblocks](#docblock-based)
-- [Add Your Custom Docblock Generators](#add-your-custom-docblock-generators)
 - [Progress](#progress)
   - [Todos](#todos)
 
@@ -67,9 +68,126 @@ Although this package has various PHPStorm specific features, it\'s still able t
    - `deep-assoc-completion`
    - `PHP Toolbox`
 
+### Custom Generators
+
+##### Docblock Generators
+1. Create a handler class as shown below
+2. Add the classname it to the [`pyro.ide-helper.docblock.generators`](config/pyro.ide-helper.php) config array.
+3. The class will be included and generated when running `php artisan ide-helper:streams`
+
+> Check the [src/DocBlocks](src/DocBlocks) classes for examples.
+
+
+```php
+// this will make auth()->user()->hasPermission() etc resolve properly, check screenshot below
+class MyDocBlocks {
+    public function handle(\Laradic\Generators\Doc\DocRegistry $registry){
+        $registry->getClass(\Illuminate\Contracts\Auth\Guard::class)
+            ->getMethod('user')
+            ->ensureReturn([\Illuminate\Contracts\Auth\Authenticatable::class, \Anomaly\UsersModule\User\Contract\UserInterface::class]);
+    }
+}
+```
+![ide-helper-auth-user](screens/ide-helper-auth-user.png)
+
+
+##### Toolbox Generators
+1. Create a handler class as shown below
+2. Add the classname it to the [`pyro.ide-helper.toolbox.generators`](config/pyro.ide-helper.php) config array.
+3. The class will be included and generated when running `php artisan ide-helper:streams`
+
+> Check the [GenerateViewsMeta](https://github.com/laradic/idea/blob/develop/src/PhpToolbox/GenerateViewsMeta.php) class for a easily digested example.
+
+> Check the [src/DocBlocks](src/PhpToolbox) classes for more examples.
+
+
+```php
+class GenerateMyMeta extends \Laradic\Idea\PhpToolbox\AbstractMetaGenerator
+{
+    protected $directory = 'custom/my'; // used in: $this->path = path_join(config('laradic.idea.toolbox.path'), $this->directory, '.ide-toolbox.metadata.json');
+
+    public function handle()
+    {
+        $this->metadata()
+            ->push('providers', [
+                'name'  => 'my_stuff',
+                'items' => [
+                    ['lookup_string' => 'A',],
+                    ['lookup_string' => 'B',]
+                ],
+            ])
+            ->push('registrar', [
+                'provider'  => 'my_stuff',
+                'language'  => 'php',
+                'signature' => [ 'my_method', 'my_method:1' ],
+            ])
+            ->save();
+    }
+}
+```
+
+
 ### Examples
 
-> These are just a few examples, to screenshot everything would be the undertaking.
+> These are just a few examples, to screenshot everything would be a big undertaking.
+
+##### Docblock based
+Most methods and properties in stream based related classes will now resolve properly.
+This is done using the same way as ide-helper:models
+by generating DocBlock tags in the source files
+
+Some examples:
+```php
+/**
+ * Class LinkCollection
+ *
+ * @link http://pyrocms.com/
+ * @author PyroCMS, Inc. <support@pyrocms.com>
+ * @author Ryan Thompson <ryan@pyrocms.com>
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface[] all()
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface find($key, $default=null)
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface findBy($key, $value)
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface first()
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface[] get($key, $default=null)
+ * etc...
+ */
+class LinkCollection extends EntryCollection{}
+```
+```php
+/**
+ * Class LinkRepository
+ *
+ * @link http://pyrocms.com/
+ * @author PyroCMS, Inc. <support@pyrocms.com>
+ * @author Ryan Thompson <ryan@pyrocms.com>
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface first($direction = 'asc')
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface find($id)
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface findBy($key, $value)
+ * @method \Pyro\MenusModule\Link\LinkCollection|\Pyro\MenusModule\Link\Contract\LinkInterface[] findAllBy($key, $value)
+ * @method \Pyro\MenusModule\Link\LinkCollection|\Pyro\MenusModule\Link\Contract\LinkInterface[] findAll(array $ids)
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface create(array $attributes)
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface getModel()
+ * @method \Pyro\MenusModule\Link\Contract\LinkInterface newInstance(array $attributes = [])
+ * etc...         
+ */
+class LinkRepository extends EntryRepository implements LinkRepositoryInterface{}
+```
+```php
+/** @mixin \Pyro\MenusModule\Link\LinkRepository */
+interface LinkRepositoryInterface {}
+```
+```php
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
+class LinkPresenter extends EntryPresenter{}
+```
+```php
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
+interface LinkInterface {}
+```
+```php
+/** @mixin \Pyro\MenusModule\Link\LinkModel */
+class LinkPresenter extends EntryPresenter{}
+```
 
 ##### Addon collections
 
@@ -133,89 +251,6 @@ To use this: Install & Enable the symfony plugin.
 
 
 
-### Docblock based
-Most methods and properties in stream based related classes will now resolve properly.
-This is done using the same way as ide-helper:models
-by generating DocBlock tags in the source files
-
-Some examples:
-```php
-/**
- * Class LinkCollection
- *
- * @link http://pyrocms.com/
- * @author PyroCMS, Inc. <support@pyrocms.com>
- * @author Ryan Thompson <ryan@pyrocms.com>
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface[] all()
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface find($key, $default=null)
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface findBy($key, $value)
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface first()
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface[] get($key, $default=null)
- * etc...
- */
-class LinkCollection extends EntryCollection{}
-```
-```php
-/**
- * Class LinkRepository
- *
- * @link http://pyrocms.com/
- * @author PyroCMS, Inc. <support@pyrocms.com>
- * @author Ryan Thompson <ryan@pyrocms.com>
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface first($direction = 'asc')
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface find($id)
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface findBy($key, $value)
- * @method \Pyro\MenusModule\Link\LinkCollection|\Pyro\MenusModule\Link\Contract\LinkInterface[] findAllBy($key, $value)
- * @method \Pyro\MenusModule\Link\LinkCollection|\Pyro\MenusModule\Link\Contract\LinkInterface[] findAll(array $ids)
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface create(array $attributes)
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface getModel()
- * @method \Pyro\MenusModule\Link\Contract\LinkInterface newInstance(array $attributes = [])
- * etc...         
- */
-class LinkRepository extends EntryRepository implements LinkRepositoryInterface{}
-```
-```php
-/** @mixin \Pyro\MenusModule\Link\LinkRepository */
-interface LinkRepositoryInterface {}
-```
-```php
-/** @mixin \Pyro\MenusModule\Link\LinkModel */
-class LinkPresenter extends EntryPresenter{}
-```
-```php
-/** @mixin \Pyro\MenusModule\Link\LinkModel */
-interface LinkInterface {}
-```
-```php
-/** @mixin \Pyro\MenusModule\Link\LinkModel */
-class LinkPresenter extends EntryPresenter{}
-```
-
-
-### Add Your Custom Docblock Generators
-You can add your own custom docblock generation!
-
-```php
-namespace App;
-class MyDocBlocks {
-    public function handle(\Laradic\Generators\Doc\DocRegistry $registry){
-        $registry->getClass(Guard::class)
-            ->getMethod('user')
-            ->ensureReturn([Authenticatable::class, UserInterface::class]);
-    }
-}
-```
-
-```php
-namespace App\Providers;
-class AppServiceProvider extends \Illuminate\Support\ServiceProvider {
-    public function register(){
-        $this->app->config->push('pyro.ide-helper.docblock.docblocks', \App\MyDocBlocks::class);
-    }
-}
-```
-
-> Check the [src/DocBlocks](src/DocBlocks) classes for examples.
 
 
 ### Progress

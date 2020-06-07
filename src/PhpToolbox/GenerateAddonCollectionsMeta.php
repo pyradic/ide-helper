@@ -10,25 +10,15 @@ use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
 use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
 use Laradic\Idea\PhpToolbox\Metadata;
 
-class GenerateAddonCollectionsMeta
+class GenerateAddonCollectionsMeta extends AbstractMetaGenerator
 {
-    protected $path;
-
-    public function __construct($path = null)
-    {
-        if ($path === null) {
-
-            $path = path_join(config('laradic.idea.toolbox.path'), 'pyro/addon_collections/.ide-toolbox.metadata.json');
-        }
-        $this->path = $path;
-    }
+    protected $directory = 'pyro/addon_collections';
 
     public function handle(AddonCollection $addons, Filesystem $fs)
     {
-        $fs->ensureDirectory(path_get_directory($this->path));
-        $meta    = Metadata::create($this->path);
         $data    = [
             'modules'    => [],
             'addons'     => [],
@@ -51,7 +41,7 @@ class GenerateAddonCollectionsMeta
             if ( ! array_key_exists($typePlural, $classes)) {
                 continue;
             }
-            $class              = get_class($addon);
+            $class                 = get_class($addon);
             $data[ $typePlural ][] = [
                 'lookup_string' => $addon->getNamespace(),
                 'type'          => $classes[ $typePlural ],
@@ -63,13 +53,13 @@ class GenerateAddonCollectionsMeta
         }
 
         foreach ($data as $name => $items) {
-            $meta->push('providers', [
+            $this->metadata()->push('providers', [
                 'name'  => "pyro_{$name}",
                 'items' => $items,
             ]);
         }
         foreach ($classes as $name => $class) {
-            $meta->push('registrar', [
+            $this->metadata()->push('registrar', [
                 "provider"   => "pyro_{$name}",
                 "language"   => "php",
                 "signature"  => [
@@ -86,6 +76,6 @@ class GenerateAddonCollectionsMeta
             ]);
         }
 
-        $meta->save();
+        $this->metadata()->save();
     }
 }

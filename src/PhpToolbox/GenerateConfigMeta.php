@@ -5,11 +5,11 @@ namespace Pyro\IdeHelper\PhpToolbox;
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Application\Application;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
 use Laradic\Idea\PhpToolbox\Metadata;
-use Laradic\Support\FS;
 
 /*
 
@@ -34,30 +34,23 @@ use Laradic\Support\FS;
             "items":
  */
 
-class GenerateConfigMeta
+class GenerateConfigMeta extends AbstractMetaGenerator
 {
-    use DispatchesJobs;
-
-    protected $path;
+    protected $directory = 'pyro/config';
 
     /** @var array */
     protected $excludes;
 
+    /** @var Collection */
     protected $data;
 
-    public function __construct($path = null, array $excludes = [])
-    {
-        if ($path === null) {
+    /** @var Filesystem */
+    protected $fs;
 
-            $path = path_join(config('laradic.idea.toolbox.path'), 'pyro/config/.ide-toolbox.metadata.json');
-        }
-        $this->path     = $path;
-        $this->excludes = $excludes;
-        $this->data     = new Collection();
-    }
-
-    public function handle(Application $application, AddonCollection $addons)
+    public function handle(Application $application, AddonCollection $addons, Filesystem $fs)
     {
+        $this->fs   = $fs;
+        $this->data = new Collection();
 
         // addons
         foreach ($addons as $addon) {
@@ -107,7 +100,7 @@ class GenerateConfigMeta
                         $signature('has'),
                         $signature('set'),
                         $signature('forget'),
-                        ['function' => 'config', 'type' => 'type']
+                        [ 'function' => 'config', 'type' => 'type' ],
                     ],
                     'signature'  => [
                         Repository::class . ':get',
@@ -115,7 +108,7 @@ class GenerateConfigMeta
                         Repository::class . ':set',
                         Repository::class . ':forget',
                         'config',
-                        'config:1'
+                        'config:1',
                     ],
                 ],
             ],
@@ -133,7 +126,7 @@ class GenerateConfigMeta
     {
         $found = [];
         foreach ($searchPaths as $i => $path) {
-            $files   = array_unique(FS::rglob(path_join($path, '**/*.php')));
+            $files   = array_unique($this->fs->rglob(path_join($path, '**/*.php')));
             $files   = array_map(function ($configFile) use ($path) {
                 return path_make_relative($configFile, $path);
             }, $files);
@@ -141,7 +134,7 @@ class GenerateConfigMeta
         }
 
         $found = collect($searchPaths)->map(function ($path) {
-            $files = collect(FS::rglob(path_join($path, '**/*.php')))
+            $files = collect($this->fs->rglob(path_join($path, '**/*.php')))
                 ->unique()
                 ->map(function ($configFile) use ($path) {
                     return path_make_relative($configFile, $path);
@@ -256,6 +249,17 @@ class GenerateConfigMeta
             return 'int';
         }
         return 'mixed';
+    }
+
+    public function getExcludes()
+    {
+        return $this->excludes;
+    }
+
+    public function setExcludes($excludes)
+    {
+        $this->excludes = $excludes;
+        return $this;
     }
 
 }

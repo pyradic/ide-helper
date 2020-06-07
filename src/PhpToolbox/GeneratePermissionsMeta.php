@@ -4,21 +4,12 @@ namespace Pyro\IdeHelper\PhpToolbox;
 
 use Anomaly\Streams\Platform\Support\Authorizer;
 use Illuminate\Contracts\Config\Repository;
-use Laradic\Idea\PhpToolbox\Metadata;
+use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
 use Pyro\IdeHelper\Command\ResolveAllPermissions;
 
-class GeneratePermissionsMeta
+class GeneratePermissionsMeta extends AbstractMetaGenerator
 {
-
-    protected $path;
-
-    public function __construct($path = null)
-    {
-        if ($path === null) {
-            $path = path_join(config('laradic.idea.toolbox.path'), 'pyro/permissions/.ide-toolbox.metadata.json');
-        }
-        $this->path = $path;
-    }
+    protected $directory = 'pyro/permissions';
 
     public function handle()
     {
@@ -38,31 +29,31 @@ class GeneratePermissionsMeta
                 'type_text'     => '  ' . $text,
             ];
         });
-        $md          = Metadata::create($this->path);
-        $md->merge([
-            'registrar' => [
-                [
-                    'provider'   => 'pyro_permissions',
-                    'language'   => 'php',
-                    'signatures' => [
-                        [
-                            'class'  => Repository::class,
-                            'method' => 'authorize',
-                            'type'   => 'type',
+        $this->metadata()
+            ->merge([
+                'registrar' => [
+                    [
+                        'provider'   => 'pyro_permissions',
+                        'language'   => 'php',
+                        'signatures' => [
+                            [
+                                'class'  => Repository::class,
+                                'method' => 'authorize',
+                                'type'   => 'type',
+                            ],
+                        ],
+                        'signature'  => [
+                            Authorizer::class . ':authorize',
                         ],
                     ],
-                    'signature'  => [
-                        Authorizer::class . ':authorize',
+                ],
+                'providers' => [
+                    [
+                        'name'  => 'pyro_permissions',
+                        'items' => $data->values()->toArray(),
                     ],
                 ],
-            ],
-            'providers' => [
-                [
-                    'name'  => 'pyro_permissions',
-                    'items' => $data->values()->toArray(),
-                ],
-            ],
-        ]);
-        $md->save();
+            ])
+            ->save();
     }
 }

@@ -24,21 +24,7 @@ class IdeHelperServiceProvider extends ServiceProvider
 
         Tag::registerTagHandler('mixin', MixinTag::class);
 
-        $this->app->singleton('command.ide.streams', function ($app) {
-            $command = new IdeHelperStreamsCommand();
-//            $command->addCompletions([
-//                new AddonCollectionsCompletion([ 'get' ]),
-//                AddonServiceProviderCompletion::class,
-//                AuthCompletion::class,
-//                new EntryDomainsCompletion(config('pyro.ide-helper.toolbox.streams.exclude', [])),
-//                FormBuilderCompletion::class,
-//                MigrationCompletion::class,
-////                ModuleCompletion::class,
-//                RequestCompletion::class,
-//                TableBuilderCompletion::class,
-//            ]);
-            return $command;
-        });
+        $this->app->singleton('command.ide.streams', IdeHelperStreamsCommand::class);
         $this->commands('command.ide.streams');
 
         ResolveSourceFolders::extend(function ($match) {
@@ -66,7 +52,7 @@ class IdeHelperServiceProvider extends ServiceProvider
     public function boot(Repository $config)
     {
         $this->publishes([ dirname(__DIR__) . '/resources/examples' => resource_path('ide-helper') ], [ 'ide-helper' ]);
-        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro/ide-helper.php') ], [ 'config','ide-helper' ]);
+        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro/ide-helper.php') ], [ 'config', 'ide-helper' ]);
 
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);

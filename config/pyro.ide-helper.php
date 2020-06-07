@@ -1,6 +1,7 @@
 <?php
 
-
+use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
+use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
@@ -14,12 +15,15 @@ use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
+use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
+use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
+use Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta;
 
 /** @return array = \Pyro\IdeHelper\Examples\Examples::config() */
 return [
-    'toolbox' => [
-        'path'    => base_path('php-toolbox'),
-        'streams' => [
+    'toolbox'  => [
+        'path'       => base_path('php-toolbox'),
+        'streams'    => [
             /*
              * Goto behaviour of field key values.
              * When doing [CTRL+click] or [CTRL+B] on a field key do:
@@ -31,10 +35,16 @@ return [
             'field_goto_target' => 'documentation', // Goto [CTRL+click] on field key will open the configuration.md file of the field (eg core/anomaly/select-field_type/docs/en/01.introduction/02.configuration.md)
             'exclude'           => [ 'Anomaly\CommentsModule', 'Anomaly\DocumentationModule' ],
         ],
+        'generators' => [
+            [ 'description' => 'addon collections completions', 'class' => GenerateAddonCollectionsMeta::class ],
+            [ 'description' => 'config completions', 'class' => GenerateConfigMeta::class, 'excludes' => [] ],
+            [ 'description' => 'view completions', 'class' => GenerateViewsMeta::class ],
+            [ 'description' => 'route completions', 'class' => GenerateRoutesMeta::class ],
+            [ 'description' => 'permission completions', 'class' => GeneratePermissionsMeta::class ],
+        ],
     ],
     'docblock' => [
-        'docblocks' => [
-
+        'generators' => [
             AddonCollectionDocBlocks::class,
             AddonServiceProviderDocBlocks::class,
             AuthDocBlocks::class,
@@ -48,6 +58,6 @@ return [
             RequestDocBlocks::class,
             ControlPanelDocBlocks::class,
             TableBuilderDocBlocks::class,
-        ]
-    ]
+        ],
+    ],
 ];

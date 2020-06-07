@@ -6,6 +6,7 @@ use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\ClassDoc;
@@ -90,19 +91,19 @@ class IdeHelperStreamsCommand extends Command
     protected function createExecutor()
     {
         $executor = resolve(DocChainExecutor::class);
-        $executor->appendToChain(config('pyro.ide-helper.docblock.docblocks'));
+        $executor->appendToChain(config('pyro.ide-helper.docblock.generators'));
         return $executor;
     }
 
     protected function spawnCall($args)
     {
         $phpBin = $_SERVER[ '_' ];
-        $out=$this->getOutput();
+        $out    = $this->getOutput();
 
         $verbosity = $out->isVerbose() ? '-v' : '';
         $verbosity = $out->isVeryVerbose() ? '-vv' : $verbosity;
         $verbosity = $out->isDebug() ? '-vvv' : $verbosity;
-        $process = new Process("{$phpBin} artisan {$verbosity} {$args}");
+        $process   = new Process("{$phpBin} artisan {$verbosity} {$args}");
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
                 echo $buffer;
@@ -113,7 +114,7 @@ class IdeHelperStreamsCommand extends Command
 //        $this->line(exec("{$phpBin} artisan {$verbosity} {$args}"));
     }
 
-    public function handle(CompletionGenerator $generator, StreamRepositoryInterface $streams)
+    public function handle(CompletionGenerator $options, StreamRepositoryInterface $streams)
     {
         /*
          * We run this shell command another 2 times.
@@ -133,7 +134,7 @@ class IdeHelperStreamsCommand extends Command
             $executor = $this->createExecutor();
             $executor->transform();
             $models = collect($executor->getRegistry()->getClasses())->map->getReflection()->filter->isSubclassOf(Model::class);
-            foreach($models as $className => $class){
+            foreach ($models as $className => $class) {
                 $this->line("  - Generating model '{$className}' completions...'", null, 'v');
                 $modelDocGenerator->generateForModel($className);
             }
@@ -142,13 +143,13 @@ class IdeHelperStreamsCommand extends Command
         if ($this->option('docblocks')) {
             $executor = $this->createExecutor();
             $executor->transform();
-            $executor->getSerializer()->on('write', function(Doc $classDoc){
+            $executor->getSerializer()->on('write', function (Doc $classDoc) {
                 $name = $classDoc->getReflection()->getName();
-                $this->line("     <info>></info> {$name}",null,'vv');
+                $this->line("     <info>></info> {$name}", null, 'vv');
             });
-            $executor->on('call', function($item){
+            $executor->on('call', function ($item) {
                 $class = get_class($item);
-                $this->line(" - {$class}",null,'v');
+                $this->line(" - {$class}", null, 'v');
             });
             $executor->run();
             return;
@@ -156,8 +157,6 @@ class IdeHelperStreamsCommand extends Command
 
 //        $this->line('<options=bold>Generating idea completions...</>');
 //        $this->spawnCall('idea:completion');
-
-
 
         $this->getLaravel()->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
         $this->warn('It\'s advised to compile the streams before running this command by running <options=bold>php artisan streams:compile</>');
@@ -167,7 +166,7 @@ class IdeHelperStreamsCommand extends Command
         $this->line('<options=bold>Generating docblock completions...</>');
         $this->spawnCall('ide-helper:streams --docblocks');
 
-        $generator->before(function ($pipe) {
+        $options->before(function ($pipe) {
             $class = get_class($pipe);
             $this->line("  - Generating {$class}", null, 'v');
         });
@@ -202,16 +201,20 @@ class IdeHelperStreamsCommand extends Command
                 $this->line("<fg=red;options=bold>Error generating {$name}</> <fg=red>{$e->getMessage()}</>", null, 'vv');
             }
         }
-        $this->line('  - Generating addon collections completions...', null, 'v');
-        $this->dispatchNow(new GenerateAddonCollectionsMeta());
-        $this->line('  - Generating config completions...', null, 'v');
-        $this->dispatchNow(new GenerateConfigMeta());
-        $this->line('  - Generating view completions...', null, 'v');
-        $this->dispatchNow(new GenerateViewsMeta());
-        $this->line('  - Generating route completions...', null, 'v');
-        $this->dispatchNow(new GenerateRoutesMeta());
-        $this->line('  - Generating permission completions...', null, 'v');
-        $this->dispatchNow(new GeneratePermissionsMeta());
+
+        foreach (config('pyro.ide-helper.toolbox.generators') as $generatorConfig) {
+            $generatorConfig = collect($generatorConfig);
+            $this->line("  - Generating {$generatorConfig->pull('description')}...", null, 'v');
+            $class    = $generatorConfig->pull('class');
+            $instance = new $class;
+            foreach ($generatorConfig as $key => $value) {
+                $methodName = Str::camel('set_' . $key);
+                if (method_exists($instance, $methodName)) {
+//                    $params = Arr::wrap($value);
+                    call_user_func([ $instance, $methodName ], $value);
+                }
+            }
+        }
 
         $this->info('Streams completion generated');
     }
