@@ -9,7 +9,7 @@
     "license": "MIT",
     "require": {
         "laradic/support": "~2.0",
-        "laradic/generators": "~2.0",
+        "laradic/generators": "~2.1",
         "laradic/idea": "~2.1",
         "symfony/process": "~3.0|~4.0|~5.0",
         "barryvdh/laravel-ide-helper": "~2.6",
