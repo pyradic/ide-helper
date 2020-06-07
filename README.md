@@ -1,7 +1,7 @@
 # Ide Helper for PyroCMS / Streams Platform
 
 The purpose of this package is to provide improved code-completion for PyroCMS/Streams Platform applications and to reduce time spend
-reading the documentation/other code.
+reading the documentation/other code. It also allows you to tap into the docblock generation process to add your own docblocks!
 
 Although this package has various PHPStorm specific features, it\'s still able to provide quite a few extras for other ide\'s/editors.
 
@@ -19,7 +19,7 @@ Although this package has various PHPStorm specific features, it\'s still able t
   - [TableBuilder](#tablebuilder-properties)
   - [Twig](#twig-completion-tip)
 - [Docblocks](#docblock-based)
-- [Progress](#api)
+- [Add Your Custom Docblock Generators](#add-your-custom-docblock-generators)
 - [Progress](#progress)
   - [Todos](#todos)
 
@@ -192,15 +192,31 @@ class LinkPresenter extends EntryPresenter{}
 ```
 
 
-### API
-```php
-use \Laradic\Generators\Doc\DocRegistry as DR;
-$executor = resolve(Laradic\Generators\Doc\DocChainExecutor::class);
-$executor->appendToChain(function(DR $registry){
-$registry->getClass(\Illuminate\Auth\Authenticatable::class)                             
-});
+### Add Your Custom Docblock Generators
+You can add your own custom docblock generation!
 
+```php
+namespace App;
+class MyDocBlocks {
+    public function handle(\Laradic\Generators\Doc\DocRegistry $registry){
+        $registry->getClass(Guard::class)
+            ->getMethod('user')
+            ->ensureReturn([Authenticatable::class, UserInterface::class]);
+    }
+}
 ```
+
+```php
+namespace App\Providers;
+class AppServiceProvider extends \Illuminate\Support\ServiceProvider {
+    public function register(){
+        $this->app->config->push('pyro.ide-helper.docblock.docblocks', \App\MyDocBlocks::class);
+    }
+}
+```
+
+> Check the [src/DocBlocks](src/DocBlocks) classes for examples.
+
 
 ### Progress
 
