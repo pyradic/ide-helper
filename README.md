@@ -102,7 +102,8 @@ class MyDocBlocks {
 
 
 ```php
-class GenerateMyMeta extends \Laradic\Idea\PhpToolbox\AbstractMetaGenerator
+```php
+class GenerateMyMeta extends \Laradic\Idea\Toolbox\AbstractMetaGenerator
 {
     protected $directory = 'custom/my'; // used in: $this->path = path_join(config('laradic.idea.toolbox.path'), $this->directory, '.ide-toolbox.metadata.json');
 

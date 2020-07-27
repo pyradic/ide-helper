@@ -6,11 +6,11 @@ use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Laradic\Idea\PhpToolbox\Metadata;
+use Laradic\Idea\Toolbox\Metadata;
 
 class GenerateStreamMeta
 {
-    /** @var \Laradic\Idea\PhpToolbox\Metadata */
+    /** @var \Laradic\Idea\Toolbox\Metadata */
     protected $meta;
 
     /** @var \Anomaly\Streams\Platform\Entry\EntryModel */
@@ -206,7 +206,7 @@ class GenerateStreamMeta
         $platformName = $databasePlatform->getName();
         $database     = null;
         if (strpos($table, '.')) {
-            list($database, $table) = explode('.', $table);
+            [ $database, $table ] = explode('.', $table);
         }
 
         $columns    = $schema->listTableColumns($table, $database);

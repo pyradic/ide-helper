@@ -6,37 +6,16 @@ use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
-use Laradic\Generators\Doc\Doc\ClassDoc;
 use Laradic\Generators\Doc\Doc\Doc;
-use Laradic\Generators\Doc\DocBlock;
 use Laradic\Generators\Doc\DocChainExecutor;
-use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
-use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
 use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
 use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
 use Pyro\IdeHelper\Command\GeneratePermissionsExamples;
 use Pyro\IdeHelper\Command\GenerateRoutesExamples;
-use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
-use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
-use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
-use Pyro\IdeHelper\DocBlocks\ControlPanelDocBlocks;
-use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
-use Pyro\IdeHelper\DocBlocks\EntryModelDocBlocks;
-use Pyro\IdeHelper\DocBlocks\ExtensionDocBlocks;
-use Pyro\IdeHelper\DocBlocks\FieldTypeDocBlocks;
-use Pyro\IdeHelper\DocBlocks\FormBuilderDocBlocks;
-use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
-use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
-use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
-use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
-use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
-use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
-use Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
 use Symfony\Component\Process\Process;
 
@@ -202,19 +181,20 @@ class IdeHelperStreamsCommand extends Command
             }
         }
 
-        foreach (config('pyro.ide-helper.toolbox.generators') as $generatorConfig) {
-            $generatorConfig = collect($generatorConfig);
-            $this->line("  - Generating {$generatorConfig->pull('description')}...", null, 'v');
-            $class    = $generatorConfig->pull('class');
-            $instance = new $class;
-            foreach ($generatorConfig as $key => $value) {
-                $methodName = Str::camel('set_' . $key);
-                if (method_exists($instance, $methodName)) {
-//                    $params = Arr::wrap($value);
-                    call_user_func([ $instance, $methodName ], $value);
-                }
-            }
-        }
+        $this->call('ide:toolbox');
+//        foreach (config('pyro.ide-helper.toolbox.generators') as $generatorConfig) {
+//            $generatorConfig = collect($generatorConfig);
+//            $this->line("  - Generating {$generatorConfig->pull('description')}...", null, 'v');
+//            $class    = $generatorConfig->pull('class');
+//            $instance = new $class;
+//            foreach ($generatorConfig as $key => $value) {
+//                $methodName = Str::camel('set_' . $key);
+//                if (method_exists($instance, $methodName)) {
+////                    $params = Arr::wrap($value);
+//                    call_user_func([ $instance, $methodName ], $value);
+//                }
+//            }
+//        }
 
         $this->info('Streams completion generated');
     }

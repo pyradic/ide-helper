@@ -8,8 +8,8 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
-use Laradic\Idea\PhpToolbox\Metadata;
+use Laradic\Idea\Toolbox\AbstractToolboxGenerator;
+use Laradic\Idea\Toolbox\Metadata;
 
 /*
 
@@ -34,12 +34,11 @@ use Laradic\Idea\PhpToolbox\Metadata;
             "items":
  */
 
-class GenerateConfigMeta extends AbstractMetaGenerator
+class GenerateConfigMeta extends AbstractToolboxGenerator
 {
-    protected $directory = 'pyro/config';
 
     /** @var array */
-    protected $excludes;
+    public $excludes = [];
 
     /** @var Collection */
     protected $data;

@@ -60,6 +60,28 @@ class IdeHelperServiceProvider extends ServiceProvider
         $metas[ AddonsMeta::class ] = [];
         $config->set('laradic.idea.meta.metas', $metas);
 
+        $config->set('laradic.idea.toolbox.generators', [
+            \Laradic\Idea\Toolbox\ConfigGenerator::class                   => [
+                'directory' => 'laravel/config',
+            ],
+            \Laradic\Idea\Toolbox\RoutesGenerator::class                   => [
+                'directory' => 'laravel/routes',
+            ],
+            \Laradic\Idea\Toolbox\ViewsGenerator::class                    => [
+                'directory'         => 'laravel/views',
+                'excludeNamespaces' => [ 'storage', 'root' ],
+            ],
+            \Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta::class => [
+                'directory' => 'pyro/addon_collections',
+            ],
+            \Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta::class           => [
+                'directory' => 'pyro/config',
+            ],
+            \Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta::class      => [
+                'directory' => 'pyro/permissions',
+            ],
+        ]);
+
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
         $this->app->booted(function () {
             if (env('INSTALLED')) {

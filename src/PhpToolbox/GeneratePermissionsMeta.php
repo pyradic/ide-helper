@@ -4,12 +4,11 @@ namespace Pyro\IdeHelper\PhpToolbox;
 
 use Anomaly\Streams\Platform\Support\Authorizer;
 use Illuminate\Contracts\Config\Repository;
-use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
+use Laradic\Idea\Toolbox\AbstractToolboxGenerator;
 use Pyro\IdeHelper\Command\ResolveAllPermissions;
 
-class GeneratePermissionsMeta extends AbstractMetaGenerator
+class GeneratePermissionsMeta extends AbstractToolboxGenerator
 {
-    protected $directory = 'pyro/permissions';
 
     public function handle()
     {

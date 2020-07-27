@@ -10,12 +10,10 @@ use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
 use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Laradic\Idea\PhpToolbox\AbstractMetaGenerator;
-use Laradic\Idea\PhpToolbox\Metadata;
+use Laradic\Idea\Toolbox\AbstractToolboxGenerator;
 
-class GenerateAddonCollectionsMeta extends AbstractMetaGenerator
+class GenerateAddonCollectionsMeta extends AbstractToolboxGenerator
 {
-    protected $directory = 'pyro/addon_collections';
 
     public function handle(AddonCollection $addons, Filesystem $fs)
     {

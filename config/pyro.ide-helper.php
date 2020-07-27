@@ -1,7 +1,7 @@
 <?php
 
-use Laradic\Idea\PhpToolbox\GenerateRoutesMeta;
-use Laradic\Idea\PhpToolbox\GenerateViewsMeta;
+use Laradic\Idea\Toolbox\RoutesGenerator;
+use Laradic\Idea\Toolbox\ViewsGenerator;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
@@ -38,8 +38,8 @@ return [
         'generators' => [
             [ 'description' => 'addon collections completions', 'class' => GenerateAddonCollectionsMeta::class ],
             [ 'description' => 'config completions', 'class' => GenerateConfigMeta::class, 'excludes' => [] ],
-            [ 'description' => 'view completions', 'class' => GenerateViewsMeta::class ],
-            [ 'description' => 'route completions', 'class' => GenerateRoutesMeta::class ],
+            [ 'description' => 'view completions', 'class' => ViewsGenerator::class ],
+            [ 'description' => 'route completions', 'class' => RoutesGenerator::class ],
             [ 'description' => 'permission completions', 'class' => GeneratePermissionsMeta::class ],
         ],
     ],
