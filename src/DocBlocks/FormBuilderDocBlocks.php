@@ -46,7 +46,7 @@ class FormBuilderDocBlocks
         $cd->getMethod('getFields')->ensureReturn('array', '= \\' . FormBuilderExamples::class . '::fields()');
         $cd->getMethod('setFields')->ensureParam('$fields', 'array', '= \\' . FormBuilderExamples::class . '::fields()');
         $cd->getMethod('addField')->ensureParam('$field', 'string|array', '= \\' . FormBuilderExamples::class . '::field()');
-        $cd->getMethod('addField')->ensureParam('$definition', 'array', '= \\' . FormBuilderExamples::class . '::field()');
+        $cd->getMethod('addFields')->ensureParam('$definition', 'array', '= \\' . FormBuilderExamples::class . '::field()');
 
         $cd->getMethod('setButtons')->ensureParam('$buttons', 'array', ' = \\' . FormBuilderExamples::class . '::buttons()');
         $cd->getMethod('getButtons')->ensureReturn('array', ' = \\' . FormBuilderExamples::class . '::buttons()');
@@ -67,7 +67,6 @@ class FormBuilderDocBlocks
         $cd->getMethod('getSections')->ensureReturn('array', ' = \\' . FormBuilderExamples::class . '::sections()');
         $cd->getMethod('getActions')->ensureReturn('array', ' = \\' . FormBuilderExamples::class . '::actions()');
         $cd->getMethod('getOptions')->ensureReturn('array', ' = \\' . FormBuilderExamples::class . '::options()');
-
     }
 
     protected $actionText = <<<EOF
