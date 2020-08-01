@@ -74,7 +74,15 @@ EOF;
             ->values()
             ->implode("\n");
 
-        $result =  <<<EOF
+        $configs = $fields
+            ->toBase()
+            ->map(function (FieldType $field) {
+                return "'{$field->getNamespace()}' => static::{$field->getSlug()}_config(),";
+            })
+            ->values()
+            ->implode("\n");
+
+        $result = <<<EOF
 <?php /** @noinspection AutoloadingIssuesInspection *//** @noinspection PhpUnused */
 
 namespace Pyro\IdeHelper\Examples;
@@ -106,6 +114,12 @@ class FieldTypeExamples
         ];
     }
 
+    public static function configs(){
+        return [
+            {$configs}
+        ];
+    }
+
     {$methods}
 }
 EOF;
@@ -114,7 +128,6 @@ EOF;
 
         return $result;
     }
-
 //
 //    protected function generateMigrationExample(FieldTypeCollection $fields)
 //    {

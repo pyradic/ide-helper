@@ -100,8 +100,8 @@ class EntryDomainsDocBlocks
         $this->handleSeeder($c[ 'seeder' ], $c, $cs);
         $this->handleInterface($c[ 'interface' ], $c, $cs);
         $this->handleRepositoryInterface($c[ 'repositoryInterface' ], $c, $cs);
-        $this->handleFormBuilder($c[ 'formBuilder' ], $c, $cs);
-        $this->handleTableBuilder($c[ 'tableBuilder' ], $c, $cs);
+//        $this->handleFormBuilder($c[ 'formBuilder' ], $c, $cs);
+//        $this->handleTableBuilder($c[ 'tableBuilder' ], $c, $cs);
 
         (new CollectionDocBlock(
             $c[ 'collection' ]->getReflection()->getName(),

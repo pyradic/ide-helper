@@ -10,7 +10,7 @@ class FormBuilderExamples
 {
     public static function field()
     {
-        return [
+        $field = [
             /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\EnabledGuesser */
             'enabled'      => true,
             'enabled'      => false,
@@ -47,9 +47,16 @@ class FormBuilderExamples
             'instructions' => '',
             /** @see \Anomaly\Streams\Platform\Ui\Form\Component\Field\Guesser\PlaceholdersGuesser */
             'placeholder'  => '',
-            'type'         => implode('|',FieldTypeExamples::types()),
             'config'       => FieldTypeExamples::configs(),
         ];
+
+        $types = array_combine(FieldTypeExamples::types(), array_values(FieldTypeExamples::configs()));
+        foreach ($types as $type => $config) {
+            $field[ 'type' ]   = $type;
+            $field[ 'config' ] = $config;
+        }
+
+        return $field;
     }
 
     public static function fields()
