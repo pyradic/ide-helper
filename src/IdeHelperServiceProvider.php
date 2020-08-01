@@ -61,23 +61,23 @@ class IdeHelperServiceProvider extends ServiceProvider
         $config->set('laradic.idea.meta.metas', $metas);
 
         $config->set('laradic.idea.toolbox.generators', [
-            \Laradic\Idea\Toolbox\ConfigGenerator::class                   => [
+            \Laradic\Idea\Toolbox\ConfigGenerator::class                => [
                 'directory' => 'laravel/config',
             ],
-            \Laradic\Idea\Toolbox\RoutesGenerator::class                   => [
+            \Laradic\Idea\Toolbox\RoutesGenerator::class                => [
                 'directory' => 'laravel/routes',
             ],
-            \Laradic\Idea\Toolbox\ViewsGenerator::class                    => [
+            \Laradic\Idea\Toolbox\ViewsGenerator::class                 => [
                 'directory'         => 'laravel/views',
                 'excludeNamespaces' => [ 'storage', 'root' ],
             ],
-            \Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta::class => [
+            \Pyro\IdeHelper\PhpToolbox\AddonCollectionsGenerator::class => [
                 'directory' => 'pyro/addon_collections',
             ],
-            \Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta::class           => [
+            \Pyro\IdeHelper\PhpToolbox\ConfigGenerator::class           => [
                 'directory' => 'pyro/config',
             ],
-            \Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta::class      => [
+            \Pyro\IdeHelper\PhpToolbox\PermissionsGenerator::class      => [
                 'directory' => 'pyro/permissions',
             ],
         ]);

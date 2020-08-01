@@ -12,7 +12,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laradic\Idea\Toolbox\AbstractToolboxGenerator;
 
-class GenerateAddonCollectionsMeta extends AbstractToolboxGenerator
+class AddonCollectionsGenerator extends AbstractToolboxGenerator
 {
 
     public function handle(AddonCollection $addons, Filesystem $fs)

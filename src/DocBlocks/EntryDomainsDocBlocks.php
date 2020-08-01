@@ -64,8 +64,8 @@ class EntryDomainsDocBlocks
             'seeder'              => "\\{$namespace}\\{$name}\\{$name}Seeder",
             'interface'           => "\\{$namespace}\\{$name}\\Contract\\{$name}Interface",
             'repositoryInterface' => "\\{$namespace}\\{$name}\\Contract\\{$name}RepositoryInterface",
-            'formBuilder'         => "\\{$namespace}\\{$name}\\Form\\{$name}FormBuilder",
-            'tableBuilder'        => "\\{$namespace}\\{$name}\\Table\\{$name}TableBuilder",
+//            'formBuilder'         => "\\{$namespace}\\{$name}\\Form\\{$name}FormBuilder",
+//            'tableBuilder'        => "\\{$namespace}\\{$name}\\Table\\{$name}TableBuilder",
         ]);
 
         $pivotFiles = glob(path_join($path, '*Pivot.php'), GLOB_NOSORT);
@@ -127,8 +127,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -143,8 +143,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -154,8 +154,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -166,8 +166,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -178,7 +178,7 @@ class EntryDomainsDocBlocks
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
      * @param array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc} $c
-     * @param array $cs = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -208,8 +208,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -242,8 +242,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -254,8 +254,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -265,8 +265,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -276,8 +276,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -288,8 +288,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -300,8 +300,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -315,8 +315,8 @@ class EntryDomainsDocBlocks
 
     /**
      * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
-     * @param array $c = static::cexample()
-     * @param array $cs = static::cexample()
+     * @param array                                $c  = static::cexample()
+     * @param array                                $cs = static::cexample()
      *
      * @return void
      */
@@ -381,7 +381,6 @@ class EntryDomainsDocBlocks
         }
         return static::$tableColumns[ $table ];
     }
-
 
     public static function cexample()
     {

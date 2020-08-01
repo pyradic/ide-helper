@@ -15,9 +15,9 @@ use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
-use Pyro\IdeHelper\PhpToolbox\GenerateAddonCollectionsMeta;
-use Pyro\IdeHelper\PhpToolbox\GenerateConfigMeta;
-use Pyro\IdeHelper\PhpToolbox\GeneratePermissionsMeta;
+use Pyro\IdeHelper\PhpToolbox\AddonCollectionsGenerator;
+use Pyro\IdeHelper\PhpToolbox\ConfigGenerator;
+use Pyro\IdeHelper\PhpToolbox\PermissionsGenerator;
 
 /** @return array = \Pyro\IdeHelper\Examples\Examples::config() */
 return [
@@ -36,11 +36,11 @@ return [
             'exclude'           => [ 'Anomaly\CommentsModule', 'Anomaly\DocumentationModule' ],
         ],
         'generators' => [
-            [ 'description' => 'addon collections completions', 'class' => GenerateAddonCollectionsMeta::class ],
-            [ 'description' => 'config completions', 'class' => GenerateConfigMeta::class, 'excludes' => [] ],
+            [ 'description' => 'addon collections completions', 'class' => AddonCollectionsGenerator::class ],
+            [ 'description' => 'config completions', 'class' => ConfigGenerator::class, 'excludes' => [] ],
             [ 'description' => 'view completions', 'class' => ViewsGenerator::class ],
             [ 'description' => 'route completions', 'class' => RoutesGenerator::class ],
-            [ 'description' => 'permission completions', 'class' => GeneratePermissionsMeta::class ],
+            [ 'description' => 'permission completions', 'class' => PermissionsGenerator::class ],
         ],
     ],
     'docblock' => [

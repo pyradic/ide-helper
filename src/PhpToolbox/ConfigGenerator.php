@@ -34,7 +34,7 @@ use Laradic\Idea\Toolbox\Metadata;
             "items":
  */
 
-class GenerateConfigMeta extends AbstractToolboxGenerator
+class ConfigGenerator extends AbstractToolboxGenerator
 {
 
     /** @var array */
