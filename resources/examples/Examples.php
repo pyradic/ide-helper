@@ -19,6 +19,16 @@ use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 
 class Examples
 {
+    public static function settings()
+    {
+        $field = FormBuilderExamples::field();
+        return [
+            null => array_merge($field, [
+                'env' => '',
+            ]),
+        ];
+    }
+
     public static function booleanCompletion()
     {
         return [
@@ -37,7 +47,7 @@ class Examples
             /** type_text:"bool", tail_text:"true|false", icon:"com.jetbrains.php.PhpIcons.FUNCTION" */
             'default_value' => false,
             /** type:"App\\BooleanHandler", type_text:"BooleanHandler", tail_text:"true|false", icon:"com.jetbrains.php.PhpIcons.FUNCTION" */
-            'handler' => Examples::class,
+            'handler'       => Examples::class,
         ];
     }
 
@@ -60,8 +70,8 @@ class Examples
                     RequestDocBlocks::class,
                     ControlPanelDocBlocks::class,
                     TableBuilderDocBlocks::class,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -83,7 +93,7 @@ class Examples
     public function handleBoolean()
     {
         $this->setBoolean([
-            '<CARET>'
+            '<CARET>',
         ]);
         $boolean = $this->getBoolean();
         $boolean[ '<CARET>' ];
@@ -94,7 +104,7 @@ class Examples
         return [
             /** ['tail_text' => "field type", 'type_text' => "CheckboxesFieldType", 'icon' => "com.jetbrains.php.PhpIcons.CLASS" */
             'anomaly.field_type.checkbox' => \Anomaly\CheckboxesFieldType\CheckboxesFieldType::class,
-            'anomaly.module.users' => \Anomaly\UsersModule\UsersModule::class,
+            'anomaly.module.users'        => \Anomaly\UsersModule\UsersModule::class,
         ];
     }
 
@@ -123,14 +133,14 @@ class Examples
 
     public static function button()
     {
-        $button=[
+        $button = [
             'slug'        => 'blocks',
             'data-toggle' => 'modal',
-            'data-toggle'  => 'confirm',
-            'data-toggle'  => 'process',
+            'data-toggle' => 'confirm',
+            'data-toggle' => 'process',
 
-            'data-icon'    => 'info',
-            'data-icon'    => 'warning',
+            'data-icon' => 'info',
+            'data-icon' => 'warning',
 
             'data-target' => '#modal',
             'data-href'   => 'admin/blocks/areas/{request.route.parameters.area}',
@@ -139,38 +149,36 @@ class Examples
             'data-message' => 'anomaly.module.addons::confirm.disable_message',
             'data-message' => 'Updating Repositories',
 
-            'button'       => '',
+            'button' => '',
 
+            'type'       => 'warning',
+            'icon'       => static::icon(),
+            'text'       => '',
+            'permission' => '',
+            'href'       => 'admin/addons/disable/{entry.namespace}',
 
-            'type'         => 'warning',
-            'icon'         => static::icon(),
-            'text'         => '',
-            'permission'   => '',
-            'href'         => 'admin/addons/disable/{entry.namespace}',
-
-            'enabled'     => 'admin/dashboard/view/*',
-            'href'        => 'admin/blocks/areas/{request.route.parameters.area}/choose',
+            'enabled' => 'admin/dashboard/view/*',
+            'href'    => 'admin/blocks/areas/{request.route.parameters.area}/choose',
         ];
 
-        $button=IconExamples::addTo($button);
+        $button = IconExamples::addTo($button);
 
         return $button;
     }
 
     public static function buttons()
     {
-        $buttons = (new \Anomaly\Streams\Platform\Ui\Button\ButtonRegistry())->getButtons();
-        $buttons[null]=static::button();
+        $buttons         = (new \Anomaly\Streams\Platform\Ui\Button\ButtonRegistry())->getButtons();
+        $buttons[ null ] = static::button();
         return $buttons;
     }
 
     public static function icon()
     {
-        $icons=(new IconRegistry)->getIcons();
-        $icons[null]='';
+        $icons         = (new IconRegistry)->getIcons();
+        $icons[ null ] = '';
         return $icons;
     }
-
 
     /**
      * @param array $rr = static::button()
@@ -181,8 +189,8 @@ class Examples
     {
         /** @noinspection InfinityLoopInspection */
         $this->sadf([
-            'success'=>['icon'],
-            'icon' => ''
+            'success' => [ 'icon' ],
+            'icon'    => '',
         ]);
     }
 }
