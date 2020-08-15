@@ -2,6 +2,7 @@
 
 use Laradic\Idea\Toolbox\RoutesGenerator;
 use Laradic\Idea\Toolbox\ViewsGenerator;
+use Pyro\IdeHelper\DocBlocks\AddCollectionsDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
@@ -49,6 +50,9 @@ return [
             AddonServiceProviderDocBlocks::class,
             AuthDocBlocks::class,
             new EntryDomainsDocBlocks(),
+            new AddCollectionsDocBlocks([
+                // MyCollection::class => MyCollectionItem::class
+            ]),
             EntryModelDocBlocks::class,
             FieldTypeDocBlocks::class,
             FormBuilderDocBlocks::class,
