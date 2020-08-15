@@ -21,12 +21,10 @@ class Examples
 {
     public static function settings()
     {
-        $field = FormBuilderExamples::field();
-        return [
-            null => array_merge($field, [
-                'env' => '',
-            ]),
-        ];
+        $field           = FormBuilderExamples::field();
+        $field[ 'env' ]  = 'SOME_DOTENV_NAME';
+        $field[ 'bind' ] = 'vendor.module.name::some.config.key';
+        return [ null => $field ];
     }
 
     public static function booleanCompletion()
