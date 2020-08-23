@@ -52,7 +52,7 @@ class IdeHelperServiceProvider extends ServiceProvider
     public function boot(Repository $config)
     {
         $this->publishes([ dirname(__DIR__) . '/resources/examples' => resource_path('ide-helper') ], [ 'ide-helper' ]);
-        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro/ide-helper.php') ], [ 'config', 'ide-helper' ]);
+        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro.ide-helper.php') ], [ 'config', 'ide-helper' ]);
 
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
