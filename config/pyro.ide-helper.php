@@ -2,7 +2,9 @@
 
 use Laradic\Idea\Toolbox\RoutesGenerator;
 use Laradic\Idea\Toolbox\ViewsGenerator;
+use Pyro\IdeHelper\DocBlocks\AddCollectionMacrosDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddCollectionsDocBlocks;
+use Pyro\IdeHelper\DocBlocks\AddMacrosDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonCollectionDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddonServiceProviderDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AuthDocBlocks;
@@ -50,7 +52,13 @@ return [
             AddonServiceProviderDocBlocks::class,
             AuthDocBlocks::class,
             new EntryDomainsDocBlocks(),
+            new AddMacrosDocBlocks([
+                \Illuminate\Support\Collection::class => [],
+            ]),
             new AddCollectionsDocBlocks([
+                // MyCollection::class => MyCollectionItem::class
+            ]),
+            new AddCollectionMacrosDocBlocks([
                 // MyCollection::class => MyCollectionItem::class
             ]),
             EntryModelDocBlocks::class,

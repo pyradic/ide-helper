@@ -83,13 +83,16 @@ class IdeHelperStreamsCommand extends Command
         $verbosity = $out->isVeryVerbose() ? '-vv' : $verbosity;
         $verbosity = $out->isDebug() ? '-vvv' : $verbosity;
         $process   = new Process("{$phpBin} artisan {$verbosity} {$args}");
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo $buffer;
-            } else {
-                echo $buffer;
-            }
-        });
+        $process
+            ->setIdleTimeout(120)
+            ->setTimeout(120)
+            ->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    echo $buffer;
+                } else {
+                    echo $buffer;
+                }
+            });
 //        $this->line(exec("{$phpBin} artisan {$verbosity} {$args}"));
     }
 

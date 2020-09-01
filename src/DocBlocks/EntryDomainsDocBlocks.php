@@ -7,6 +7,7 @@ use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
+use Laradic\Generators\Doc\Block\CollectionMacrosDocBlock;
 use Laradic\Generators\Doc\Doc\ClassDoc;
 use Laradic\Generators\Doc\DocRegistry;
 use Pyro\IdeHelper\Command\FindAllEntryDomains;
@@ -104,6 +105,10 @@ class EntryDomainsDocBlocks
 //        $this->handleTableBuilder($c[ 'tableBuilder' ], $c, $cs);
 
         (new CollectionDocBlock(
+            $c[ 'collection' ]->getReflection()->getName(),
+            $c[ 'interface' ]->getReflection()->getName())
+        )->generate($this->registry);
+        (new CollectionMacrosDocBlock(
             $c[ 'collection' ]->getReflection()->getName(),
             $c[ 'interface' ]->getReflection()->getName())
         )->generate($this->registry);
