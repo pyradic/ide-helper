@@ -57,6 +57,11 @@ return [
             ]),
             new AddCollectionsDocBlocks([
                 // MyCollection::class => MyCollectionItem::class
+                \Anomaly\Streams\Platform\Ui\Form\Component\Action\ActionCollection::class  => \Anomaly\Streams\Platform\Ui\Form\Component\Action\Action::class,
+                \Anomaly\Streams\Platform\Ui\Table\Component\Action\ActionCollection::class => \Anomaly\Streams\Platform\Ui\Table\Component\Action\Action::class,
+                \Anomaly\Streams\Platform\Ui\Button\ButtonCollection::class                 => \Anomaly\Streams\Platform\Ui\Button\Button::class,
+                \Anomaly\Streams\Platform\Ui\Form\Component\Field\FieldCollection::class    => \Anomaly\Streams\Platform\Addon\FieldType\FieldType::class,
+                \Anomaly\Streams\Platform\Field\FieldCollection::class                      => \Anomaly\Streams\Platform\Field\Contract\FieldInterface::class,
             ]),
             new AddCollectionMacrosDocBlocks([
                 // MyCollection::class => MyCollectionItem::class
