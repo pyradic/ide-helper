@@ -70,7 +70,11 @@ class IdeHelperStreamsCommand extends Command
     protected function createExecutor()
     {
         $executor = resolve(DocChainExecutor::class);
-        $executor->appendToChain(config('pyro.ide-helper.docblock.generators'));
+        $items    = config('pyro.ide-helper.docblock.generators');
+        if ( ! is_array($items) && is_callable($items)) {
+            $items = $this->laravel->call($items);
+        }
+        $executor->appendToChain($items);
         return $executor;
     }
 
