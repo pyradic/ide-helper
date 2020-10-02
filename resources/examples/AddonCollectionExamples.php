@@ -76,7 +76,6 @@ class AddonCollectionExamples
             'anomaly.extension.xml_feed_widget'         => \Anomaly\XmlFeedWidgetExtension\XmlFeedWidgetExtension::class,
             'crvs.module.core'                          => \Crvs\CoreModule\CoreModule::class,
             'crvs.theme.frontend'                       => \Crvs\FrontendTheme\FrontendTheme::class,
-            'pyro.module.permission_tree'               => \Pyro\PermissionTreeModule\PermissionTreeModule::class,
             'pyrocms.theme.accelerant'                  => \Pyrocms\AccelerantTheme\AccelerantTheme::class,
             'pyrocms.theme.starter'                     => \Pyrocms\StarterTheme\StarterTheme::class,
             'crvs.theme.admin'                          => \Crvs\AdminTheme\AdminTheme::class,
