@@ -1,4 +1,5 @@
 <?php /** @noinspection AutoloadingIssuesInspection */
+
 /** @noinspection PhpUnused */
 
 namespace Pyro\IdeHelper\Examples;
@@ -335,7 +336,8 @@ class FieldTypeExamples
     {
         return [
             'folders'       =>
-                [],
+                [
+                ],
             'max'           => null,
             'mode'          => 'default',
             'allowed_types' => '',
