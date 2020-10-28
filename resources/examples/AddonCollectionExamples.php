@@ -79,8 +79,6 @@ class AddonCollectionExamples
             'crvs.theme.admin'                           => \Crvs\AdminTheme\AdminTheme::class,
             'crvs.extension.care_role_type'              => \Crvs\CareRoleTypeExtension\CareRoleTypeExtension::class,
             'crvs.extension.caretaker_role_type'         => \Crvs\CaretakerRoleTypeExtension\CaretakerRoleTypeExtension::class,
-            'crvs.extension.direct_admin_server_type'    => \Crvs\DirectAdminServerTypeExtension\DirectAdminServerTypeExtension::class,
-            'crvs.extension.direct_admin_server_type'    => \Crvs\DirectAdminServerTypeExtension\DirectAdminServerTypeExtension::class,
             'crvs.module.ci'                             => \Crvs\CiModule\CiModule::class,
             'crvs.extension.client_registrations_widget' => \Crvs\ClientRegistrationsWidgetExtension\ClientRegistrationsWidgetExtension::class,
             'crvs.extension.client_registrations_widget' => \Crvs\ClientRegistrationsWidgetExtension\ClientRegistrationsWidgetExtension::class,
@@ -104,6 +102,7 @@ class AddonCollectionExamples
             'crvs.extension.private_storage_adapter'     => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
             'crvs.extension.requester_role_type'         => \Crvs\RequesterRoleTypeExtension\RequesterRoleTypeExtension::class,
             'crvs.extension.volunteer_role_type'         => \Crvs\VolunteerRoleTypeExtension\VolunteerRoleTypeExtension::class,
+            'crvs2.module.clients'                       => \Crvs2\ClientsModule\ClientsModule::class,
             'examples.module.ex1'                        => \Examples\Ex1Module\Ex1Module::class,
             'examples.module.ex2'                        => \Examples\Ex2Module\Ex2Module::class,
             'examples.module.ex3'                        => \Examples\Ex3Module\Ex3Module::class,
@@ -138,6 +137,8 @@ class AddonCollectionExamples
             'pyro.extension.table_exporter'              => \Pyro\TableExporterExtension\TableExporterExtension::class,
             'pyro.module.vxe_table'                      => \Pyro\VxeTableModule\VxeTableModule::class,
             'wmomo.module.zwolle'                        => \Wmomo\ZwolleModule\ZwolleModule::class,
+            'pyro.extension.version_list_widget'         => \Pyro\VersionListWidgetExtension\VersionListWidgetExtension::class,
+            'pyro.extension.versions_widget'             => \Pyro\VersionsWidgetExtension\VersionsWidgetExtension::class,
         ];
     }
 }
