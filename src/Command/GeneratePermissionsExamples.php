@@ -2,7 +2,6 @@
 
 namespace Pyro\IdeHelper\Command;
 
-use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldTypeCollection;
 
 class GeneratePermissionsExamples
@@ -43,13 +42,13 @@ class GeneratePermissionsExamples
     {
         /** @var \Illuminate\Support\Collection $permissions */
         $permissions = dispatch_now(new ResolveAllPermissions());
-        $keys =$permissions->pluck('key')->map(function($val){
+        $keys        = $permissions->pluck('key')->map(function ($val) {
             return $val = "'{$val}',";
         })->implode("\n");
-        $assoc = $permissions->pluck('key')->map(function($val){
+        $assoc       = $permissions->pluck('key')->map(function ($val) {
             return $val = "'{$val}' => '{$val}',";
         })->implode("\n");
-        $result =  <<<EOF
+        $result      = <<<EOF
 <?php /** @noinspection AutoloadingIssuesInspection *//** @noinspection PhpUnused */
 
 namespace Pyro\IdeHelper\Examples;
@@ -67,7 +66,7 @@ class PermissionsExamples
     {
         return [
         {$assoc}
-        ]
+        ];
     }
 }
 EOF;

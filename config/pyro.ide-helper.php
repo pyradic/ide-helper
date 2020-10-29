@@ -46,6 +46,29 @@ return [
             [ 'description' => 'permission completions', 'class' => PermissionsGenerator::class ],
         ],
     ],
+    'examples' => [
+        'path'       => resource_path('vendor/pyro/ide-helper'),
+        'namespace'  => 'Pyro\IdeHelper\Examples',
+        'generators' => [
+            \Pyro\IdeHelper\Command\GenerateAddonCollectionExamples::class,
+            \Pyro\IdeHelper\Command\GenerateFieldTypeExamples::class,
+            \Pyro\IdeHelper\Command\GeneratePermissionsExamples::class,
+            \Pyro\IdeHelper\Command\GenerateRoutesExamples::class,
+        ],
+        'files'      => [
+            //'resources/examples/AddonCollectionExamples.php',
+            'resources/examples/AddonServiceProviderExamples.php',
+            'resources/examples/Examples.php',
+            //'resources/examples/FieldTypeExamples.php',
+            'resources/examples/FormBuilderExamples.php',
+            'resources/examples/IconExamples.php',
+            'resources/examples/mdi.php',
+            'resources/examples/ModuleExamples.php',
+            //'resources/examples/PermissionsExamples.php',
+            //'resources/examples/RoutesExamples.php',
+            'resources/examples/TableBuilderExamples.php',
+        ],
+    ],
     'docblock' => [
         'generators' => [
             AddonCollectionDocBlocks::class,
