@@ -1,4 +1,5 @@
 <?php /** @noinspection AutoloadingIssuesInspection */
+
 /** @noinspection PhpUnused */
 
 namespace Pyro\IdeHelper\Examples;

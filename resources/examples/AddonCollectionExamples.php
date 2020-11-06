@@ -102,7 +102,6 @@ class AddonCollectionExamples
             'crvs.extension.private_storage_adapter'     => \Crvs\PrivateStorageAdapterExtension\PrivateStorageAdapterExtension::class,
             'crvs.extension.requester_role_type'         => \Crvs\RequesterRoleTypeExtension\RequesterRoleTypeExtension::class,
             'crvs.extension.volunteer_role_type'         => \Crvs\VolunteerRoleTypeExtension\VolunteerRoleTypeExtension::class,
-            'crvs2.module.clients'                       => \Crvs2\ClientsModule\ClientsModule::class,
             'examples.module.ex1'                        => \Examples\Ex1Module\Ex1Module::class,
             'examples.module.ex2'                        => \Examples\Ex2Module\Ex2Module::class,
             'examples.module.ex3'                        => \Examples\Ex3Module\Ex3Module::class,
@@ -137,8 +136,6 @@ class AddonCollectionExamples
             'pyro.extension.table_exporter'              => \Pyro\TableExporterExtension\TableExporterExtension::class,
             'pyro.module.vxe_table'                      => \Pyro\VxeTableModule\VxeTableModule::class,
             'wmomo.module.zwolle'                        => \Wmomo\ZwolleModule\ZwolleModule::class,
-            'pyro.extension.version_list_widget'         => \Pyro\VersionListWidgetExtension\VersionListWidgetExtension::class,
-            'pyro.extension.versions_widget'             => \Pyro\VersionsWidgetExtension\VersionsWidgetExtension::class,
         ];
     }
 }

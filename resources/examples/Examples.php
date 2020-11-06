@@ -136,6 +136,7 @@ class Examples
             'data-toggle' => 'modal',
             'data-toggle' => 'confirm',
             'data-toggle' => 'process',
+            'data-toggle' => 'tooltip',
 
             'data-icon' => 'info',
             'data-icon' => 'warning',
@@ -149,7 +150,12 @@ class Examples
 
             'button' => '',
 
+            'type'       => 'danger',
             'type'       => 'warning',
+            'type'       => 'success',
+            'type'       => 'info',
+            'type'       => 'primary',
+            'type'       => 'secondary',
             'icon'       => static::icon(),
             'text'       => '',
             'permission' => '',
