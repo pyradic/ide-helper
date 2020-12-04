@@ -77,6 +77,7 @@ class AddonCollectionExamples
             'pyrocms.theme.starter'                      => \Pyrocms\StarterTheme\StarterTheme::class,
             'crvs.module.activities'                     => \Crvs\ActivitiesModule\ActivitiesModule::class,
             'crvs.theme.admin'                           => \Crvs\AdminTheme\AdminTheme::class,
+            'crvs.module.agenda'                         => \Crvs\AgendaModule\AgendaModule::class,
             'crvs.extension.care_role_type'              => \Crvs\CareRoleTypeExtension\CareRoleTypeExtension::class,
             'crvs.extension.caretaker_role_type'         => \Crvs\CaretakerRoleTypeExtension\CaretakerRoleTypeExtension::class,
             'crvs.module.ci'                             => \Crvs\CiModule\CiModule::class,
@@ -134,6 +135,7 @@ class AddonCollectionExamples
             'pyro.field_type.relationship_through'       => \Pyro\RelationshipThroughFieldType\RelationshipThroughFieldType::class,
             'pyro.module.streams_platform'               => \Pyro\StreamsPlatformModule\StreamsPlatformModule::class,
             'pyro.extension.table_exporter'              => \Pyro\TableExporterExtension\TableExporterExtension::class,
+            'pyro.extension.table_filters'               => \Pyro\TableFiltersExtension\TableFiltersExtension::class,
             'pyro.module.vxe_table'                      => \Pyro\VxeTableModule\VxeTableModule::class,
             'wmomo.module.zwolle'                        => \Wmomo\ZwolleModule\ZwolleModule::class,
         ];

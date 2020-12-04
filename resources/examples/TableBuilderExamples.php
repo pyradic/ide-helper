@@ -175,7 +175,7 @@ class TableBuilderExamples
 
     public static function options()
     {
-        return
+        $options =
             [
                 'limit'              => 0,
                 'prefix'             => '',
@@ -186,8 +186,10 @@ class TableBuilderExamples
                 /**
                  * @see \Anomaly\Streams\Platform\Ui\Table\Command\SetDefaultOptions
                  */
-                'table_view'         => '',
+                'table_view'         => 'streams::table/table',
                 'wrapper_view'       => 'streams::',
+                'breadcrumb'         => '',
+                'order_by'           => '',
                 /** If provided, enables displaying the heading view with the given title */
                 'title'              => '', // sadfsdf
                 /** If provided, enables displaying the heading view with the given description */
@@ -221,7 +223,7 @@ class TableBuilderExamples
                  * Only show if has permission
                  * @see \Anomaly\Streams\Platform\Ui\Table\TableAuthorizer
                  */
-                'permission'         => PermissionsExamples::permissions(),
+                'permission'         => '',
                 'no_results_message' => 'streams::message.no_results',
                 'filters'            => [
                     'filter_icon' => Examples::icon(),
@@ -230,6 +232,12 @@ class TableBuilderExamples
                     'clear_text'  => '',
                 ],
             ];
+
+        foreach (PermissionsExamples::permissions() as $permission) {
+            $options[ 'permission' ] = $permission;
+        }
+
+        return $options;
     }
 
     public static function option()
