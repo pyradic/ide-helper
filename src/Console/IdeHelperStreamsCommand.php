@@ -6,6 +6,7 @@ use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\Doc;
@@ -80,13 +81,14 @@ class IdeHelperStreamsCommand extends Command
 
     protected function spawnCall($args)
     {
-        $phpBin = $_SERVER[ '_' ];
+        $phpBin = $_SERVER[ 'argv' ][ 0 ];
         $out    = $this->getOutput();
 
         $verbosity = $out->isVerbose() ? '-v' : '';
         $verbosity = $out->isVeryVerbose() ? '-vv' : $verbosity;
         $verbosity = $out->isDebug() ? '-vvv' : $verbosity;
-        $process   = new Process("{$phpBin} artisan {$verbosity} {$args}");
+        $args      = Arr::wrap($args);
+        $process   = new Process(array_merge([ $phpBin, 'artisan', $verbosity ], $args));
         $process
             ->setIdleTimeout(120)
             ->setTimeout(120)
