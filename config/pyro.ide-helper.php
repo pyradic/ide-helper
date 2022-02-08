@@ -86,7 +86,6 @@ return [
                 \Illuminate\Support\Collection::class                   => [],
                 \Illuminate\Console\Command::class                      => [],
                 \Illuminate\Console\Scheduling\Event::class             => [],
-                \Illuminate\Database\Eloquent\FactoryBuilder::class     => [],
                 \Illuminate\Filesystem\Filesystem::class                => [],
                 \Illuminate\Mail\Mailer::class                          => [],
                 \Illuminate\Routing\Redirector::class                   => [],
