@@ -12,6 +12,13 @@ class FieldTypeDocBlocks
         $fts = $fieldTypes->all();
 
         foreach ($fts as $ft) {
+            try {
+                if ( ! class_exists($ft, false)) {
+                    continue;
+                }
+            } catch (\Throwable $e){
+                continue;
+            }
             $cd = $registry->getClass(get_class($ft));
             $this->ensureMethod($cd, $ft, 'getPresenter'); //, get_class($ft->getPresenter()));
             $this->ensureMethod($cd, $ft, 'getAccessor'); //, get_class($ft->getAccessor()));

@@ -79,7 +79,7 @@ class EntryDomainsDocBlocks
         }
 
         $c = $c->map(function ($className, $key) {
-            if ( ! class_exists($className) && ! interface_exists($className)) {
+            if ( ! class_exists($className,false) && ! interface_exists($className, false)) {
                 $className = $this->getFallbackClass($key);
                 return $this->registry->getClass($className);
             }
