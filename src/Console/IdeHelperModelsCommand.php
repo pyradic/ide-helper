@@ -92,7 +92,7 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
         ]);
     }
 
-    protected function setProperty($name, $type = null, $read = null, $write = null, $comment = '', $nullable = false)
+    public function setProperty($name, $type = null, $read = null, $write = null, $comment = '', $nullable = false)
     {
         return parent::setProperty($name, $type, true, true, $comment, $nullable);
     }
