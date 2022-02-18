@@ -10,6 +10,7 @@ use Laradic\Idea\Command\ResolveSourceFolders;
 use Laradic\Support\FS;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
+use Pyro\IdeHelper\Console\IdeHelperAllCommands;
 use Pyro\IdeHelper\Metas\AddonsMeta;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 
@@ -25,7 +26,9 @@ class IdeHelperServiceProvider extends ServiceProvider
         Tag::registerTagHandler('mixin', MixinTag::class);
 
         $this->app->singleton('command.ide.streams', IdeHelperStreamsCommand::class);
+        $this->app->singleton('command.ide.all', IdeHelperAllCommands::class);
         $this->commands('command.ide.streams');
+        $this->commands('command.ide.all');
 
         ResolveSourceFolders::extend(function ($match) {
             /** @var ResolveSourceFolders $this */
@@ -54,6 +57,8 @@ class IdeHelperServiceProvider extends ServiceProvider
         $this->publishes([ dirname(__DIR__) . '/resources/examples' => resource_path('ide-helper') ], [ 'ide-helper' ]);
         $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro.ide-helper.php') ], [ 'config', 'ide-helper' ]);
 
+
+        $config->push('ide-helper.ignored_models', 'Anomaly\Streams\Platform\Model\Search\SearchItemsEntryModel');
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
         unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);

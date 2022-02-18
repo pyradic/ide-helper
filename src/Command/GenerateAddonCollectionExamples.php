@@ -9,7 +9,8 @@ class GenerateAddonCollectionExamples  extends AbstractGenerator
 {
     public function handle(AddonCollection $addons)
     {
-        $body=$addons->map(function(Addon $addon){
+
+        $body=$addons->map(function( $addon){
            $class=get_class($addon);
             return  "'{$addon->getNamespace()}' => \\{$class}::class,";
         })->implode("\n");

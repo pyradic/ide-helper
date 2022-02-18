@@ -6,22 +6,19 @@ class FieldTypeExamples
 {
     public static function types()
     {
-        return ['anomaly.field_type.blocks',
-'anomaly.field_type.country',
+        return ['anomaly.field_type.country',
+'anomaly.field_type.datetime',
 'anomaly.field_type.checkboxes',
 'anomaly.field_type.colorpicker',
 'anomaly.field_type.boolean',
 'anomaly.field_type.addon',
-'anomaly.field_type.datetime',
 'anomaly.field_type.decimal',
 'anomaly.field_type.editor',
 'anomaly.field_type.email',
 'anomaly.field_type.encrypted',
 'anomaly.field_type.file',
 'anomaly.field_type.files',
-'anomaly.field_type.grid',
 'anomaly.field_type.icon',
-'anomaly.field_type.wysiwyg',
 'anomaly.field_type.integer',
 'anomaly.field_type.language',
 'anomaly.field_type.markdown',
@@ -29,6 +26,7 @@ class FieldTypeExamples
 'anomaly.field_type.polymorphic',
 'anomaly.field_type.relationship',
 'anomaly.field_type.repeater',
+'anomaly.field_type.blocks',
 'anomaly.field_type.select',
 'anomaly.field_type.slider',
 'anomaly.field_type.slug',
@@ -36,7 +34,8 @@ class FieldTypeExamples
 'anomaly.field_type.tags',
 'anomaly.field_type.text',
 'anomaly.field_type.textarea',
-'anomaly.field_type.url'];
+'anomaly.field_type.url',
+'anomaly.field_type.wysiwyg'];
     }
 
     public static function valueTypes()
@@ -55,22 +54,19 @@ class FieldTypeExamples
 
     public static function values(){
         return [
-            null => static::blocks(),
-null => static::country(),
+            null => static::country(),
+null => static::datetime(),
 null => static::checkboxes(),
 null => static::colorpicker(),
 null => static::boolean(),
 null => static::addon(),
-null => static::datetime(),
 null => static::decimal(),
 null => static::editor(),
 null => static::email(),
 null => static::encrypted(),
 null => static::file(),
 null => static::files(),
-null => static::grid(),
 null => static::icon(),
-null => static::wysiwyg(),
 null => static::integer(),
 null => static::language(),
 null => static::markdown(),
@@ -78,6 +74,7 @@ null => static::multiple(),
 null => static::polymorphic(),
 null => static::relationship(),
 null => static::repeater(),
+null => static::blocks(),
 null => static::select(),
 null => static::slider(),
 null => static::slug(),
@@ -86,27 +83,25 @@ null => static::tags(),
 null => static::text(),
 null => static::textarea(),
 null => static::url(),
+null => static::wysiwyg(),
         ];
     }
 
     public static function configs(){
         return [
-            'anomaly.field_type.blocks' => static::blocks_config(),
-'anomaly.field_type.country' => static::country_config(),
+            'anomaly.field_type.country' => static::country_config(),
+'anomaly.field_type.datetime' => static::datetime_config(),
 'anomaly.field_type.checkboxes' => static::checkboxes_config(),
 'anomaly.field_type.colorpicker' => static::colorpicker_config(),
 'anomaly.field_type.boolean' => static::boolean_config(),
 'anomaly.field_type.addon' => static::addon_config(),
-'anomaly.field_type.datetime' => static::datetime_config(),
 'anomaly.field_type.decimal' => static::decimal_config(),
 'anomaly.field_type.editor' => static::editor_config(),
 'anomaly.field_type.email' => static::email_config(),
 'anomaly.field_type.encrypted' => static::encrypted_config(),
 'anomaly.field_type.file' => static::file_config(),
 'anomaly.field_type.files' => static::files_config(),
-'anomaly.field_type.grid' => static::grid_config(),
 'anomaly.field_type.icon' => static::icon_config(),
-'anomaly.field_type.wysiwyg' => static::wysiwyg_config(),
 'anomaly.field_type.integer' => static::integer_config(),
 'anomaly.field_type.language' => static::language_config(),
 'anomaly.field_type.markdown' => static::markdown_config(),
@@ -114,6 +109,7 @@ null => static::url(),
 'anomaly.field_type.polymorphic' => static::polymorphic_config(),
 'anomaly.field_type.relationship' => static::relationship_config(),
 'anomaly.field_type.repeater' => static::repeater_config(),
+'anomaly.field_type.blocks' => static::blocks_config(),
 'anomaly.field_type.select' => static::select_config(),
 'anomaly.field_type.slider' => static::slider_config(),
 'anomaly.field_type.slug' => static::slug_config(),
@@ -122,20 +118,11 @@ null => static::url(),
 'anomaly.field_type.text' => static::text_config(),
 'anomaly.field_type.textarea' => static::textarea_config(),
 'anomaly.field_type.url' => static::url_config(),
+'anomaly.field_type.wysiwyg' => static::wysiwyg_config(),
         ];
     }
 
-    public static function blocks_config(){
-    return array (
-  'blocks' => '',
-  'min' => '',
-  'max' => '',
-);
-}
-public static function blocks(){
-    return ['type' => 'anomaly.field_type.blocks', 'config' => static::blocks_config() ];
-}
-public static function country_config(){
+    public static function country_config(){
     return array (
   'mode' => '',
   'top_options' => '',
@@ -145,6 +132,19 @@ public static function country_config(){
 }
 public static function country(){
     return ['type' => 'anomaly.field_type.country', 'config' => static::country_config() ];
+}
+public static function datetime_config(){
+    return array (
+  'mode' => 'datetime',
+  'picker' => true,
+  'date_format' => 'm/d/Y',
+  'time_format' => 'g:i A',
+  'timezone' => 'Europe/Amsterdam',
+  'step' => 1,
+);
+}
+public static function datetime(){
+    return ['type' => 'anomaly.field_type.datetime', 'config' => static::datetime_config() ];
 }
 public static function checkboxes_config(){
     return array (
@@ -195,19 +195,6 @@ public static function addon_config(){
 }
 public static function addon(){
     return ['type' => 'anomaly.field_type.addon', 'config' => static::addon_config() ];
-}
-public static function datetime_config(){
-    return array (
-  'mode' => 'datetime',
-  'picker' => true,
-  'date_format' => 'j F, Y',
-  'time_format' => 'H:i',
-  'timezone' => 'Europe/Amsterdam',
-  'step' => 1,
-);
-}
-public static function datetime(){
-    return ['type' => 'anomaly.field_type.datetime', 'config' => static::datetime_config() ];
 }
 public static function decimal_config(){
     return array (
@@ -280,17 +267,6 @@ public static function files_config(){
 public static function files(){
     return ['type' => 'anomaly.field_type.files', 'config' => static::files_config() ];
 }
-public static function grid_config(){
-    return array (
-  'related' => '',
-  'add_row' => '',
-  'min' => '',
-  'max' => '',
-);
-}
-public static function grid(){
-    return ['type' => 'anomaly.field_type.grid', 'config' => static::grid_config() ];
-}
 public static function icon_config(){
     return array (
   'mode' => 'search',
@@ -303,40 +279,6 @@ public static function icon_config(){
 }
 public static function icon(){
     return ['type' => 'anomaly.field_type.icon', 'config' => static::icon_config() ];
-}
-public static function wysiwyg_config(){
-    return array (
-  'buttons' => 
-  array (
-    0 => 'format',
-    1 => 'bold',
-    2 => 'italic',
-    3 => 'deleted',
-    4 => 'lists',
-    5 => 'link',
-    6 => 'horizontalrule',
-    7 => 'underline',
-  ),
-  'plugins' => 
-  array (
-    0 => 'source',
-    1 => 'table',
-    2 => 'video',
-    3 => 'inlinestyle',
-    4 => 'filemanager',
-    5 => 'imagemanager',
-    6 => 'fullscreen',
-    7 => 'alignment',
-  ),
-  'height' => 75,
-  'line_breaks' => false,
-  'remove_new_lines' => false,
-  'default_value' => '',
-  'configuration' => 'default',
-);
-}
-public static function wysiwyg(){
-    return ['type' => 'anomaly.field_type.wysiwyg', 'config' => static::wysiwyg_config() ];
 }
 public static function integer_config(){
     return array (
@@ -408,6 +350,16 @@ public static function repeater_config(){
 }
 public static function repeater(){
     return ['type' => 'anomaly.field_type.repeater', 'config' => static::repeater_config() ];
+}
+public static function blocks_config(){
+    return array (
+  'blocks' => '',
+  'min' => '',
+  'max' => '',
+);
+}
+public static function blocks(){
+    return ['type' => 'anomaly.field_type.blocks', 'config' => static::blocks_config() ];
 }
 public static function select_config(){
     return array (
@@ -505,5 +457,39 @@ public static function url_config(){
 }
 public static function url(){
     return ['type' => 'anomaly.field_type.url', 'config' => static::url_config() ];
+}
+public static function wysiwyg_config(){
+    return array (
+  'buttons' => 
+  array (
+    0 => 'format',
+    1 => 'bold',
+    2 => 'italic',
+    3 => 'deleted',
+    4 => 'lists',
+    5 => 'link',
+    6 => 'horizontalrule',
+    7 => 'underline',
+  ),
+  'plugins' => 
+  array (
+    0 => 'source',
+    1 => 'table',
+    2 => 'video',
+    3 => 'inlinestyle',
+    4 => 'filemanager',
+    5 => 'imagemanager',
+    6 => 'fullscreen',
+    7 => 'alignment',
+  ),
+  'height' => 75,
+  'line_breaks' => false,
+  'remove_new_lines' => false,
+  'default_value' => '',
+  'configuration' => 'default',
+);
+}
+public static function wysiwyg(){
+    return ['type' => 'anomaly.field_type.wysiwyg', 'config' => static::wysiwyg_config() ];
 }
 }
