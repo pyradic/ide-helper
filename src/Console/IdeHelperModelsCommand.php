@@ -72,7 +72,8 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
         $paths = $paths->call('glob', [], false)->filter()->flatten();
         return collect(array_merge(
             $paths->toArray(),
-            glob(base_path('vendor/anomaly/streams-platform/src/*/*Model.php'))
+            glob(base_path('vendor/anomaly/streams-platform/src/*/*Model.php')),
+            glob(storage_path('streams/default/models/*/*Model.php'))
         ))
             ->filter(function ($path) {
                 return ends_with($path, [ 'BlocksModel.php', 'StatusFilterQuery.php' ]) === false;
@@ -92,7 +93,7 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
         ]);
     }
 
-    protected function setProperty($name, $type = null, $read = null, $write = null, $comment = '', $nullable = false)
+    public function setProperty($name, $type = null, $read = null, $write = null, $comment = '', $nullable = false)
     {
         return parent::setProperty($name, $type, true, true, $comment, $nullable);
     }
