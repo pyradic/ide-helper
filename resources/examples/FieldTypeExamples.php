@@ -134,16 +134,17 @@ public static function country(){
     return ['type' => 'anomaly.field_type.country', 'config' => static::country_config() ];
 }
 public static function datetime_config(){
-    return array (
-  'mode' => 'datetime',
-  'picker' => true,
-  'date_format' => 'm/d/Y',
-  'time_format' => 'g:i A',
-  'timezone' => 'Europe/Amsterdam',
-  'step' => 1,
-);
+    return [
+        'mode'        => 'datetime',
+        'picker'      => true,
+        'date_format' => 'F j, Y',
+        'time_format' => 'H:i',
+        'timezone'    => 'Europe/Amsterdam',
+        'step'        => 1,
+    ];
 }
-public static function datetime(){
+
+    public static function datetime(){
     return ['type' => 'anomaly.field_type.datetime', 'config' => static::datetime_config() ];
 }
 public static function checkboxes_config(){
@@ -242,7 +243,7 @@ public static function encrypted(){
 }
 public static function file_config(){
     return array (
-  'folders' => 
+  'folders' =>
   array (
   ),
   'max' => NULL,
@@ -255,7 +256,7 @@ public static function file(){
 }
 public static function files_config(){
     return array (
-  'folders' => 
+  'folders' =>
   array (
   ),
   'min' => '',
@@ -270,7 +271,7 @@ public static function files(){
 public static function icon_config(){
     return array (
   'mode' => 'search',
-  'icon_sets' => 
+  'icon_sets' =>
   array (
     0 => 'fontawesome',
   ),
@@ -460,7 +461,7 @@ public static function url(){
 }
 public static function wysiwyg_config(){
     return array (
-  'buttons' => 
+  'buttons' =>
   array (
     0 => 'format',
     1 => 'bold',
@@ -471,7 +472,7 @@ public static function wysiwyg_config(){
     6 => 'horizontalrule',
     7 => 'underline',
   ),
-  'plugins' => 
+  'plugins' =>
   array (
     0 => 'source',
     1 => 'table',

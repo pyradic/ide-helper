@@ -4,6 +4,7 @@ namespace Pyro\IdeHelper\Metas;
 
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
+use Anomaly\Streams\Platform\Support\Decorator;
 use Illuminate\Support\Str;
 use Laradic\Idea\Metas\MetaInterface;
 use Laradic\Idea\Metas\MetaOptions;
@@ -35,7 +36,7 @@ class AddonsMeta implements MetaInterface
     {
 
         $this->options = $options;
-        $types = [null,'module','extension','plugin','theme','field_type'];
+        $types         = [ 'module', 'extension', 'plugin', 'theme', 'field_type' ];
         foreach($types as $type){
             $overrides = $this->getOverridesForType($type);
             foreach($overrides as $key => $value){
@@ -69,11 +70,13 @@ class AddonsMeta implements MetaInterface
     {
         /** @var AddonCollection|\Anomaly\Streams\Platform\Addon\Addon[] $collection */
         $collection = $type === null ? $this->addons : $this->addons->{$type};
-        $collection=collect($collection->namespaces())->sort()->mapWithKeys(function($namespace){
+        $collection =collect($collection->namespaces())->sort()->mapWithKeys(function($namespace){
             return [$namespace => $this->addons->get($namespace)];
         });
-        $items      = ["''" => "'@'"];
+        $items      = [ "''" => "'@'" ];
+        $decorator  = new Decorator();
         foreach ($collection as $addon) {
+            $addon                                 = $decorator->undecorate($addon);
             $items[ "'{$addon->getNamespace()}'" ] = Str::ensureLeft(get_class($addon), '\\') . '::class';
         }
         return collect($items);

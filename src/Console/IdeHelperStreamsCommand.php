@@ -7,17 +7,14 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\Doc;
 use Laradic\Generators\Doc\DocChainExecutor;
-use Pyro\IdeHelper\Command\GenerateAddonCollectionExamples;
-use Pyro\IdeHelper\Command\GenerateFieldTypeExamples;
-use Pyro\IdeHelper\Command\GeneratePermissionsExamples;
-use Pyro\IdeHelper\Command\GenerateRoutesExamples;
-use Pyro\IdeHelper\Overrides\FieldTypeParser;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Process;
 
 class IdeHelperStreamsCommand extends Command
@@ -29,32 +26,11 @@ class IdeHelperStreamsCommand extends Command
                                                 {--models}
                                                 {--examples}
                                                 {--toolbox}
-                                                {--docblocks}
-                                                {--clean}
-                                                {--pick}';
+                                                {--docblocks}';
 
     protected $description = '';
 
     protected $hidden = true;
-
-//
-//    public $completions = [];
-//
-//    public function getCompletions()
-//    {
-//        return $this->completions;
-//    }
-//
-//    public function setCompletions(array $completions)
-//    {
-//        $this->completions = $completions;
-//    }
-//
-//    public function addCompletions($completions)
-//    {
-//        $completions       = Arr::wrap($completions);
-//        $this->completions = array_merge($this->completions, $completions);
-//    }
 
     public function out(int $level, string $text, string $prefixColor = null)
     {
@@ -106,8 +82,23 @@ class IdeHelperStreamsCommand extends Command
 //        $this->line(exec("{$phpBin} artisan {$verbosity} {$args}"));
     }
 
+    protected function validate()
+    {
+        $required = [ 'models', 'examples', 'toolbox', 'docblocks', ];
+        $options  = array_keys(array_filter($this->input->getOptions()));
+        $valid    = count(array_intersect($required, $options)) > 0;
+        if ( ! $valid) {
+            $this->error('You need to add at least one of the options: ' . implode(', ', $required));
+            return false;
+        }
+        return true;
+    }
+
     public function handle(CompletionGenerator $options, StreamRepositoryInterface $streams)
     {
+        if ( ! $this->validate()) {
+            return;
+        }
 
         if ($this->option('models')) {
             $modelDocGenerator = new ModelDocGenerator(app('files'));
@@ -154,21 +145,26 @@ class IdeHelperStreamsCommand extends Command
             $this->line("  - Generating {$class}", null, 'v');
         });
 
-        if($this->option('examples')) {
+        if ($this->option('examples')) {
             // examples
             $this->line('<options=bold>Generating examples...</>');
-            $namespace = 'Pyro\\IdeHelper\\Examples';
-            $this->line('  - GenerateAddonCollectionExamples', null, 'v');
-            dispatch_now(new GenerateAddonCollectionExamples(__DIR__ . '/../../resources/examples/AddonCollectionExamples.php', $namespace));
-            $this->line('  - GenerateFieldTypeExamples', null, 'v');
-            dispatch_now(new GenerateFieldTypeExamples(__DIR__ . '/../../resources/examples/FieldTypeExamples.php', $namespace));
-            $this->line('  - GenerateRouteExamples', null, 'v');
-            dispatch_now(new GenerateRoutesExamples(__DIR__ . '/../../resources/examples/RoutesExamples.php', $namespace));
-            $this->line('  - GeneratePermissionsExamples', null, 'v');
-            dispatch_now(new GeneratePermissionsExamples(__DIR__ . '/../../resources/examples/PermissionsExamples.php', $namespace));
+            $namespace  = config('pyro.ide-helper.examples.namespace');
+            $outputPath = config('pyro.ide-helper.examples.output_path');
+            $generators = config('pyro.ide-helper.examples.generators');
+            $files      = config('pyro.ide-helper.examples.files');
+            foreach ($generators as $generator) {
+                $name = last(explode('\\', $generator));
+                $this->line("  - {$name}", null, 'v');
+                $this->dispatchNow(new $generator(Path::join($outputPath, $name . '.php'), $namespace));
+            }
+            foreach ($files as $filePath) {
+                $content = File::get($filePath);
+                $content = str_replace('namespace Pyro\IdeHelper\Examples', $namespace, $content);
+                File::put(Path::join($outputPath, Path::getFilenameWithoutExtension($filePath) . '.php'), $content);
+            }
         }
 
-        if($this->option('toolbox')) {
+        if ($this->option('toolbox')) {
             // toolbox
             $this->line('<options=bold>Generating toolbox completions...</>');
             $this->line('  - Generating stream classes completions...', null, 'v');

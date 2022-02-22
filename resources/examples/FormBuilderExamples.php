@@ -97,12 +97,21 @@ class FormBuilderExamples
     {
         return [
             'columns' => [
-                [
+                null => [
                     'classes' => '',
                     'size'    => 24,
                     'fields'  => [],
                     'html'    => '',
                     'view'    => '',
+                    'groups'  => [
+                        null => static::section(),
+                    ],
+                    'tabs'    => [
+                        null => static::sectionTab(),
+                    ],
+                    'rows'    => [
+                        null => static::sectionRow(),
+                    ],
                 ],
             ],
         ];
@@ -155,7 +164,7 @@ class FormBuilderExamples
     {
         $section             = static::sectionBase();
         $section[ 'rows' ]   = [
-            $row => self::sectionRow(),
+            $row => static::sectionRow(),
         ];
         $section[ 'tabs' ]   = [
             $tab => self::sectionTab(),
@@ -168,7 +177,7 @@ class FormBuilderExamples
 
     public static function sections()
     {
-        return [ static::section(), null => static::section() ];
+        return [ static::section() ];
     }
 
     public static function sections2()

@@ -13,7 +13,7 @@ use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
 use Anomaly\Streams\Platform\Addon\Plugin\Plugin;
 use Anomaly\Streams\Platform\Addon\Plugin\PluginCollection;
 use Anomaly\Streams\Platform\Addon\Theme\ThemeCollection;
-use Crvs\Platform\Addon\Theme\Theme;
+use Anomaly\Streams\Platform\Addon\Theme\Theme;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
 use Laradic\Generators\Doc\DocRegistry;
@@ -44,16 +44,17 @@ class AddonCollectionDocBlocks
         foreach (static::$data as $data) {
             $cd = $registry->getClass($data[ 'collection' ]);
             $cd->cleanTag('property');
-            (new CollectionDocBlock($data[ 'collection' ], $data[ 'item' ], []))
+            (new CollectionDocBlock($data[ 'collection' ], $data[ 'item' ], [ 'get', 'has' ]))
                 ->generate($registry);
 
             foreach (static::$data as $item) {
                 $cd->ensureProperty(
                     Str::plural($item[ 'name' ]),
-                    [$item[ 'collection' ], $item[ 'item' ] . '[]']
+                    [ $item[ 'collection' ], $item[ 'item' ] . '[]' ]
                 );
             }
-            $cd->getMethod('get')->ensureParam('$namespace', 'string', ' = ' . \Pyro\IdeHelper\Examples\AddonCollectionExamples::class . '::addonType()[$any]');
+//            $cd->getMethod('get')->ensureParam('$namespace', 'string', ' = ' . \Pyro\IdeHelper\Examples\AddonCollectionExamples::class . '::addonType()[$any]');
+            $cd->getMethod('get')->cleanTag('return')->cleanTag('param')->cleanTag('param');
         }
     }
 

@@ -39,16 +39,25 @@ class AddonCollectionsGenerator extends AbstractToolboxGenerator
             if ( ! array_key_exists($typePlural, $classes)) {
                 continue;
             }
-            $class                 = get_class($addon);
-            $data[ $typePlural ][] = [
+            $class = get_class($addon);
+
+            $ref    = new \ReflectionClass($class);
+            $target = $ref->getFileName();
+            $target = str_replace(base_path() . '/', 'file:///', $target);
+
+            $item                  = [
                 'lookup_string' => $addon->getNamespace(),
-                'type'          => $classes[ $typePlural ],
-                'target'        => $class,
+                'type'          => $class, //$classes[ $typePlural ],
+                'target'        => $class, //$target,
                 'type_text'     => $class,
                 'icon'          => 'com.jetbrains.php.PhpIcons.CLASS',
-                'tail_text'     => " {$type}",
+                'tail_text'     => " [{$type}]",
             ];
+            $data[ $typePlural ][] = $item;
+//            $data[ 'addons' ][]    = $item;
         }
+
+//        $classes[ 'addons'] = AddonCollection::class;
 
         foreach ($data as $name => $items) {
             $this->metadata()->push('providers', [
@@ -62,6 +71,7 @@ class AddonCollectionsGenerator extends AbstractToolboxGenerator
                 "language"   => "php",
                 "signature"  => [
                     "{$class}:get",
+                    "{$class}:get:0",
                 ],
                 "signatures" => [
 
@@ -69,6 +79,7 @@ class AddonCollectionsGenerator extends AbstractToolboxGenerator
                         "class"  => "{$class}",
                         "method" => "get",
                         "type"   => "type",
+                        "index"  => 0,
                     ],
                 ],
             ]);

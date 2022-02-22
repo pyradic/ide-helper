@@ -47,26 +47,27 @@ return [
         ],
     ],
     'examples' => [
-        'path'       => resource_path('vendor/pyro/ide-helper'),
-        'namespace'  => 'Pyro\IdeHelper\Examples',
-        'generators' => [
+        'path'        => resource_path('vendor/pyro/ide-helper'),
+        'output_path' => resource_path('vendor/pyro/ide-helper'),
+        'namespace'   => 'Pyro\IdeHelper\Examples',
+        'generators'  => [
             \Pyro\IdeHelper\Command\GenerateAddonCollectionExamples::class,
             \Pyro\IdeHelper\Command\GenerateFieldTypeExamples::class,
             \Pyro\IdeHelper\Command\GeneratePermissionsExamples::class,
             \Pyro\IdeHelper\Command\GenerateRoutesExamples::class,
         ],
-        'files'      => [
+        'files'       => [
             //'resources/examples/AddonCollectionExamples.php',
-            'resources/examples/AddonServiceProviderExamples.php',
-            'resources/examples/Examples.php',
+            __DIR__ . '/../resources/examples/AddonServiceProviderExamples.php',
+            __DIR__ . '/../resources/examples/Examples.php',
             //'resources/examples/FieldTypeExamples.php',
-            'resources/examples/FormBuilderExamples.php',
-            'resources/examples/IconExamples.php',
-            'resources/examples/mdi.php',
-            'resources/examples/ModuleExamples.php',
+            __DIR__ . '/../resources/examples/FormBuilderExamples.php',
+            __DIR__ . '/../resources/examples/IconExamples.php',
+            __DIR__ . '/../resources/examples/mdi.php',
+            __DIR__ . '/../resources/examples/ModuleExamples.php',
             //'resources/examples/PermissionsExamples.php',
             //'resources/examples/RoutesExamples.php',
-            'resources/examples/TableBuilderExamples.php',
+            __DIR__ . '/../resources/examples/TableBuilderExamples.php',
         ],
     ],
     'docblock' => [
