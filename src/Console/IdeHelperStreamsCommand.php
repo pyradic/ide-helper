@@ -150,6 +150,7 @@ class IdeHelperStreamsCommand extends Command
             $this->line('<options=bold>Generating examples...</>');
             $namespace  = config('pyro.ide-helper.examples.namespace');
             $outputPath = config('pyro.ide-helper.examples.output_path');
+            File::ensureDirectoryExists($outputPath);
             $generators = config('pyro.ide-helper.examples.generators');
             $files      = config('pyro.ide-helper.examples.files');
             foreach ($generators as $generator) {
