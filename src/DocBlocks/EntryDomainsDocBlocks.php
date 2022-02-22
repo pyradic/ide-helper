@@ -5,6 +5,7 @@ namespace Pyro\IdeHelper\DocBlocks;
 use Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface;
 use Anomaly\Streams\Platform\Entry\EntryModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laradic\Generators\Doc\Block\CollectionDocBlock;
 use Laradic\Generators\Doc\Block\CollectionMacrosDocBlock;
@@ -21,6 +22,8 @@ class EntryDomainsDocBlocks
 
     protected $exclude = [ 'Anomaly\CommentsModule', 'Anomaly\DocumentationModule' ];
 
+    protected $include = [ '*' ];
+
     public function __construct($exclude = [])
     {
         $this->exclude = $exclude;
@@ -30,11 +33,19 @@ class EntryDomainsDocBlocks
     {
         $this->registry = $registry;
 
-        $this->getDomains()->filter(function ($namespace) {
+        $domains = $this->getDomains();
+        $domains = $domains->filter(function ($namespace) {
             return ! in_array($namespace, $this->exclude);
-        })->map(function ($namespace, $path) {
+        });
+        $domains = $domains->filter(function ($namespace) {
+            return Str::is($this->include, $namespace);
+        });
+
+        $classes = $domains->map(function ($namespace, $path) {
             return $this->getClasses($path, $namespace);
         });
+
+        return;
     }
 
     protected function getDomains()
@@ -42,7 +53,7 @@ class EntryDomainsDocBlocks
         $domains                                                                = $this->dispatchNow(new FindAllEntryDomains(app('addon.collection')->installed()));
         $domains[ base_path('vendor/anomaly/streams-platform/src/Assignment') ] = 'Anomaly\Streams\Platform';
         $domains[ base_path('vendor/anomaly/streams-platform/src/Stream') ]     = 'Anomaly\Streams\Platform';
-        $domains[ base_path('vendor/anomaly/streams-platform/src/Entry') ]      = 'Anomaly\Streams\Platform';
+//        $domains[ base_path('vendor/anomaly/streams-platform/src/Entry') ]      = 'Anomaly\Streams\Platform';
         $domains[ base_path('vendor/anomaly/streams-platform/src/Version') ]    = 'Anomaly\Streams\Platform';
         $domains[ base_path('vendor/anomaly/streams-platform/src/Field') ]      = 'Anomaly\Streams\Platform';
         return collect($domains);
@@ -52,7 +63,7 @@ class EntryDomainsDocBlocks
     {
         $name = pathinfo($path, PATHINFO_BASENAME);
         /** @var \Illuminate\Support\Collection|ClassDoc[] $c */
-        /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc}  $c */
+        /** @var array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc} $c */
         $c = collect([
             'model'               => "\\{$namespace}\\{$name}\\{$name}Model",
             'collection'          => "\\{$namespace}\\{$name}\\{$name}Collection",
@@ -79,38 +90,73 @@ class EntryDomainsDocBlocks
         }
 
         $c = $c->map(function ($className, $key) {
-            if ( ! class_exists($className,false) && ! interface_exists($className, false)) {
-                $className = $this->getFallbackClass($key);
-                return $this->registry->getClass($className);
+            try {
+                if (class_exists($className) || interface_exists($className)) {
+                    return $this->registry->getClass($className);
+                }
             }
-            return $this->registry->getClass($className);
+            catch (\Throwable $e) {
+
+            }
+
+            $className = $this->getFallbackClass($key);
+            return $className; //$this->registry->getClass($className);
         });
 
-        $cs = $c->map(function (ClassDoc $class) {
-            return Str::ensureLeft($class->getReflection()->getName() . '[]', '\\');
+        $cs = $c->map(function ($class) {
+            if ($class instanceof ClassDoc) {
+                $class = $class->getReflection()->getName();
+            }
+            return Str::ensureLeft($class . '[]', '\\');
         });
 
-        $this->handleModel($c[ 'model' ], $c, $cs);
-        $this->handleCollection($c[ 'collection' ], $c, $cs);
-        $this->handleCriteria($c[ 'criteria' ], $c, $cs);
-        $this->handleObserver($c[ 'observer' ], $c, $cs);
-        $this->handlePresenter($c[ 'presenter' ], $c, $cs);
-        $this->handleRepository($c[ 'repository' ], $c, $cs);
-        $this->handleQueryBuilder($c[ 'queryBuilder' ], $c, $cs);
-        $this->handleRouter($c[ 'router' ], $c, $cs);
-        $this->handleSeeder($c[ 'seeder' ], $c, $cs);
-        $this->handleInterface($c[ 'interface' ], $c, $cs);
-        $this->handleRepositoryInterface($c[ 'repositoryInterface' ], $c, $cs);
+        foreach ($c as $name => $classDoc) {
+            if ( ! $classDoc instanceof ClassDoc) {
+                continue;
+            }
+            $method = Str::camel('handle_' . $name);
+            $this->{$method}($classDoc, $c, $cs);
+        }
+
+//        $this->handleModel($c[ 'model' ], $c, $cs);
+//        $this->handleCollection($c[ 'collection' ], $c, $cs);
+//        $this->handleCriteria($c[ 'criteria' ], $c, $cs);
+//        $this->handleObserver($c[ 'observer' ], $c, $cs);
+//        $this->handlePresenter($c[ 'presenter' ], $c, $cs);
+//        $this->handleRepository($c[ 'repository' ], $c, $cs);
+//        $this->handleQueryBuilder($c[ 'queryBuilder' ], $c, $cs);
+//        $this->handleRouter($c[ 'router' ], $c, $cs);
+//        $this->handleSeeder($c[ 'seeder' ], $c, $cs);
+//        $this->handleInterface($c[ 'interface' ], $c, $cs);
+//        $this->handleRepositoryInterface($c[ 'repositoryInterface' ], $c, $cs);
+
 //        $this->handleFormBuilder($c[ 'formBuilder' ], $c, $cs);
 //        $this->handleTableBuilder($c[ 'tableBuilder' ], $c, $cs);
 
+        $this->generateCollections($c);
+        return compact('c', 'cs', 'namespace', 'name', 'path');
+    }
+
+    protected function generateCollections(Collection $c)
+    {
+        if ( ! $c[ 'collection' ] instanceof ClassDoc) {
+            return;
+        }
+        $item = $c[ 'interface' ];
+        if ( ! $item instanceof ClassDoc) {
+            $item = $c[ 'model' ];
+        }
+        if ( ! $item instanceof ClassDoc) {
+            return;
+        }
+
         (new CollectionDocBlock(
             $c[ 'collection' ]->getReflection()->getName(),
-            $c[ 'interface' ]->getReflection()->getName())
+            $item->getReflection()->getName())
         )->generate($this->registry);
         (new CollectionMacrosDocBlock(
             $c[ 'collection' ]->getReflection()->getName(),
-            $c[ 'interface' ]->getReflection()->getName())
+            $item->getReflection()->getName())
         )->generate($this->registry);
     }
 
@@ -181,9 +227,9 @@ class EntryDomainsDocBlocks
     }
 
     /**
-     * @param \Laradic\Generators\Doc\Doc\ClassDoc $cd
+     * @param \Laradic\Generators\Doc\Doc\ClassDoc                                                                                                                                                                                                                                              $cd
      * @param array{model:ClassDoc, collection:ClassDoc, criteria:ClassDoc, observer:ClassDoc, presenter:ClassDoc, repository:ClassDoc, queryBuilder:ClassDoc, router:ClassDoc, seeder:ClassDoc, interface:ClassDoc, repositoryInterface:ClassDoc, formBuilder:ClassDoc, tableBuilder:ClassDoc} $c
-     * @param array                                $cs = static::cexample()
+     * @param array                                                                                                                                                                                                                                                                             $cs = static::cexample()
      *
      * @return void
      */
@@ -195,7 +241,6 @@ class EntryDomainsDocBlocks
             ->ensureMethod('getObject', $c[ 'model' ])
             ->ensureMixin($c[ 'model' ]);
 
-        /** @var \Crvs\Platform\Entry\EntryModel $model */
         $modelClass = $c[ 'model' ]->getClassName();
         $model      = new $modelClass();
         if ($model instanceof EntryModel) {
@@ -230,19 +275,19 @@ class EntryDomainsDocBlocks
             ->ensureMethod('findWithoutRelations', $c[ 'interface' ], '$id')
             ->ensureMethod('findBy', $c[ 'interface' ], '$key, $value')
             ->ensureMethod('findAll', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'array $ids')
-            ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], 'string $key, $value')
+            ->ensureMethod('findAllBy', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$column, $value')
             ->ensureMethod('findTrashed', $c[ 'interface' ], '$id')
             ->ensureMethod('newQuery', $c[ 'queryBuilder' ])
             //->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
             // 'create' will be provided by php toolbox
             // 'update' cannot be provided by php toolbox. it messes things up. So it will be provided here, utilizing deep-assoc-completion
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
-            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes')// = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes')// = ' . $this->getAttributesString($c[ 'model' ]))
             ->ensureMethod('getModel', $c[ 'model' ])
-            ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []')
-            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
-            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
-            ->ensureMethod('lastModified', $c[ 'interface' ]);
+            ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []');
+//            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
+//            ->ensureMethod('first', $c[ 'interface' ], '$direction = "asc"')
+//            ->ensureMethod('lastModified', $c[ 'interface' ]);
     }
 
     /**
@@ -300,7 +345,7 @@ class EntryDomainsDocBlocks
      */
     protected function handleRepositoryInterface(ClassDoc $cd, $c, $cs)
     {
-        $cd->ensureMixin($c[ 'repository' ]);
+        $this->handleRepository($cd, $c, $cs);
     }
 
     /**

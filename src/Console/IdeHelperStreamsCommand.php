@@ -160,7 +160,7 @@ class IdeHelperStreamsCommand extends Command
             }
             foreach ($files as $filePath) {
                 $content = File::get($filePath);
-                $content = str_replace('namespace Pyro\IdeHelper\Examples', $namespace, $content);
+                $content = str_replace('namespace Pyro\IdeHelper\Examples', "namespace $namespace", $content);
                 File::put(Path::join($outputPath, Path::getFilenameWithoutExtension($filePath) . '.php'), $content);
             }
         }
