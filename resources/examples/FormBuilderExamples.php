@@ -177,7 +177,7 @@ class FormBuilderExamples
 
     public static function sections()
     {
-        return [ static::section() ];
+        return [ static::section(), null => static::section() ];
     }
 
     public static function sections2()
