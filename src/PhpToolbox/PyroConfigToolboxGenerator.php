@@ -34,7 +34,7 @@ use Laradic\Idea\Toolbox\Metadata;
             "items":
  */
 
-class ConfigGenerator extends AbstractToolboxGenerator
+class PyroConfigToolboxGenerator extends AbstractToolboxGenerator
 {
 
     /** @var array */

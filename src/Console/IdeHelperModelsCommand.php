@@ -46,8 +46,8 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
             'src/**/*Pivot.php',
         ];
         $paths = collect($globs)
-            ->map([$addon, 'getPath'])
-            ->call('rglob',[],false)
+            ->map([ $addon, 'getPath' ])
+            ->call('rglob', [], false)
             ->filter()
             ->flatten();
 //        $paths = collect($addon->getPath('src/*/*Model.php'))->merge($addon->getPath('src/*/*Pivot.php'));
@@ -67,6 +67,7 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
     {
         /** @var \Illuminate\Support\Collection $paths */
         $paths = $addons->enabled()->toBase()->values()->map->getPath('src/*/*Model.php');
+        $paths = $paths->merge($addons->enabled()->toBase()->values()->map->getPath('src/*Model.php'));
 //        $applicationResourceModelsPath = resolve(Application::class)->getStoragePath('models');
 //        $paths->push(path_join($applicationResourceModelsPath, '*/*Model.php'));
         $paths = $paths->call('glob', [], false)->filter()->flatten();

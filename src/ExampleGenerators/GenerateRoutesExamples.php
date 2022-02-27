@@ -1,44 +1,14 @@
 <?php
 
-namespace Pyro\IdeHelper\Command;
+namespace Pyro\IdeHelper\ExampleGenerators;
 
-use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
-use Anomaly\Streams\Platform\Addon\FieldType\FieldTypeCollection;
 use Illuminate\Routing\Router;
+use function base_path;
+use function collect;
+use function path_is_relative;
 
-class GenerateRoutesExamples
+class GenerateRoutesExamples extends AbstractGenerator
 {
-    /** @var string */
-    protected $path;
-
-    /** @var boolean */
-    protected $noWrite;
-
-    /** @var string */
-    protected $namespace;
-
-    /**
-     * GenerateFieldBlueprint constructor.
-     *
-     * @param string $path    File path to write generated results to
-     * @param string $namespace
-     * @param bool   $noWrite Disable write to file
-     */
-    public function __construct(string $path = __DIR__ . '/../../resources/examples/RoutesExamples.php', string $namespace = 'Pyro\\IdeHelper\\Examples', bool $noWrite = false)
-    {
-        $this->path      = $path;
-        $this->noWrite   = $noWrite;
-        $this->namespace = $namespace;
-    }
-
-    protected function write(string $data)
-    {
-        if ($this->noWrite) {
-            return;
-        }
-        $path = path_is_relative($this->path) ? base_path($this->path) : $this->path;
-        file_put_contents($path, $data, LOCK_EX);
-    }
 
     public function handle(Router $router)
     {
@@ -47,7 +17,7 @@ class GenerateRoutesExamples
             return $route->uri();
         })->filter();
 
-        $uris = $routes->map(function($val){
+        $uris = $routes->map(function ($val) {
             return $val = "'{$val}',";
         })->implode("\n");
 

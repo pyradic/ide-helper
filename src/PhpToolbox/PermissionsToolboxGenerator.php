@@ -7,7 +7,7 @@ use Illuminate\Contracts\Config\Repository;
 use Laradic\Idea\Toolbox\AbstractToolboxGenerator;
 use Pyro\IdeHelper\Command\ResolveAllPermissions;
 
-class PermissionsGenerator extends AbstractToolboxGenerator
+class PermissionsToolboxGenerator extends AbstractToolboxGenerator
 {
 
     public function handle()

@@ -12,8 +12,9 @@ use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\Doc;
 use Laradic\Generators\Doc\DocChainExecutor;
+use Pyro\IdeHelper\ExampleGenerators\ExampleGenerator;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
-use Pyro\IdeHelper\PhpToolbox\GenerateStreamMeta;
+use Pyro\IdeHelper\PhpToolbox\GenerateStreamsToolbox;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Process;
 
@@ -23,6 +24,7 @@ class IdeHelperStreamsCommand extends Command
 
     protected $signature = 'ide-helper:streams
                                                 {--out= : output path}
+                                                {--all : Experimental}
                                                 {--models}
                                                 {--examples}
                                                 {--toolbox}
@@ -31,22 +33,6 @@ class IdeHelperStreamsCommand extends Command
     protected $description = '';
 
     protected $hidden = true;
-
-    public function out(int $level, string $text, string $prefixColor = null)
-    {
-        $prefix = "<fg={$prefixColor}>";
-
-        if ($level === 0) {
-            $this->line("<options=bold>{$text}</>");
-        } elseif ($level === 1) {
-
-            $this->line("{$text}");
-        } elseif ($level === 1) {
-            $this->line("{$prefix} -</> {$text}");
-        } elseif ($level === 2) {
-            $this->line("{$prefix} ></> {$text}");
-        }
-    }
 
     protected function createExecutor()
     {
@@ -59,32 +45,9 @@ class IdeHelperStreamsCommand extends Command
         return $executor;
     }
 
-    protected function spawnCall($args)
-    {
-        $phpBin = $_SERVER[ 'argv' ][ 0 ];
-        $out    = $this->getOutput();
-
-        $verbosity = $out->isVerbose() ? '-v' : '';
-        $verbosity = $out->isVeryVerbose() ? '-vv' : $verbosity;
-        $verbosity = $out->isDebug() ? '-vvv' : $verbosity;
-        $args      = Arr::wrap($args);
-        $process   = new Process(array_merge([ $phpBin, 'artisan', $verbosity ], $args));
-        $process
-            ->setIdleTimeout(120)
-            ->setTimeout(120)
-            ->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    echo $buffer;
-                } else {
-                    echo $buffer;
-                }
-            });
-//        $this->line(exec("{$phpBin} artisan {$verbosity} {$args}"));
-    }
-
     protected function validate()
     {
-        $required = [ 'models', 'examples', 'toolbox', 'docblocks', ];
+        $required = [ 'models', 'examples', 'toolbox', 'docblocks', 'all' ];
         $options  = array_keys(array_filter($this->input->getOptions()));
         $valid    = count(array_intersect($required, $options)) > 0;
         if ( ! $valid) {
@@ -100,24 +63,26 @@ class IdeHelperStreamsCommand extends Command
             return;
         }
 
-        if ($this->option('models')) {
-            $modelDocGenerator = new ModelDocGenerator(app('files'));
-            $modelDocGenerator
-                ->setReset(true)
-                ->setKeepText(true)
-                ->setWriteModelMagicWhere(true)
-                ->setWrite(true);
+//        if ($this->option('models')) {
+//            $modelDocGenerator = new ModelDocGenerator(app('files'));
+//            $modelDocGenerator
+//                ->setReset(true)
+//                ->setKeepText(true)
+//                ->setWriteModelMagicWhere(true)
+//                ->setWrite(true);
+//
+//            $executor = $this->createExecutor();
+//            $executor->transform();
+//            $models = collect($executor->getRegistry()->getClasses())->map->getReflection()->filter->isSubclassOf(Model::class);
+//            foreach ($models as $className => $class) {
+//                $this->line("  - Generating model '{$className}' completions...'", null, 'v');
+//                $modelDocGenerator->generateForModel($className);
+//            }
+//            return;
+//        }
 
-            $executor = $this->createExecutor();
-            $executor->transform();
-            $models = collect($executor->getRegistry()->getClasses())->map->getReflection()->filter->isSubclassOf(Model::class);
-            foreach ($models as $className => $class) {
-                $this->line("  - Generating model '{$className}' completions...'", null, 'v');
-                $modelDocGenerator->generateForModel($className);
-            }
-            return;
-        }
-        if ($this->option('docblocks')) {
+        if ($this->option('docblocks') || $this->option('all')) {
+            $this->line('<options=bold>Generating docblocks...</>');
             $executor = $this->createExecutor();
             $executor->transform();
             $executor->getSerializer()->on('write', function (Doc $classDoc) {
@@ -129,44 +94,31 @@ class IdeHelperStreamsCommand extends Command
                 $this->line(" - {$class}", null, 'v');
             });
             $executor->run();
-            return;
+
+            $this->line('<options=bold>Generating model docblocks...</>');
+            $modelDocGenerator = new ModelDocGenerator(app('files'));
+            $modelDocGenerator
+                ->setReset(true)
+                ->setKeepText(true)
+                ->setWriteModelMagicWhere(true)
+                ->setWrite(true);
+            $models = collect($executor->getRegistry()->getClasses())->map->getReflection()->filter->isSubclassOf(Model::class);
+            foreach ($models as $className => $class) {
+                $this->line("  - {$className}", null, 'v');
+                $modelDocGenerator->generateForModel($className);
+            }
         }
 
-//        $this->line('<options=bold>Generating idea completions...</>');
-//        $this->spawnCall('idea:completion');
-
-//        $this->line('<options=bold>Generating model completions...</>');
-//        $this->spawnCall('ide-helper:streams --models');
-//        $this->line('<options=bold>Generating docblock completions...</>');
-//        $this->spawnCall('ide-helper:streams --docblocks');
-
-        $options->before(function ($pipe) {
-            $class = get_class($pipe);
-            $this->line("  - Generating {$class}", null, 'v');
-        });
-
-        if ($this->option('examples')) {
-            // examples
+        if ($this->option('examples') || $this->option('all')) {
             $this->line('<options=bold>Generating examples...</>');
-            $namespace  = config('pyro.ide-helper.examples.namespace');
-            $outputPath = config('pyro.ide-helper.examples.output_path');
-            File::ensureDirectoryExists($outputPath);
-            $generators = config('pyro.ide-helper.examples.generators');
-            $files      = config('pyro.ide-helper.examples.files');
-            foreach ($generators as $generator) {
-                $name = last(explode('\\', $generator));
-                $this->line("  - {$name}", null, 'v');
-                $this->dispatchNow(new $generator(Path::join($outputPath, $name . '.php'), $namespace));
-            }
-            foreach ($files as $filePath) {
-                $content = File::get($filePath);
-                $content = str_replace('namespace Pyro\IdeHelper\Examples', "namespace $namespace", $content);
-                File::put(Path::join($outputPath, Path::getFilenameWithoutExtension($filePath) . '.php'), $content);
-            }
+            /** @var ExampleGenerator $generator */
+            $generator = $this->laravel->make(ExampleGenerator::class);
+            $generator->on('generated', fn($name, $path) => $this->line(" - Generated '{$name}' at {$path}", null, 'v'));
+            $generator->on('copied', fn($path) => $this->line(" - Copied {$path}", null, 'v'));
+            $generator->generate();
         }
 
-        if ($this->option('toolbox')) {
-            // toolbox
+        if ($this->option('toolbox') || $this->option('all')) {
             $this->line('<options=bold>Generating toolbox completions...</>');
             $this->line('  - Generating stream classes completions...', null, 'v');
             $excludes = config('pyro.ide-helper.toolbox.streams.exclude', []);
@@ -177,7 +129,7 @@ class IdeHelperStreamsCommand extends Command
                     continue;
                 }
                 try {
-                    $this->dispatchNow(new GenerateStreamMeta($stream));
+                    $this->dispatchNow(new GenerateStreamsToolbox($stream));
                     $this->line("     <info>></info> Generated stream '{$name}' completions", null, 'vv');
                 }
                 catch (\Exception $e) {

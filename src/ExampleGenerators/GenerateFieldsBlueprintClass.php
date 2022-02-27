@@ -1,6 +1,6 @@
 <?php
 
-namespace Pyro\IdeHelper\Command;
+namespace Pyro\IdeHelper\ExampleGenerators;
 
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Addon\FieldType\FieldTypeCollection;

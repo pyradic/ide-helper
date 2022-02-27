@@ -2,6 +2,7 @@
 
 namespace Pyro\IdeHelper;
 
+use Anomaly\Streams\Platform\Model\EloquentModel;
 use Barryvdh\Reflection\DocBlock\Tag;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
@@ -11,6 +12,7 @@ use Laradic\Support\FS;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
 use Pyro\IdeHelper\Console\IdeHelperAllCommands;
+use Pyro\IdeHelper\ExampleGenerators\ExampleGenerator;
 use Pyro\IdeHelper\Metas\AddonsMeta;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
 
@@ -19,17 +21,43 @@ class IdeHelperServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(dirname(__DIR__) . '/config/pyro.ide-helper.php', 'pyro.ide-helper');
+        $this->registerProviders();
+        $this->registerCommands();
+        $this->registerExampleGenerator();
+        $this->registerResolveSourceFolders();
+        Tag::registerTagHandler('mixin', MixinTag::class);
+
+        $this->app->booted(function () {
+            if (env('INSTALLED')) {
+                $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
+            }
+        });
+    }
+
+    public function boot(Repository $config)
+    {
+        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro.ide-helper.php') ], [ 'config', 'ide-helper' ]);
+        $this->overrideConfigs();
+        $this->overrideCommands();
+    }
+
+    protected function registerProviders()
+    {
         $this->app->register(\Laradic\Support\SupportServiceProvider::class);
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         $this->app->register(\Laradic\Idea\IdeaServiceProvider::class);
+    }
 
-        Tag::registerTagHandler('mixin', MixinTag::class);
-
+    protected function registerCommands()
+    {
         $this->app->singleton('command.ide.streams', IdeHelperStreamsCommand::class);
         $this->app->singleton('command.ide.all', IdeHelperAllCommands::class);
         $this->commands('command.ide.streams');
         $this->commands('command.ide.all');
+    }
 
+    protected function registerResolveSourceFolders()
+    {
         ResolveSourceFolders::extend(function ($match) {
             /** @var ResolveSourceFolders $this */
             if ($match[ 'hasPackageJson' ]) {
@@ -52,51 +80,37 @@ class IdeHelperServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot(Repository $config)
+    protected function registerExampleGenerator()
     {
-        $this->publishes([ dirname(__DIR__) . '/resources/examples' => resource_path('ide-helper') ], [ 'ide-helper' ]);
-        $this->publishes([ dirname(__DIR__) . '/config/pyro.ide-helper.php' => config_path('pyro.ide-helper.php') ], [ 'config', 'ide-helper' ]);
+        $this->app->bind(ExampleGenerator::class, function ($app) {
+            $namespace  = config('pyro.ide-helper.examples.namespace');
+            $outputPath = config('pyro.ide-helper.examples.output_path');
+            $generators = config('pyro.ide-helper.examples.generators');
+            $files      = config('pyro.ide-helper.examples.files');
 
+            return new ExampleGenerator($namespace, $outputPath, $generators, $files);
+        });
+    }
 
+    protected function overrideCommands()
+    {
+        $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
+    }
+
+    protected function overrideConfigs()
+    {
+        $config = resolve(Repository::class);
         $config->push('ide-helper.ignored_models', 'Anomaly\Streams\Platform\Model\Search\SearchItemsEntryModel');
+        $config->push('ide-helper.ignored_models', EloquentModel::class);
+        $config->set('ide-helper.force_fqn', true);
+        $config->set('ide-helper.write_model_external_builder_methods', false);
+        $config->set('ide-helper.write_model_relation_count_properties', false);
+
         $metas = $config->get('laradic.idea.meta.metas', []);
         unset($metas[ \Laradic\Idea\Metas\ViewMeta::class ]);
         unset($metas[ \Laradic\Idea\Metas\ConfigMeta::class ]);
         $metas[ AddonsMeta::class ] = [];
         $config->set('laradic.idea.meta.metas', $metas);
-
-        $config->set('laradic.idea.toolbox.generators', [
-            \Laradic\Idea\Toolbox\ConfigGenerator::class                => [
-                'directory' => 'laravel/config',
-            ],
-            \Laradic\Idea\Toolbox\RoutesGenerator::class                => [
-                'directory' => 'laravel/routes',
-            ],
-            \Laradic\Idea\Toolbox\ViewsGenerator::class                 => [
-                'directory'         => 'laravel/views',
-                'excludeNamespaces' => [ 'storage', 'root' ],
-            ],
-            \Pyro\IdeHelper\PhpToolbox\AddonCollectionsGenerator::class => [
-                'directory' => 'pyro/addon_collections',
-            ],
-            \Pyro\IdeHelper\PhpToolbox\ConfigGenerator::class           => [
-                'directory' => 'pyro/config',
-            ],
-            \Pyro\IdeHelper\PhpToolbox\PermissionsGenerator::class      => [
-                'directory' => 'pyro/permissions',
-            ],
-        ]);
-
-        $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
-        $this->app->booted(function () {
-            if (env('INSTALLED')) {
-                $this->app->bind(\Anomaly\Streams\Platform\Addon\FieldType\FieldTypeParser::class, FieldTypeParser::class);
-            }
-        });
-    }
-
-    public function ser()
-    {
-
+        $config->set('laradic.idea.toolbox.generators', $config->get('pyro.ide-helper.toolbox.generators'));
     }
 }

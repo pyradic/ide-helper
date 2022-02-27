@@ -18,13 +18,18 @@ use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
-use Pyro\IdeHelper\PhpToolbox\AddonCollectionsGenerator;
-use Pyro\IdeHelper\PhpToolbox\ConfigGenerator;
-use Pyro\IdeHelper\PhpToolbox\PermissionsGenerator;
+use Pyro\IdeHelper\PhpToolbox\AddonCollectionsToolboxGenerator;
+use Pyro\IdeHelper\PhpToolbox\PyroConfigToolboxGenerator;
+use Pyro\IdeHelper\PhpToolbox\PermissionsToolboxGenerator;
 
 /** @return array = \Pyro\IdeHelper\Examples\Examples::config() */
 return [
+    /*
+     * Toolbox relies on `php-toolbox` plugin to work
+     * Intelij: https://plugins.jetbrains.com/plugin/8133-php-toolbox
+     */
     'toolbox'  => [
+        /** The path where all generated files will be written to. should not be modified */
         'path'       => base_path('php-toolbox'),
         'streams'    => [
             /*
@@ -38,38 +43,75 @@ return [
             'field_goto_target' => 'documentation', // Goto [CTRL+click] on field key will open the configuration.md file of the field (eg core/anomaly/select-field_type/docs/en/01.introduction/02.configuration.md)
             'exclude'           => [ 'Anomaly\CommentsModule', 'Anomaly\DocumentationModule' ],
         ],
+        /** This overrides the 'laradic.idea.toolbox.generators' config  */
         'generators' => [
-            [ 'description' => 'addon collections completions', 'class' => AddonCollectionsGenerator::class ],
-            [ 'description' => 'config completions', 'class' => ConfigGenerator::class, 'excludes' => [] ],
-            [ 'description' => 'view completions', 'class' => ViewsGenerator::class ],
-            [ 'description' => 'route completions', 'class' => RoutesGenerator::class ],
-            [ 'description' => 'permission completions', 'class' => PermissionsGenerator::class ],
+            \Laradic\Idea\Toolbox\ConfigGenerator::class                       => [
+                'description' => 'Laravel config completions',
+                'directory'   => 'laravel/config',
+            ],
+            \Laradic\Idea\Toolbox\RoutesGenerator::class                       => [
+                'description' => 'Route completions',
+                'directory'   => 'laravel/routes',
+            ],
+            \Laradic\Idea\Toolbox\ViewsGenerator::class                        => [
+                'description'       => 'View completions',
+                'directory'         => 'laravel/views',
+                'excludeNamespaces' => [ 'storage', 'root' ],
+            ],
+            \Pyro\IdeHelper\PhpToolbox\AddonCollectionsToolboxGenerator::class => [
+                'description' => 'addon collections completions',
+                'directory'   => 'pyro/addon_collections',
+            ],
+            \Pyro\IdeHelper\PhpToolbox\PyroConfigToolboxGenerator::class       => [
+                'description' => 'PyroCMS config completions',
+                'directory'   => 'pyro/config',
+                'excludes'    => [],
+            ],
+            \Pyro\IdeHelper\PhpToolbox\PermissionsToolboxGenerator::class      => [
+                'description' => 'permission completions',
+                'directory'   => 'pyro/permissions',
+            ],
         ],
     ],
+    /*
+     * Example files are used in docblocks where the type is array. This relies on the `deep-assoc-completion` plugin to work.
+     * VSCode: https://marketplace.visualstudio.com/items?itemName=klesun.deep-assoc-completion-vscode
+     * Intelij: https://plugins.jetbrains.com/plugin/9927-deep-assoc-completion/
+     */
     'examples' => [
         'path'        => resource_path('vendor/pyro/ide-helper'),
+        /** The path where all example files will be written to */
         'output_path' => resource_path('vendor/pyro/ide-helper'),
+        /** the namespace all example files should have */
         'namespace'   => 'Pyro\IdeHelper\Examples',
+        /* generated example files will by copied to output path with the given namespace */
         'generators'  => [
-            \Pyro\IdeHelper\Command\GenerateAddonCollectionExamples::class,
-            \Pyro\IdeHelper\Command\GenerateFieldTypeExamples::class,
-            \Pyro\IdeHelper\Command\GeneratePermissionsExamples::class,
-            \Pyro\IdeHelper\Command\GenerateRoutesExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateAddonCollectionExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateFieldTypeExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GeneratePermissionsExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateRoutesExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateConfigExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateSettingsExamples::class,
+            \Pyro\IdeHelper\ExampleGenerators\GenerateViewExamples::class,
         ],
+        /* hand made example files will by copied to output path. With the namespace corrected */
         'files'       => [
-            //'resources/examples/AddonCollectionExamples.php',
             __DIR__ . '/../resources/examples/AddonServiceProviderExamples.php',
             __DIR__ . '/../resources/examples/Examples.php',
-            //'resources/examples/FieldTypeExamples.php',
             __DIR__ . '/../resources/examples/FormBuilderExamples.php',
             __DIR__ . '/../resources/examples/IconExamples.php',
             __DIR__ . '/../resources/examples/mdi.php',
+            __DIR__ . '/../resources/examples/MigrationExamples.php',
             __DIR__ . '/../resources/examples/ModuleExamples.php',
-            //'resources/examples/PermissionsExamples.php',
-            //'resources/examples/RoutesExamples.php',
+//            __DIR__ . '/../resources/examples/SettingsExamples.php',
             __DIR__ . '/../resources/examples/TableBuilderExamples.php',
         ],
     ],
+    /*
+     * Docblock generators do not rely on any addon and are compatible with all IDEs.
+     * They modify docblocks for A LOT of files.
+     * This provideds not just code-completion, but better refactoring results as wel!!!
+     */
     'docblock' => [
         'generators' => [
             AddonCollectionDocBlocks::class,

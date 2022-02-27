@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laradic\Idea\Toolbox\Metadata;
 
-class GenerateStreamMeta
+class GenerateStreamsToolbox
 {
     /** @var \Laradic\Idea\Toolbox\Metadata */
     protected $meta;

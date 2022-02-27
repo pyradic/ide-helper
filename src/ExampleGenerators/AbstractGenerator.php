@@ -1,9 +1,14 @@
 <?php
 
-namespace Pyro\IdeHelper\Command;
+namespace Pyro\IdeHelper\ExampleGenerators;
+
+use Illuminate\Foundation\Bus\Dispatchable;
+use function base_path;
+use function path_is_relative;
 
 abstract class AbstractGenerator
 {
+
     /** @var string */
     protected $path;
 
@@ -12,6 +17,8 @@ abstract class AbstractGenerator
 
     /** @var string */
     protected $namespace;
+
+    protected $prefix;
 
     /**
      * GenerateFieldBlueprint constructor.
@@ -32,8 +39,22 @@ abstract class AbstractGenerator
         if ($this->noWrite) {
             return;
         }
+        if ($this->prefix) {
+            $data = str_replace('<?php', "<?php\n\n{$this->prefix}\n\n", $data);
+        }
         $path = path_is_relative($this->path) ? base_path($this->path) : $this->path;
         file_put_contents($path, $data);
+    }
+
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(string $prefix)
+    {
+        $this->prefix = $prefix;
+        return $this;
     }
 
     public function getPath()

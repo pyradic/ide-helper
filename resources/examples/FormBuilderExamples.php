@@ -93,26 +93,29 @@ class FormBuilderExamples
         ];
     }
 
-    public static function sectionRow()
+    public static function sectionRow($column = null)
     {
         return [
-            'columns' => [
-                null => [
-                    'classes' => '',
-                    'size'    => 24,
-                    'fields'  => [],
-                    'html'    => '',
-                    'view'    => '',
-                    'groups'  => [
-                        null => static::section(),
-                    ],
-                    'tabs'    => [
-                        null => static::sectionTab(),
-                    ],
-                    'rows'    => [
-                        null => static::sectionRow(),
-                    ],
-                ],
+            'columns' => [ static::column() ],
+        ];
+    }
+
+    public static function column()
+    {
+        return [
+            'classes' => '',
+            'size'    => 24,
+            'fields'  => [],
+            'html'    => '',
+            'view'    => '',
+            'groups'  => [
+                null => static::section(),
+            ],
+            'tabs'    => [
+                null => static::sectionTab(),
+            ],
+            'rows'    => [
+                null => static::sectionRow(),
             ],
         ];
     }

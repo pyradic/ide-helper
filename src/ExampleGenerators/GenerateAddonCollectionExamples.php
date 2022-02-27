@@ -1,17 +1,16 @@
 <?php
 
-namespace Pyro\IdeHelper\Command;
+namespace Pyro\IdeHelper\ExampleGenerators;
 
-use Anomaly\Streams\Platform\Addon\Addon;
 use Anomaly\Streams\Platform\Addon\AddonCollection;
 
-class GenerateAddonCollectionExamples  extends AbstractGenerator
+class GenerateAddonCollectionExamples extends AbstractGenerator
 {
     public function handle(AddonCollection $addons)
     {
 
-        $body=$addons->map(function( $addon){
-           $class=get_class($addon);
+        $body = $addons->map(function ($addon) {
+            $class = get_class($addon);
             return  "'{$addon->getNamespace()}' => \\{$class}::class,";
         })->implode("\n");
         $body = <<<EOF

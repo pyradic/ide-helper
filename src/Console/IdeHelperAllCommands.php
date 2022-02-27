@@ -9,7 +9,7 @@ class IdeHelperAllCommands extends Command
 {
     protected $signature = 'ide-helper:all';
 
-    protected $description = '';
+    protected $description = 'Shorthand command that compiles all streams, then calling all ide helping commands there are.';
 
     public function handle()
     {
