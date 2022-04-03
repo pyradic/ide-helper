@@ -13,6 +13,7 @@ class IdeHelperAllCommands extends Command
 
     public function handle()
     {
+        $this->warn('Its best to run a "composer dump-autoload" before running this command!!');
         $this->call('streams:compile');
         $this->call('ide-helper:eloquent');
         $this->call('ide-helper:models',['--write' => true]);

@@ -4,6 +4,8 @@ namespace Pyro\IdeHelper\DocBlocks;
 
 use Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface;
 use Anomaly\Streams\Platform\Entry\EntryModel;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -12,6 +14,7 @@ use Laradic\Generators\Doc\Block\CollectionMacrosDocBlock;
 use Laradic\Generators\Doc\Doc\ClassDoc;
 use Laradic\Generators\Doc\DocRegistry;
 use Pyro\IdeHelper\Command\FindAllEntryDomains;
+use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 
 class EntryDomainsDocBlocks
 {
@@ -24,14 +27,20 @@ class EntryDomainsDocBlocks
 
     protected $include = [ '*' ];
 
+    protected $model;
+
+    /** @var Application */
+    protected $app;
+
     public function __construct($exclude = [])
     {
         $this->exclude = $exclude;
     }
 
-    public function handle(DocRegistry $registry)
+    public function handle(DocRegistry $registry, Application $app)
     {
         $this->registry = $registry;
+        $this->app      = $app;
 
         $domains = $this->getDomains();
         $domains = $domains->filter(function ($namespace) {
@@ -54,8 +63,8 @@ class EntryDomainsDocBlocks
         $domains[ base_path('vendor/anomaly/streams-platform/src/Assignment') ] = 'Anomaly\Streams\Platform';
         $domains[ base_path('vendor/anomaly/streams-platform/src/Stream') ]     = 'Anomaly\Streams\Platform';
 //        $domains[ base_path('vendor/anomaly/streams-platform/src/Entry') ]      = 'Anomaly\Streams\Platform';
-        $domains[ base_path('vendor/anomaly/streams-platform/src/Version') ]    = 'Anomaly\Streams\Platform';
-        $domains[ base_path('vendor/anomaly/streams-platform/src/Field') ]      = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Version') ] = 'Anomaly\Streams\Platform';
+        $domains[ base_path('vendor/anomaly/streams-platform/src/Field') ]   = 'Anomaly\Streams\Platform';
         return collect($domains);
     }
 
@@ -98,7 +107,6 @@ class EntryDomainsDocBlocks
             catch (\Throwable $e) {
 
             }
-
             $className = $this->getFallbackClass($key);
             return $className; //$this->registry->getClass($className);
         });
@@ -267,6 +275,8 @@ class EntryDomainsDocBlocks
     {
 
         $cd->cleanTag('method')
+            ->cleanTag('property')
+            ->ensureProperty('$model', $c[ 'model' ])
             ->ensureMethod('all', [ $c[ 'collection' ], $cs[ 'interface' ] ])
             ->ensureMethod('allWithTrashed', [ $c[ 'collection' ], $cs[ 'interface' ] ])
             ->ensureMethod('allWithoutRelations', [ $c[ 'collection' ], $cs[ 'interface' ] ])
@@ -281,8 +291,8 @@ class EntryDomainsDocBlocks
             //->ensureMethod('create', $c[ 'interface' ], 'array $attributes = ' . $this->getAttributesString($c[ 'model' ]))
             // 'create' will be provided by php toolbox
             // 'update' cannot be provided by php toolbox. it messes things up. So it will be provided here, utilizing deep-assoc-completion
-            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes')// = ' . $this->getAttributesString($c[ 'model' ]))
-            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes')// = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('create', $c[ 'interface' ], 'array $attributes = []')// = ' . $this->getAttributesString($c[ 'model' ]))
+            ->ensureMethod('update', $c[ 'interface' ], 'array $attributes = []')// = ' . $this->getAttributesString($c[ 'model' ]))
             ->ensureMethod('getModel', $c[ 'model' ])
             ->ensureMethod('newInstance', $c[ 'interface' ], 'array $attributes = []');
 //            ->ensureMethod('sorted', [ $c[ 'collection' ], $cs[ 'interface' ] ], '$direction = "asc"')
@@ -299,7 +309,20 @@ class EntryDomainsDocBlocks
      */
     protected function handleQueryBuilder(ClassDoc $cd, $c, $cs)
     {
-        $c[ 'queryBuilder' ]->ensureProperty('$model', $c[ 'model' ]);
+        $c[ 'queryBuilder' ]
+            ->ensureProperty('$model', $c[ 'model' ])
+            ->ensureMethod('getModel', $c[ 'model' ]);
+
+        $model     = $this->app->make($c[ 'model' ]->getClassName());
+        $generator = new ModelDocGenerator(new Filesystem());
+        $generator->setLaravel($this->app);
+        $generator->setWrite(false)->setWriteModelMagicWhere(true);
+        $generator->getPropertiesFromTable($model);
+
+        foreach ($generator->getMethods() as $method => $data) {
+            $data[ 'type' ] = $c[ 'queryBuilder' ]->getClassName();
+            $c[ 'queryBuilder' ]->ensureMethod($method, $data[ 'type' ], implode(',', $data[ 'arguments' ]), $data[ 'comment' ]);
+        }
     }
 
     /**
@@ -333,7 +356,10 @@ class EntryDomainsDocBlocks
      */
     protected function handleInterface(ClassDoc $cd, $c, $cs)
     {
-        $cd->ensureMixin($c[ 'model' ]);
+        $cd
+            ->cleanTag('method')
+            ->cleanTag('property')
+            ->ensureMixin($c[ 'model' ]);
     }
 
     /**
@@ -345,6 +371,10 @@ class EntryDomainsDocBlocks
      */
     protected function handleRepositoryInterface(ClassDoc $cd, $c, $cs)
     {
+//        $cd
+//            ->cleanTag('method')
+//            ->cleanTag('property')
+//            ->ensureMixin($c[ 'repository' ]);
         $this->handleRepository($cd, $c, $cs);
     }
 

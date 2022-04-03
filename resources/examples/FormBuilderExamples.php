@@ -105,7 +105,10 @@ class FormBuilderExamples
         return [
             'classes' => '',
             'size'    => 24,
-            'fields'  => [],
+            'fields'  => [
+                '',
+                null=>static::field()
+            ],
             'html'    => '',
             'view'    => '',
             'groups'  => [
@@ -124,7 +127,10 @@ class FormBuilderExamples
     {
         $tab = [
             'title'  => '',
-            'fields' => [],
+            'fields'  => [
+                '',
+                null=>static::field()
+            ],
             'icon'   => '',
             'html'   => '',
             'view'   => '',
@@ -159,7 +165,10 @@ class FormBuilderExamples
              */
             'type'                 => '',
             'stacked'              => true,
-            'fields'               => [],
+            'fields'  => [
+                '',
+                null=>static::field()
+            ],
         ]);
     }
 
@@ -183,63 +192,7 @@ class FormBuilderExamples
         return [ static::section(), null => static::section() ];
     }
 
-    public static function sections2()
-    {
-        $rows             = <<<DOC
-[
-    [
-        'columns' =>[
-             [
-                'classes' => '',
-                'size' => 24,
-                'fields' => [],
-                'html' => '',
-                'view' => ''
-            ]
-        ]
-    ]
-],
-DOC;
-        $tabs             = <<<DOC
-[
-    \$tab => [
-        'title'  => '',
-        'fields' => [],
-        'icon' => '',
-        'html' => '',
-        'view' => '',
-        'rows' => {$rows},
-    ],
-]
-DOC;
-        $formSectionStart = <<<DOC
-        'view' => '',
-        'html' => '',
-        'stacked' => true,
-        'fields' => [],
-        'attributes' => [],
-        'rows' => {$rows},
-        'tabs' => {$tabs},
-DOC;
 
-        $groups = <<<DOC
-[
-     [
-        {$formSectionStart}
-        'groups' => [],
-     ]
-]
-DOC;
-
-        $formSection = <<<DOC
-[
-        {$formSectionStart}
-        'groups' => {$groups},
-]
-DOC;
-
-        return $formSection;
-    }
 
     public static function actions($action = null)
     {

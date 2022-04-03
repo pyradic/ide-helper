@@ -1,7 +1,5 @@
 <?php
 
-use Laradic\Idea\Toolbox\RoutesGenerator;
-use Laradic\Idea\Toolbox\ViewsGenerator;
 use Pyro\IdeHelper\DocBlocks\AddCollectionMacrosDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddCollectionsDocBlocks;
 use Pyro\IdeHelper\DocBlocks\AddMacrosDocBlocks;
@@ -18,17 +16,18 @@ use Pyro\IdeHelper\DocBlocks\MigrationDocBlocks;
 use Pyro\IdeHelper\DocBlocks\ModuleDocBlocks;
 use Pyro\IdeHelper\DocBlocks\RequestDocBlocks;
 use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
-use Pyro\IdeHelper\PhpToolbox\AddonCollectionsToolboxGenerator;
-use Pyro\IdeHelper\PhpToolbox\PyroConfigToolboxGenerator;
-use Pyro\IdeHelper\PhpToolbox\PermissionsToolboxGenerator;
 
 /** @return array = \Pyro\IdeHelper\Examples\Examples::config() */
 return [
+    'models'  => [
+        'ignore_properties' => [ 'translations', 'versions' ],
+        'ignore_methods'    => [ 'cache', 'translate', 'call', 'translated', 'translatedIn' ],
+    ],
     /*
      * Toolbox relies on `php-toolbox` plugin to work
      * Intelij: https://plugins.jetbrains.com/plugin/8133-php-toolbox
      */
-    'toolbox'  => [
+    'toolbox' => [
         /** The path where all generated files will be written to. should not be modified */
         'path'       => base_path('php-toolbox'),
         'streams'    => [
@@ -70,6 +69,10 @@ return [
             \Pyro\IdeHelper\PhpToolbox\PermissionsToolboxGenerator::class      => [
                 'description' => 'permission completions',
                 'directory'   => 'pyro/permissions',
+            ],
+            \Pyro\IdeHelper\PhpToolbox\ResourcesToolboxGenerator::class        => [
+                'description' => 'resources completions',
+                'directory'   => 'pyro/resources',
             ],
         ],
     ],

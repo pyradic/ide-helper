@@ -77,5 +77,17 @@ class ModelDocGenerator extends IdeHelperModelsCommand
         return $this;
     }
 
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @return array<string,{type:string, comment:string, arguments: array}>
+     */
+    public function getMethods()
+    {
+        return $this->methods;
+    }
 
 }

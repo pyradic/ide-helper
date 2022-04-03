@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCommand
 {
+
     public function handle()
     {
 
@@ -96,7 +97,34 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
 
     public function setProperty($name, $type = null, $read = null, $write = null, $comment = '', $nullable = false)
     {
-        return parent::setProperty($name, $type, true, true, $comment, $nullable);
+        $ignores = config('pyro.ide-helper.models.ignore_properties', []);
+        if ($this->isIgnored($name, $ignores)) {
+            return;
+        }
+        parent::setProperty($name, $type, true, true, $comment, $nullable);
+    }
+
+    protected function isIgnored(string $name, array $ignores)
+    {
+        if (in_array($name, $ignores)) {
+            return true;
+        }
+        foreach ($ignores as $ignore) {
+            if (Str::is($ignore, $name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function setMethod($name, $type = '', $arguments = [], $comment = '')
+    {
+
+        $ignores = config('pyro.ide-helper.models.ignore_methods', []);
+        if ($this->isIgnored($name, $ignores)) {
+            return;
+        }
+        parent::setMethod($name, $type, $arguments, $comment);
     }
 
     protected function generateDocs($loadModels, $ignore = '')
@@ -125,8 +153,9 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
     protected function createEntryModelPhpDocs($class)
     {
         /** @var EntryModel $model */
-        $model  = new $class;
-        $stream = $model->getStream();
+        $model        = new $class;
+        $stream       = $model->getStream();
+        $translatable = $stream->translatable;
         /** @var \Anomaly\Streams\Platform\Assignment\AssignmentCollection|\Anomaly\Streams\Platform\Assignment\Contract\AssignmentInterface[] $assigns */
         $assigns = $stream->getAssignments();
 //        $rassigns = $stream->getRelationshipAssignments();
@@ -135,11 +164,13 @@ class IdeHelperModelsCommand extends \Barryvdh\LaravelIdeHelper\Console\ModelsCo
             $fieldSlug          = $field->getSlug();
             $fieldType          = $field->getType();
             $fieldTypeNamespace = $fieldType->getNamespace();
+
 //            $columnType = $type->getColumnType();
             if (
                 ! array_key_exists($fieldSlug, $this->properties)
                 || in_array($fieldTypeNamespace, $this->forceTypes, true)
             ) {
+
                 $this->setProperty($fieldSlug, $this->streamsFieldToPhpType($field));
                 if ($this->write_model_magic_where) {
                     $this->setMethod(

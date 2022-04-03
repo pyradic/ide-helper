@@ -86,8 +86,10 @@ class GenerateStreamsToolbox
 
     protected function generateFieldAttributeMethods()
     {
-        $repository = "{$this->namespace}\\{$this->classPrefix}Repository";
-        $model      = get_class($this->model);
+        $repository          = "{$this->namespace}\\{$this->classPrefix}Repository";
+        $repositoryInterface = "{$this->namespace}\\Contract\\{$this->classPrefix}RepositoryInterface";
+        $model               = get_class($this->model);
+        $modelInterface      = "{$this->namespace}\\Contract\\{$this->classPrefix}Interface";
         if ( ! class_exists($repository)) {
             return;
         }
@@ -98,18 +100,24 @@ class GenerateStreamsToolbox
             'signatures' => [
                 [ 'class' => $repository, 'method' => 'create', 'type' => 'array_key', ],
                 [ 'class' => $repository, 'method' => 'update', 'type' => 'array_key', ],
+                [ 'class' => $repositoryInterface, 'method' => 'create', 'type' => 'array_key', ],
+                [ 'class' => $repositoryInterface, 'method' => 'update', 'type' => 'array_key', ],
                 [ 'class' => $model, 'method' => 'create', 'type' => 'array_key', ],
                 [ 'class' => $model, 'method' => 'update', 'type' => 'array_key', ],
+                [ 'class' => $modelInterface, 'method' => 'create', 'type' => 'array_key', ],
+                [ 'class' => $modelInterface, 'method' => 'update', 'type' => 'array_key', ],
 //                [ 'class' => $interface, 'method' => 'create', 'type' => 'array_key', ],
 //                [ 'class' => $interface, 'method' => 'update', 'type' => 'array_key', ],
             ],
             'signature'  => [
                 "{$repository}:create",
                 "{$repository}:update",
+                "{$repositoryInterface}:create",
+                "{$repositoryInterface}:update",
                 "{$model}:create",
                 "{$model}:update",
-//                "{$interface}::create",
-//                "{$interface}::update",
+                "{$modelInterface}:create",
+                "{$modelInterface}:update",
             ],
         ]);
     }

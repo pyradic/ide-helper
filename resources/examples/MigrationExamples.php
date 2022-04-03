@@ -10,6 +10,7 @@ class MigrationExamples
             $field => [
                 'config'       => array_values(FieldTypeExamples::configs()),
                 'unique'       => false,
+                'namespace'    => '',
                 'required'     => false,
                 'searchable'   => false,
                 'translatable' => false,
