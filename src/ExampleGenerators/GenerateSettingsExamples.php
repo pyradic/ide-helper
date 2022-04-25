@@ -14,11 +14,6 @@ class GenerateSettingsExamples extends AbstractGenerator
 {
     public function handle(Repository $config)
     {
-        $items = array_keys(Arr::dot($config->all()));
-        $binds = '';
-        foreach ($items as $key) {
-            $binds .= "'bind' => '{$key}'," . PHP_EOL;
-        }
         $result = <<<EOF
 <?php /** @noinspection AutoloadingIssuesInspection *//** @noinspection PhpUnused */
 
@@ -33,9 +28,8 @@ class SettingsExamples
 
     public static function settings()
     {
-        \$settings = [];
-        foreach (\Pyro\IdeHelper\Examples\FieldTypeExamples::values() as \$key => \$value) {
-            \$settings[ \$key ] = array_merge(\$value,  [
+        \$settings = [
+            null => [
                 /** A .env key */
                 'env'         => 'ENV_KEY',
                 'placeholder' => false,
@@ -43,10 +37,9 @@ class SettingsExamples
                 /** A configuration key */
                 'bind'        => '{vendor}.{addonType}.{name}::{configFile}.{dotKey}',
                 'bind'        => 'example.module.forum::discussions.allowed',
-                {$binds}
-            ]);
-        }
-        return \$settings;
+            ],
+        ];
+        return array_merge(\$settings, \Pyro\IdeHelper\Examples\FieldTypeExamples::values());
     }
 }
 EOF;
