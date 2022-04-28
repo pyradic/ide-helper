@@ -6,12 +6,17 @@ use Anomaly\Streams\Platform\Model\EloquentModel;
 use Barryvdh\Reflection\DocBlock\Tag;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
-use Laradic\Generators\DocBlock\Tags\MixinTag;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\Engines\PhpEngine;
+use Illuminate\View\Factory;
+use Illuminate\View\FileViewFinder;
+use Laradic\Generators\Doc\Tags\MixinTag;
 use Laradic\Idea\Command\ResolveSourceFolders;
 use Laradic\Support\FS;
+use Pyro\IdeHelper\Console\IdeHelperAllCommands;
+use Pyro\IdeHelper\Console\IdeHelperMetaCommand;
 use Pyro\IdeHelper\Console\IdeHelperModelsCommand;
 use Pyro\IdeHelper\Console\IdeHelperStreamsCommand;
-use Pyro\IdeHelper\Console\IdeHelperAllCommands;
 use Pyro\IdeHelper\ExampleGenerators\ExampleGenerator;
 use Pyro\IdeHelper\Metas\AddonsMeta;
 use Pyro\IdeHelper\Overrides\FieldTypeParser;
@@ -87,6 +92,7 @@ class IdeHelperServiceProvider extends ServiceProvider
             $outputPath = config('pyro.ide-helper.examples.output_path');
             $generators = config('pyro.ide-helper.examples.generators');
             $files      = config('pyro.ide-helper.examples.files');
+            $files      = array_map(fn($file) => __DIR__ . '/../resources/examples/' . $file, $files);
 
             return new ExampleGenerator($namespace, $outputPath, $generators, $files);
         });
@@ -95,6 +101,9 @@ class IdeHelperServiceProvider extends ServiceProvider
     protected function overrideCommands()
     {
         $this->app->singleton('command.ide-helper.models', IdeHelperModelsCommand::class);
+        $this->app->singleton('command.ide-helper.meta', function ($app) {
+          return  new IdeHelperMetaCommand($app[ 'files' ], $this->createLocalViewFactory(), $app[ 'config' ]);
+        });
     }
 
     protected function overrideConfigs()
@@ -112,5 +121,21 @@ class IdeHelperServiceProvider extends ServiceProvider
         $metas[ AddonsMeta::class ] = [];
         $config->set('laradic.idea.meta.metas', $metas);
         $config->set('laradic.idea.toolbox.generators', $config->get('pyro.ide-helper.toolbox.generators'));
+    }
+
+    /**
+     * @return Factory
+     */
+    public function createLocalViewFactory()
+    {
+        $resolver = new EngineResolver();
+        $resolver->register('php', function () {
+            return new PhpEngine($this->app[ 'files' ]);
+        });
+        $finder  = new FileViewFinder($this->app[ 'files' ], [ __DIR__ . '/../resources/views' ]);
+        $factory = new Factory($resolver, $finder, $this->app[ 'events' ]);
+        $factory->addExtension('php', 'php');
+
+        return $factory;
     }
 }

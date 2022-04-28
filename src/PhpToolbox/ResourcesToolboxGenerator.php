@@ -37,6 +37,9 @@ class   ResourcesToolboxGenerator extends AbstractToolboxGenerator
         $data  = collect();
         foreach ($addons->all() as $addon) {
             $path     = $addon->getPath('resources');
+            if($path === '/resources'){
+                continue;
+            }
             $allFiles = $this->allFiles($path);
 
             foreach ($allFiles as $file) {

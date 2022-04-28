@@ -19,7 +19,10 @@ use Pyro\IdeHelper\DocBlocks\TableBuilderDocBlocks;
 
 /** @return array = \Pyro\IdeHelper\Examples\Examples::config() */
 return [
-    'models'  => [
+    'metas'    => [
+        'exclude' => [ 'oaty.discord', 'oaty.discord.bot', 'oaty.bots', 'oaty.bots.loop', 'oaty.playstation.bot' ],
+    ],
+    'models'   => [
         'ignore_properties' => [ 'translations', 'versions' ],
         'ignore_methods'    => [ 'cache', 'translate', 'call', 'translated', 'translatedIn' ],
     ],
@@ -27,7 +30,7 @@ return [
      * Toolbox relies on `php-toolbox` plugin to work
      * Intelij: https://plugins.jetbrains.com/plugin/8133-php-toolbox
      */
-    'toolbox' => [
+    'toolbox'  => [
         /** The path where all generated files will be written to. should not be modified */
         'path'       => base_path('php-toolbox'),
         'streams'    => [
@@ -99,15 +102,15 @@ return [
         ],
         /* hand made example files will by copied to output path. With the namespace corrected */
         'files'       => [
-            __DIR__ . '/../resources/examples/AddonServiceProviderExamples.php',
-            __DIR__ . '/../resources/examples/Examples.php',
-            __DIR__ . '/../resources/examples/FormBuilderExamples.php',
-            __DIR__ . '/../resources/examples/IconExamples.php',
-            __DIR__ . '/../resources/examples/mdi.php',
-            __DIR__ . '/../resources/examples/MigrationExamples.php',
-            __DIR__ . '/../resources/examples/ModuleExamples.php',
-//            __DIR__ . '/../resources/examples/SettingsExamples.php',
-            __DIR__ . '/../resources/examples/TableBuilderExamples.php',
+            'AddonServiceProviderExamples.php',
+            'Examples.php',
+            'FormBuilderExamples.php',
+            'IconExamples.php',
+            'mdi.php',
+            'MigrationExamples.php',
+            'ModuleExamples.php',
+//          'SettingsExamples.php',
+            'TableBuilderExamples.php',
         ],
     ],
     /*
