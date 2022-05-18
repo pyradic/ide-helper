@@ -37,6 +37,7 @@ class EntryDomainsDocBlocks
         $this->exclude = $exclude;
     }
 
+
     public function handle(DocRegistry $registry, Application $app)
     {
         $this->registry = $registry;
@@ -461,6 +462,29 @@ class EntryDomainsDocBlocks
         }
         return static::$tableColumns[ $table ];
     }
+
+    public function getExclude()
+    {
+        return $this->exclude;
+    }
+
+    public function setExclude($exclude)
+    {
+        $this->exclude = $exclude;
+        return $this;
+    }
+
+    public function getInclude()
+    {
+        return $this->include;
+    }
+
+    public function setInclude($include)
+    {
+        $this->include = $include;
+        return $this;
+    }
+
 
     public static function cexample()
     {

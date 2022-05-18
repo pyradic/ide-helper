@@ -2,21 +2,19 @@
 
 namespace Pyro\IdeHelper\Console;
 
+use Anomaly\Streams\Platform\Addon\AddonCollection;
 use Anomaly\Streams\Platform\Stream\Contract\StreamRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Laradic\Generators\Completion\CompletionGenerator;
 use Laradic\Generators\Doc\Doc\Doc;
 use Laradic\Generators\Doc\DocChainExecutor;
+use Pyro\IdeHelper\DocBlocks\EntryDomainsDocBlocks;
 use Pyro\IdeHelper\ExampleGenerators\ExampleGenerator;
 use Pyro\IdeHelper\Overrides\ModelDocGenerator;
 use Pyro\IdeHelper\PhpToolbox\GenerateStreamsToolbox;
-use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Process\Process;
 
 class IdeHelperStreamsCommand extends Command
 {
@@ -24,6 +22,7 @@ class IdeHelperStreamsCommand extends Command
 
     protected $signature = 'ide-helper:streams
                                                 {--out= : output path}
+                                                {--addon= : addon namespace or slug}
                                                 {--all : Experimental}
                                                 {--models}
                                                 {--examples}
@@ -37,11 +36,6 @@ class IdeHelperStreamsCommand extends Command
     protected function createExecutor()
     {
         $executor = resolve(DocChainExecutor::class);
-        $items    = config('pyro.ide-helper.docblock.generators');
-        if ( ! is_array($items) && is_callable($items)) {
-            $items = $this->laravel->call($items);
-        }
-        $executor->appendToChain($items);
         return $executor;
     }
 
@@ -57,10 +51,15 @@ class IdeHelperStreamsCommand extends Command
         return true;
     }
 
-    public function handle(CompletionGenerator $options, StreamRepositoryInterface $streams)
+    public function handle(CompletionGenerator $options, StreamRepositoryInterface $streams, AddonCollection $addons)
     {
         if ( ! $this->validate()) {
             return;
+        }
+        /** @var \Anomaly\Streams\Platform\Addon\Addon|null $addon */
+        $addon = $this->option('addon');
+        if ($addon && $addons->has($addon)) {
+            $addon = $addons->get($addon);
         }
 
 //        if ($this->option('models')) {
@@ -84,6 +83,18 @@ class IdeHelperStreamsCommand extends Command
         if ($this->option('docblocks') || $this->option('all')) {
             $this->line('<options=bold>Generating docblocks...</>');
             $executor = $this->createExecutor();
+            if ($addon) {
+                $namespace = (new \ReflectionClass($addon))->getNamespaceName();
+                $items     = [
+                    (new EntryDomainsDocBlocks())->setInclude([ $namespace ]),
+                ];
+            } else {
+                $items = config('pyro.ide-helper.docblock.generators');
+                if ( ! is_array($items) && is_callable($items)) {
+                    $items = $this->laravel->call($items);
+                }
+            }
+            $executor->appendToChain($items);
             $executor->transform();
             $executor->getSerializer()->on('write', function (Doc $classDoc) {
                 $name = $classDoc->getReflection()->getName();
@@ -122,7 +133,13 @@ class IdeHelperStreamsCommand extends Command
             $this->line('<options=bold>Generating toolbox completions...</>');
             $this->line('  - Generating stream classes completions...', null, 'v');
             $excludes = config('pyro.ide-helper.toolbox.streams.exclude', []);
-            foreach ($streams->all() as $stream) {
+
+            if ($addon) {
+                $streamItems = $streams->findAllByNamespace($addon->getSlug());
+            } else {
+                $streamItems = $streams->all();
+            }
+            foreach ($streamItems as $stream) {
                 $name = $stream->getNamespace() . '::' . $stream->getSlug();
                 if (Str::startsWith($stream->getBoundEntryModelName(), $excludes)) {
                     $this->line("     <warning>></warning> Skipped stream '{$name}' completions...", null, 'vv');
