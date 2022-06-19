@@ -112,6 +112,7 @@ class IdeHelperServiceProvider extends ServiceProvider
         $config->push('ide-helper.ignored_models', 'Anomaly\Streams\Platform\Model\Search\SearchItemsEntryModel');
         $config->push('ide-helper.ignored_models', EloquentModel::class);
         $config->set('ide-helper.force_fqn', true);
+        $config->set('ide-helper.include_class_docblocks', true);
         $config->set('ide-helper.write_model_external_builder_methods', false);
         $config->set('ide-helper.write_model_relation_count_properties', false);
 
